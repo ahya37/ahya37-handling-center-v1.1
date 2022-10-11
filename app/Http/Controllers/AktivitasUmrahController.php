@@ -31,12 +31,14 @@ class AktivitasUmrahController extends Controller
      * @return \Illuminate\Http\Response
      */
     public $path;
+    public $path_petugas;
     public $dimensions;
 
     public function __construct()
     {
         //DEFINISIKAN PATH
         $this->path = storage_path('app/public/tugas');
+        $this->path_petugas = storage_path('app/public/petugas/tugas');
         //DEFINISIKAN DIMENSI
         // $this->dimensions = ['245'];
     }
@@ -1667,58 +1669,4 @@ class AktivitasUmrahController extends Controller
             return $e->getMessage();
         }
     }
-
-    public function indexPetugas()
-    {
-        return view('aktivitasumrahpetugas.index');
-    }
-
-    public function pageTahapanTugasByPetugas()
-    {
-        // $user_id = Auth::user()->id;
-        // $aktitivitasModel = new AktivitasUmrahModel();
-        // $jadwal      = $aktitivitasModel->getNameTourcodeByPembimbing($user_id);
-
-        $user_id = Auth::user()->id;
-        $aktitivitasModel = new AktivitasUmrahPetugasModel();
-        $jadwal      = $aktitivitasModel->getHistoryNameTourcodeByPetugasListJudul($user_id);
-
-        $gf         = new Globalprovider();
-        $result     = [];
-
-        foreach ($jadwal as $value) {
-            $result[] = [
-                'id' => $value->id,
-                'tourcode' => $value->tourcode,
-            ];
-        }
-
-        return view('users.petugas.index', compact('jadwal','aktitivitasModel','result'));
-    }
-
-    public function pageFormTugasByPetugasByJudul($aktitivitas_umrah_petugas_id)
-    {
-
-        $user_id = Auth::user()->id;
-
-        $aktitivitasModel = new AktivitasUmrahPetugasModel();
-        $jadwal      = $aktitivitasModel->getNameTourcodeByPetugasByAkunPetugas($user_id, $aktitivitas_umrah_petugas_id);
-        $catatan     = $aktitivitasModel->select('catatan')->where('id', $aktitivitas_umrah_petugas_id)->first();
-
-        return view('users.petugas.listjudul', compact('jadwal','aktitivitasModel','aktitivitas_umrah_petugas_id','catatan'));
-    }
-
-    public function pageDetaiTugasPetugasByJudul($aktitivitas_umrah_petugas_id, $id)
-    {
-        // $user_id = Auth::user()->id;
-        // $aktitivitasModel = new AktivitasUmrahModel();
-        // $jadwal      = $aktitivitasModel->getNameTourcodeByAktivitasUmrahId($id);
-        // return $jadwal;
-        $judul   = DB::table('master_judul_tugas_petugas')->select('nama')->where('id', $id)->first();
-        dd($judul);
-        $user_id = Auth::user()->id;
-
-        return view('users.tugas.form', ['judul' => $judul,'user_id' => $user_id,'aktitivitas_umrah_id' => $aktitivitas_umrah_id]);
-    }
-    
 }

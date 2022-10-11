@@ -52,5 +52,19 @@ class AktivitasUmrahPetugasModel extends Model
         return $sql;
     }
 
+    public function getListTugasByPembimbingByJudul($aktitivitas_umrah_petugas_id, $id)
+    {
+        $sql = DB::table('aktivitas_umrah_petugas as a')
+                ->join('detail_aktivitas_umrah_petugas as b','b.aktivitas_umrah_petugas_id','=','a.id')
+                ->join('petugas as d','d.id','a.petugas_id')
+                ->select('b.id','b.nomor_tugas as nomor','b.nama_tugas as nama','b.status','b.created_at','b.validate','b.require_image')
+                ->where('b.master_judul_tugas_id', $id)
+                ->where('a.id','=', $aktitivitas_umrah_petugas_id)
+                ->where('a.status','=','active')
+                ->orderBy('b.nomor_tugas','asc')
+                ->get();
+        return $sql;
+    }
+
 
 }

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="page-wrapper">
         <div class="page-content">
@@ -15,9 +14,6 @@
 
                         <div class="">
                             <h6 class="mb-0 text-success">Tourcode : {{ $item->tourcode }} </h6>
-                            {{-- <div>
-								   <a href="{{ route('user.aktivitas.detail', $item->id) }}" class="mt-2 btn btn-sm btn-primary">Klik untuk mengisi tahapan tugas</a>
-							   </div> --}}
                         </div>
                     </div>
 
@@ -26,7 +22,6 @@
                         $title_tugas = $aktitivitasModel->getListSopByAktivitasUmrahId($id);
                     @endphp
                     <div class="mt-4"></div>
-                    
                     @foreach ($title_tugas as $list)
                         @if ($list->total_sop == $list->total_terisi)
                             <div class="d-flex align-items-center">
@@ -55,8 +50,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('/js/list-judul.js') }}"></script>
-@endpush

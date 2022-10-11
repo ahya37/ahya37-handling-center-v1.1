@@ -220,7 +220,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kuisioner/detail/{id}', 'DashboardController@detailKuisionerByDashboard')->name('kusioner.detail.jawaban');
 
         // PETUGAS
-        Route::get('/petugas/umrah', 'AktivitasUmrahController@indexPetugas')->name('aktivitas.petugas.index');
+        Route::get('/petugas/umrah', 'AktivitasUmrahPetugascontroller@indexPetugas')->name('aktivitas.petugas.index');
 
     });
     
@@ -257,10 +257,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/panduan/{slug}', 'PanduanController@show');
 
         // PETUGAS
-        Route::get('/petugas/tugas', 'AktivitasUmrahController@pageTahapanTugasByPetugas')->name('user.aktivitas.petugas.index');
-        Route::get('/petugas/form/isitugas/{master_sop_id}', 'AktivitasUmrahController@pageFormTugasByPetugasByJudul')->name('user.petugas.form.isitugas');
-        Route::get('/petugas/judul/detailtugas/{aktitivitas_umrah_petugas_id}/{id}', 'AktivitasUmrahController@pageDetaiTugasPetugasByJudul')->name('user.petugas.aktivitas.judul.detail');
-        
+        Route::get('/petugas/tugas', 'AktivitasUmrahPetugascontroller@pageTahapanTugasByPetugas')->name('user.aktivitas.petugas.index');
+        Route::get('/petugas/form/isitugas/{master_sop_id}', 'AktivitasUmrahPetugascontroller@pageFormTugasByPetugasByJudul')->name('user.petugas.form.isitugas');
+        Route::get('/petugas/judul/detailtugas/{aktitivitas_umrah_petugas_id}/{id}', 'AktivitasUmrahPetugascontroller@pageDetaiTugasPetugasByJudul')->name('user.petugas.aktivitas.judul.detail');
+        Route::get('/petugas/listtugas/{aktitivitas_umrah_petugas_id}/{id}', 'AktivitasUmrahPetugascontroller@getDetailTugasByPetugas');
+        Route::post('/petugas/createTugaswithfileUpload', 'AktivitasUmrahPetugascontroller@uploadPelaksanaanPetugas')->name('user.petugas.create.aktivitas');
+
     });
 });
 
