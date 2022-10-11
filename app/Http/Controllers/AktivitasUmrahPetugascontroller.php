@@ -228,7 +228,7 @@ class AktivitasUmrahPetugascontroller extends Controller
             }
 
             // GET NILAI_POINT DARI MASTER_TUGAS
-            $master_tugas = TugasForPetugasModel::where('id',  $tugas->master_tugas_petugas_id)->first(); 
+            $master_tugas = TugasForPetugasModel::select('nilai_point')->where('id',  $tugas->master_tugas_petugas_id)->first(); 
 
             $tugas->update([
                 'status' => $status,
