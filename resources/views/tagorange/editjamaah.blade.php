@@ -33,7 +33,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Telp.</label>
-                                            <input type="type" name="telp" value="{{$jamaah->telp_jamaah}}" class="form-control @error ('tourcode') is-invalid @enderror" required>
+                                            <input type="type" name="telp" value="{{$jamaah->telp_jamaah}}" class="form-control @error ('tourcode') is-invalid @enderror" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Email</label>
-                                            <input type="email" name="email" value="{{$jamaah->email_jamaah}}" class="form-control @error ('tourcode') is-invalid @enderror" required>
+                                            <input type="email" name="email" value="{{$jamaah->email_jamaah}}" class="form-control @error ('tourcode') is-invalid @enderror" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Alamat</label>
-                                            <textarea name="address" class="form-control @error ('tourcode') is-invalid @enderror" required>{{$jamaah->alamat_jamaah}}</textarea>
+                                            <textarea name="address" class="form-control @error ('tourcode') is-invalid @enderror" >{{$jamaah->alamat_jamaah}}</textarea>
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
