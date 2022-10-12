@@ -103,6 +103,9 @@ function closeModal() {
   $("#myModal").modal("hide");
   $("#image").val("");
   $("#idJamaah").val("");
+  $('#btnloading').hide();
+  $('#btnsave').show();
+  $('#btnclose').show();
   document.getElementById("image-preview").src = '';
   const table = $("#tablePlace").DataTable();
   table.ajax.reload();
