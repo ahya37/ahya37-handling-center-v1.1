@@ -285,7 +285,7 @@ const table = $("#data").DataTable({
             return `<span class='text-warning'>${nilai_akhir}</span>`;
           }
           if (nilai_akhir === "D") {
-            return `<span class='text-primary'>B</span>`;
+            return `<span class='text-danger'>D</span>`;
           }
         }else{
           return `<span>Dalam proses mengerjakan</span>`;

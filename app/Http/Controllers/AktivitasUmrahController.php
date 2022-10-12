@@ -935,6 +935,7 @@ class AktivitasUmrahController extends Controller
             ];
         }
 
+
         return view('users.history.index', compact('result'));
     }
 
