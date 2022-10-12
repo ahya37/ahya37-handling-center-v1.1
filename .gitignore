@@ -2,3 +2,4 @@
 .htaccess
 vendor/*
 storage/*
+public/storage/*

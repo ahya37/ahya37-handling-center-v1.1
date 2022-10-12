@@ -14,7 +14,6 @@
 							<div class="row">
 								<div class="col-md-10">
 									<h6 class="mb-0 text-success">Tourcode : {{ $item['tourcode'] }} </h6>
-
 									<a href="{{ route('user.aktivitas.historydetail', $item['id']) }}"
 										class="mt-2 btn btn-sm btn-primary">Klik untuk melihat histori tugas</a>
 								</div>

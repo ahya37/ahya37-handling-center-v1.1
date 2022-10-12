@@ -127,8 +127,6 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::post('/tag/orange/jamaah/uploadfoto', 'OperasionalController@uploadFotoJamaahByModal')->name('tagorange.jamaah.uploadfoto');   
 
 
-    
-
     });
     
     Route::group(['prefix' => 'kuisioner'], function(){

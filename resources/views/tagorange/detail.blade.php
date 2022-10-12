@@ -143,7 +143,7 @@
                 <!-- <span id="notif" style="display: none" class="alert alert-danger"></span> -->
 
                 <div class="modal-body">
-                    <form action="{{ route('tagorange.jamaah.uploadfoto') }}" method="POST" enctype="multipart/form-data">
+                    <form id="form" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="col-md-12 mb-1">
                             <label class="form-label">Foto <span class="text-danger">Diharuskan</span></label>
@@ -159,10 +159,10 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" id="btnloading" disabled style="display: none">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
+                        Menyimpan...
                     </button>
 
-                    <button type="submit" class="btn btn-sm btn-primary" id="btnsave"
+                    <button type="submit" class="btn btn-sm btn-primary upload-image" id="btnsave"
                         data-dismiss="modal">Simpan</button>
                     <button type="button" class="btn btn-sm btn-danger" id="btnclose" onclick="closeModal()"
                         data-dismiss="modal">Tutup</button>

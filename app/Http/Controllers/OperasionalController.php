@@ -366,13 +366,20 @@ class OperasionalController extends Controller
             ]);
 
             DB::commit();
-                        
-            return redirect()->back()->with(['success' => 'Foto jamaah telah diupload']);
+
+            return ResponseFormatter::success([
+                null,
+                'message' => 'Berhasil hapus jamaah'
+            ],200); 
+     
             
         } catch (\Exception $e) {
-            return $e->getMessage();
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
         }
     }
-
 
 }
