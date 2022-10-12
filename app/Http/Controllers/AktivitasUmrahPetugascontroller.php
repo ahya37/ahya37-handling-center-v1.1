@@ -6,6 +6,7 @@ use App\TugasModel;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\AktivitasUmrahPetugasModel;
+use App\SopPetugasModel;
 use App\TugasForPetugasModel;
 use App\DetailAktivitasUmrahPetugasModel;
 use Illuminate\Support\Facades\DB;
@@ -252,6 +253,151 @@ class AktivitasUmrahPetugascontroller extends Controller
             DB::rollback();
 			return $e->getMessage();
             return redirect()->back()->with(['warning' => 'Gagal Simpan Tugas SOP']);
+        }
+    }
+
+    public function dataTableListData(Request $request)
+    {
+        $orderBy = 'c.tourcode';
+        switch ($request->input('order.0.column')) {
+            case '1':
+                $orderBy = 'c.tourcode';
+                break;
+        }
+
+        // $aktitivitasModel = new AktivitasUmrahModel();
+        $data             = DB::table('aktivitas_umrah_petugas as a')
+                            ->join('petugas as b','b.id','=','a.petugas_id')
+                            ->join('umrah as c','c.id','=','a.umrah_id')
+                            ->select('a.id','b.nama as petugas','c.tourcode', 'a.status','c.dates','c.id as umrah_id','c.start_date','c.end_date','a.status_tugas',
+                            DB::raw('(select sum(nilai_akhir) from detail_aktivitas_umrah_petugas where aktivitas_umrah_petugas_id = a.id) as nilai_akhir'))
+                            ->where('a.isdelete', 0);
+
+        if($request->input('search.value')!=null){
+            $data = $data->where(function($q)use($request){
+                $q->whereRaw('LOWER(c.tourcode) like ? ',['%'.strtolower($request->input('search.value')).'%']);
+            });
+        }
+
+        if($request->input('month') != '' AND $request->input('year') != ''){
+                            $data->whereMonth('c.start_date', $request->month);
+                            $data->whereYear('c.start_date', $request->year);
+        }
+
+        if($request->input('tourcode') != ''){
+                            $data->where('c.tourcode', $request->tourcode);
+        }
+
+        if($request->input('pembimbing') != ''){
+                            $data->where('b.id', $request->pembimbing);
+        }
+
+        
+        $recordsFiltered = $data->get()->count();
+        if($request->input('length')!=-1) $data = $data->skip($request->input('start'))->take($request->input('length'));
+        $data = $data->orderBy($orderBy,$request->input('order.0.dir'))->get();
+
+        $recordsTotal = $data->count();
+
+        return response()->json([
+                'draw'=>$request->input('draw'),
+                'recordsTotal'=>$recordsTotal,
+                'recordsFiltered'=>$recordsFiltered,
+                'data'=> $data
+            ]);
+    }
+
+    public function show($id)
+    {
+        // GET TOURCODE DAN NAMA PEMBIMBING
+        $aktitivitasModel = new AktivitasUmrahPetugasModel();
+        $aktitivitas      = $aktitivitasModel->getNameTourcodeAndPetugas($id);
+        $judul_sop        = $aktitivitasModel->getListTugasByAktivitasUmrahId($id);
+
+        $sopModel     = SopPetugasModel::select('name');
+        $sop = $sopModel->where('id', $aktitivitas->master_sop_petugas_id)->first();
+        $title = 'Petugas';
+
+        return view('aktivitasumrahpetugas.detail', compact('aktitivitas','judul_sop','aktitivitasModel','sop','title'));
+    }
+
+    public function updateStatusAktifitasUmrah(Request $request)
+    {
+            
+        DB::beginTransaction();
+        try {
+
+            $id = $request->id;
+
+            // HITUNG TAHAPAN TUGAS
+            $tugasModel = new DetailAktivitasUmrahPetugasModel();
+            $count_tugas = $tugasModel->where('aktivitas_umrah_petugas_id', $id)
+                            ->where('status','=','')->count();
+            // JIKA SAMA DENGAN 0, MAKA UPDATE STATUS DI AKTIVITAS_UMRAH MENJADI = FINISH
+            $updateStatus = false;
+
+            $count_validate = $tugasModel->where('aktivitas_umrah_petugas_id', $id)
+                            ->where('validate','=','N')->count();
+
+            if ($count_tugas  > 0) {
+                return ResponseFormatter::success([
+                    'data' => 'status',
+                    'message' => 'Gagal, Petugas belum meyelesaikan tahapan tugas'
+                ],200);
+            }
+            else{
+                $aktitivitas = AktivitasUmrahPetugasModel::where('id', $id)->first();
+                $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
+            }
+            
+            if($updateStatus){
+                DB::commit();
+                return ResponseFormatter::success([
+                   null,
+                   'message' => 'Tugas telah selesai'
+            ],200);
+            }else{
+                 return ResponseFormatter::error([
+                   null,
+                   null
+                ]); 
+            }
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
+    }
+
+    public function deleteAktifitasUmrah(Request $request)
+    {
+            
+        DB::beginTransaction();
+        try {
+
+            $id = $request->id;
+
+            // UPDATE ISDELETE AKTITVITAS UMRAH = 1
+           $tugas = AktivitasUmrahPetugasModel::where('id', $id)->first();
+           $tugas->update(['isdelete' => 1]);
+
+            DB::commit();
+            return ResponseFormatter::success([
+                'data',
+                'message' => 'Tugas telah dihapus'
+            ],200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
         }
     }
 }

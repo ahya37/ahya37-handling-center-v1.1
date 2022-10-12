@@ -194,4 +194,38 @@ class PetugasController extends Controller
         return response()->json($data);
 
     }
+
+    public function getDataPetugasUmrahByMonth(Request $request, $month, $year)
+    {
+        try {
+
+            $data = DB::table('aktivitas_umrah_petugas as a')
+                    ->join('petugas as b','a.petugas_id','=','b.id')
+                    ->select('b.id','b.nama')
+                    ->whereMonth('a.created_at', $month)
+                    ->whereYear('a.created_at', $year)
+                    ->get();
+
+            if($request->has('q')){
+                $search = $request->q;
+                $data = DB::table('aktivitas_umrah_petugas as a')
+                    ->join('petugas as b','a.petugas_id','=','b.id')
+                    ->select('b.id','b.nama')
+                    ->whereMonth('a.created_at', $month)
+                    ->whereYear('a.created_at', $year)
+                    ->where('b.nama','LIKE',"%$search%")
+                    ->get();
+
+            }
+
+            return response()->json($data);
+
+        } catch (\Exception $e) {
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
+    }
 }

@@ -19,7 +19,7 @@
                     <div class="d-flex align-items-center">
                         <img src="/assets/images/profile-user.png" class="user-img" width="60" alt="user avatar">
                         <div class="flex-grow-1 ms-2">
-                            <h5 class="mt-0">{{ $title }} : {{ $aktitivitas->pembimbing }}</h5>
+                            <h5 class="mt-0">{{ $title }} : {{ $aktitivitas->petugas }}</h5>
                             <p class="mb-0">Tourcode : {{ $aktitivitas->tourcode }}</p>
                         </div>
                     </div>

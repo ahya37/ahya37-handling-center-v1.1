@@ -33,6 +33,7 @@ Route::get('testlisttugas/{id}', 'TestController@testListTugas');
 Route::post('searchpanduan', 'PanduanController@searchPanduan');
 
 Route::get('/getdatapetugas', 'PetugasController@getDataPetugas');
+Route::get('/getdatapetugas/umrah/{month}/{year}', 'PetugasController@getDataPetugasUmrahByMonth');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -56,6 +57,8 @@ Route::group(['as' => 'api.'], function () {
 	
 	Route::get('/roomlist', 'UmhajController@getRoomlist');
 
+    // PETUGAS
+    Route::post('/petugas/dt/aktivitas', 'AktivitasUmrahPetugascontroller@dataTableListData');
 
 });
 

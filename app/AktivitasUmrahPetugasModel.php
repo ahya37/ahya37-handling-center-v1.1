@@ -66,5 +66,37 @@ class AktivitasUmrahPetugasModel extends Model
         return $sql;
     }
 
+    public function getNameTourcodeAndPetugas($id)
+    {
+        $sql = DB::table('aktivitas_umrah_petugas as a')
+                ->join('petugas as b','b.id','=','a.petugas_id')
+                ->join('umrah as c','c.id','=','a.umrah_id')
+                ->select('b.nama as petugas','c.tourcode','a.status_tugas','c.master_sop_id','c.master_sop_petugas_id','a.id')
+                ->where('a.id', $id)    
+                ->first();
+        return $sql;
+    }
+
+    public function getListTugasByAktivitasUmrahId($id)
+    {
+        $sql = DB::table('detail_aktivitas_umrah_petugas as a')
+                ->select('b.id','b.nama')
+                ->join('master_judul_tugas_petugas as b', 'a.master_judul_tugas_id','=','b.id')
+                ->where('a.aktivitas_umrah_petugas_id', $id)
+                ->groupBy('b.id','b.nama')
+                ->get();
+        return $sql;
+    }
+
+    public function getListTugasByMasterJudulIdByAktitivitasUmrah($aktitivitas_umrah_petugas_id,$id)
+    {
+        $sql = DB::table('detail_aktivitas_umrah_petugas')
+                ->where('master_judul_tugas_id', $id)
+                ->where('aktivitas_umrah_petugas_id', $aktitivitas_umrah_petugas_id)
+                ->select('id','nomor_tugas','status','alasan','file','file_doc','file_doc_name','updated_at','nama_tugas','nilai_akhir','validate')
+                ->orderBy('nomor_tugas','asc')
+                ->get();
+        return $sql;
+    }
 
 }

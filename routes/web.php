@@ -221,6 +221,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         // PETUGAS
         Route::get('/petugas/umrah', 'AktivitasUmrahPetugascontroller@indexPetugas')->name('aktivitas.petugas.index');
+        Route::get('/petugas/detail/{id}', 'AktivitasUmrahPetugascontroller@show')->name('aktivitas.detail');
+        Route::post('/petugas/finish', 'AktivitasUmrahPetugascontroller@updateStatusAktifitasUmrah');
+        Route::post('/petugas/delete/tugas', 'AktivitasUmrahPetugascontroller@deleteAktifitasUmrah');
+
 
     });
     
