@@ -129,7 +129,7 @@ $('#form').submit(function(e) {
  e.preventDefault();
  let formData = new FormData(this);
  $.ajax({
-    type:'POST',
+    method:'POST',
     url: `/umrah/tag/orange/jamaah/uploadfoto`,
      data: formData,
      contentType: false,
