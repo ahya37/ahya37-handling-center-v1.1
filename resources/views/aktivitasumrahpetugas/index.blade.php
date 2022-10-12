@@ -57,7 +57,6 @@
 									<tr>
                                         <th>Tourcode</th>
                                         <th>Pembimbing / Asisten</th>
-                                        <th>Grade</th>
                                         <th>Opsi</th>
 									</tr>
 								</thead>

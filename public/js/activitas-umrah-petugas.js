@@ -270,30 +270,30 @@ const table = $("#data").DataTable({
         return `<p>${row.petugas} (${row.status_tugas})</p>`;
       },
     },
+    // {
+    //   targets: 2,
+    //   render: function (data, type, row, meta) {
+    //     if (row.status === "finish") {
+    //       let nilai_akhir = calculateGrade(row.nilai_akhir);
+    //       if (nilai_akhir === "A") {
+    //         return `<span class='text-success'>${nilai_akhir}</span>`;
+    //       }
+    //       if (nilai_akhir === "B") {
+    //         return `<span class='text-primary'>${nilai_akhir}</span>`;
+    //       }
+    //       if (nilai_akhir === "C") {
+    //         return `<span class='text-warning'>${nilai_akhir}</span>`;
+    //       }
+    //       if (nilai_akhir === "D") {
+    //         return `<span class='text-primary'>B</span>`;
+    //       }
+    //     }else{
+    //       return `<span>Dalam proses mengerjakan</span>`;
+    //     }
+    //   },
+    // },
     {
       targets: 2,
-      render: function (data, type, row, meta) {
-        if (row.status === "finish") {
-          let nilai_akhir = calculateGrade(row.nilai_akhir);
-          if (nilai_akhir === "A") {
-            return `<span class='text-success'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "B") {
-            return `<span class='text-primary'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "C") {
-            return `<span class='text-warning'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "D") {
-            return `<span class='text-primary'>B</span>`;
-          }
-        }else{
-          return `<span>Dalam proses mengerjakan</span>`;
-        }
-      },
-    },
-    {
-      targets: 3,
       render: function (data, type, row, meta) {
         const btnSelesai =
           row.status === `active`
@@ -311,23 +311,23 @@ const table = $("#data").DataTable({
 
 // <a href='/aktivitas/report/tugas/${row.id}' class="btn btn-sm btn-primary">Cetak </a>
 
-function calculateGrade(data) {
-  let grade = "Dalam prosess";
-  if (data >= 909 && data >= 957) {
-    grade = "A";
-  }
-  if (data >= 814 && data <= 908) {
-    grade = "B";
-  }
-  if (data >= 622 && data <= 813) {
-    grade = "C";
-  }
-  if (data <= 621) {
-    grade = "D";
-  }
+// function calculateGrade(data) {
+//   let grade = "Dalam prosess";
+//   if (data >= 909 && data >= 957) {
+//     grade = "A";
+//   }
+//   if (data >= 814 && data <= 908) {
+//     grade = "B";
+//   }
+//   if (data >= 622 && data <= 813) {
+//     grade = "C";
+//   }
+//   if (data <= 621) {
+//     grade = "D";
+//   }
 
-  return grade;
-}
+//   return grade;
+// }
 
 // finish
 function onDelete(data) {
