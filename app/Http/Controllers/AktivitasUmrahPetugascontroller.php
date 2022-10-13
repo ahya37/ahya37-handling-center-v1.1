@@ -140,7 +140,6 @@ class AktivitasUmrahPetugascontroller extends Controller
 
             ]);
 
-
             if ($validator->fails()) {
                 return redirect()->back()->with(['warning' => 'Cek kembali format file yang di upload, coba lagi']);
             }
@@ -179,7 +178,7 @@ class AktivitasUmrahPetugascontroller extends Controller
 			 if ($request->file('image')) {
                 //  cek jika file tidak kosong, hapus file di direktori
                 if ($image != null) {
-                    File::delete(storage_path('app/public/'.$tugas->file));
+                    File::delete(storage_path('app/public/petugas/'.$tugas->file));
                 }
                 
 
@@ -213,8 +212,6 @@ class AktivitasUmrahPetugascontroller extends Controller
 			}else{
 				$fileName = $image;
 			}
-
-            
 
             if ($request->hasFile('docx')) {
                 //  cek jika file tidak kosong, hapus file di direktori

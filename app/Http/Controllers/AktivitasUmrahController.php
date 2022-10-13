@@ -31,14 +31,12 @@ class AktivitasUmrahController extends Controller
      * @return \Illuminate\Http\Response
      */
     public $path;
-    public $path_petugas;
     public $dimensions;
 
     public function __construct()
     {
         //DEFINISIKAN PATH
         $this->path = storage_path('app/public/tugas');
-        $this->path_petugas = storage_path('app/public/petugas/tugas');
         //DEFINISIKAN DIMENSI
         // $this->dimensions = ['245'];
     }
