@@ -84,8 +84,8 @@
                                                         @if ($list->file == null)
                                                             <small>-</small>
                                                         @else
-                                                            <a target="_blank" href="{{ asset('storage/' . $list->file) }}">
-                                                                <img src="{{ asset('storage/' . $list->file) }}">
+                                                            <a target="_blank" href="{{ asset('storage/petugas/' . $list->file) }}">
+                                                                <img src="{{ asset('storage/petugas/' . $list->file) }}">
                                                             </a>
                                                         @endif
                                                     </td>
