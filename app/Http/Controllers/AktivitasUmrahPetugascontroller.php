@@ -218,13 +218,13 @@ class AktivitasUmrahPetugascontroller extends Controller
                 if ($docx != null) {
                     File::delete(storage_path('app/public/'.$tugas->file_doc));
                 }
-                $fileDocx = $request->docx->store('tugas/docx','public');
+                $fileDocx = $request->docx->store('/petugas/tugas/docx','public');
                 $fileDocxName = $request->docx->getClientOriginalName();
             }else{
                 $fileDocx = NULL;
                 $fileDocxName = NULL;
             }
-
+            
             // GET NILAI_POINT DARI MASTER_TUGAS
             $master_tugas = TugasForPetugasModel::select('nilai_point')->where('id',  $tugas->master_tugas_petugas_id)->first(); 
 
