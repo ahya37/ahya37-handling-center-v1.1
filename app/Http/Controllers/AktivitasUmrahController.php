@@ -661,36 +661,40 @@ class AktivitasUmrahController extends Controller
             $id = $request->id;
 
             // HITUNG TAHAPAN TUGAS
-            $tugasModel = new DetailAktivitasUmrahModel();
-            $count_tugas = $tugasModel->where('aktivitas_umrah_id', $id)
-                            ->where('status','=','')->count();
+            // $tugasModel = new DetailAktivitasUmrahModel();
+            // $count_tugas = $tugasModel->where('aktivitas_umrah_id', $id)
+            //                 ->where('status','=','')->count();
             // JIKA SAMA DENGAN 0, MAKA UPDATE STATUS DI AKTIVITAS_UMRAH MENJADI = FINISH
-            $updateStatus = false;
+            // $updateStatus = false;
 
-            $count_validate = $tugasModel->where('aktivitas_umrah_id', $id)
-                            ->where('validate','=','N')->count();
+            // $count_validate = $tugasModel->where('aktivitas_umrah_id', $id)
+            //                 ->where('validate','=','N')->count();
 
-            if ($count_tugas  > 0) {
-                return ResponseFormatter::success([
-                    'data' => 'status',
-                    'message' => 'Gagal, Pembimbing belum meyelesaikan tahapan tugas'
-                ],200);
-
-            }
-            // elseif($count_validate > 0){
+            // if ($count_tugas  > 0) {
             //     return ResponseFormatter::success([
-            //         'data' => 'validate',
-            //         'message' => 'Gagal, Beberapa tugas belum divalidasi'
+            //         'data' => 'status',
+            //         'message' => 'Gagal, Pembimbing belum meyelesaikan tahapan tugas'
             //     ],200);
-            // }
-            else{
 
-                $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
-                $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
-            }
+            // }
+            // // elseif($count_validate > 0){
+            // //     return ResponseFormatter::success([
+            // //         'data' => 'validate',
+            // //         'message' => 'Gagal, Beberapa tugas belum divalidasi'
+            // //     ],200);
+            // // }
+            // else{
+
+            //     $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
+            //     $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
+            // }
             
             // if ($count_tugas == 0) {
             // }
+
+            $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
+            $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
+
 
             if($updateStatus){
 
