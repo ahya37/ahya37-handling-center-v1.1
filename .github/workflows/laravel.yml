@@ -39,6 +39,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /var/www/app
-            ls -lah
+            git pull origin master
 
     
