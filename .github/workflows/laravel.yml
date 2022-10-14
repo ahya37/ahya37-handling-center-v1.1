@@ -38,6 +38,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
+            sudo su
             cd /var/www/app
             git pull origin master
 

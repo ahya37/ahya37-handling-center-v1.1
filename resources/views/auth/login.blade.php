@@ -32,7 +32,7 @@
                             <div class="card-body">
                                 <div class="p-4 rounded">
                                     
-                                    <h3 class="text-center">Login In</h3>
+                                    <h3 class="text-center">Login</h3>
                                    
                                     <div class="form-body">
                                         <form class="row g-3" method="POST" action="{{ route('login') }}">
