@@ -15,14 +15,14 @@
 @section('content')
     <div class="page-wrapper">
         <div class="page-content">
-            <h5>Dashboard Analisis Pembimbing</h6>
+            <h5>DEVELOPMENT MODE</h6>
                 <ul style="list-style-type:circle">
                     <li>
-                        Grafik yang ditampilkan adalah data penilaian dari semua penugasan pembimbing
+                        {{-- Grafik yang ditampilkan adalah data penilaian dari semua penugasan pembimbing --}}
                 </ul>
                 </li>
                 <hr />
-                <div id="load"></div>
+                {{-- <div id="load"></div>
                 <div id="container"></div>
                 <div class="col-md-12 d-flex">
                     <div class="col">
@@ -84,11 +84,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
         </div>
     </div>
     <!--start switcher-->
-    <div class="switcher-wrapper">
+    {{-- <div class="switcher-wrapper">
         <div class="switcher-btn"><i class="bx bx-cog bx-spin"></i></div>
         <div class="switcher-body">
             <div class="d-flex align-items-center">
@@ -127,7 +127,7 @@
                     Semua</button>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--end switcher-->
 @endsection
 
