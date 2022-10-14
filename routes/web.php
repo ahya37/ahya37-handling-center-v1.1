@@ -28,6 +28,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('dashboard')->group(function () {
     Route::get('/kuisioner','DashboardController@dashboardKuisioner')->name('dashbaord.kuisioner');
+    Route::get('/analytics','DashboardController@dashboardAnalitycs')->name('dashbaord.analytics');
 });
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {

@@ -11,7 +11,7 @@
 @section('content')
 <div class="page-wrapper">
         <div class="page-content">
-			<h5>Dashboard Analisis Kuisioner</h6>
+			<h5>Dashboard Kuisioner</h6>
 			<ul style="list-style-type:circle">
 				<li>
 					Grafik yang ditampilkan adalah data penilaian dari semua kuisioner</ul>

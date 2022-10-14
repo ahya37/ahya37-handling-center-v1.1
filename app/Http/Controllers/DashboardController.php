@@ -206,4 +206,9 @@ class DashboardController extends Controller
         }
     }
 
+    public function dashboardAnalitycs()
+    {
+        return view('dashboard.analitik.index');
+    }
+
 }
