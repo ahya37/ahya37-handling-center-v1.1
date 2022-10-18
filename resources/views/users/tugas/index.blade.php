@@ -30,7 +30,7 @@
                                                 <td class="px-0">
                                                     <div class="d-flex align-items-center">
                                                         <div>
-                                                            <i class="bx bxs-checkbox me-2 font-22 text-info"></i>
+                                                            <i class="bx bx-user-check font-22 text-info"></i>
                                                         </div>
                                                         <div>Jumlah Jamaah</div>
                                                     </div>
