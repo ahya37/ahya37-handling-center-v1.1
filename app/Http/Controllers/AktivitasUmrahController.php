@@ -790,9 +790,13 @@ class AktivitasUmrahController extends Controller
             $result[] = [
                 'id' => $value->id,
                 'tourcode' => $value->tourcode,
-				'url' => $value->url
+				'url' => $value->url,
+                'count_jamaah' => $value->count_jamaah,
+                'responden_kuisioner' => $value->total_responden
             ];
         }
+
+        // return $result;
 
         return view('users.tugas.index', compact('jadwal','aktitivitasModel','result'));
     }

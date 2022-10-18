@@ -195,7 +195,9 @@ class AktivitasUmrahModel extends Model
                 ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                 ->join('umrah as c','c.id','=','a.umrah_id')
 				->join('kuisioner_umrah as d','c.id','=','d.umrah_id')
-                ->select('d.url','a.id','c.tourcode', DB::raw('(SELECT SUM(nilai_akhir) FROM detail_aktivitas_umrah WHERE aktivitas_umrah_id = a.id) AS nilai_akhir'))
+                ->select('d.url','a.id','c.tourcode','c.count_jamaah',
+                    DB::raw('(SELECT SUM(nilai_akhir) FROM detail_aktivitas_umrah WHERE aktivitas_umrah_id = a.id) AS nilai_akhir'),
+                    DB::raw('(select count(distinct(nama)) from responden_kuisioner_umrah where kuisioner_umrah_id = d.id) as total_responden'))
                 ->where('b.user_id', $user_id)    
                 ->where('a.status','active')    
                 ->where('a.isdelete',0)    

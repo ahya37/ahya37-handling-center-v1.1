@@ -22,7 +22,29 @@
                 </ul>
                 </li>
                 <hr />
-                {{-- <div id="load"></div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 mt-1">
+								<div class="mb-4">
+									<button onclick="allMonth()"  class="btn btn-sm btn-outline-danger" title="Bulan">Reset</button>
+							</div>
+							</div>
+                            <div class="col-md-2 mt-1">
+                                <div class="mb-4">
+                                    <input id="dates" class="col-md-12 btn btn-sm btn-outline-secondary datepicker filter" placeholder="Pilih Bulan"/>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                                    <select id="pembimbing" class="single-select pembimbing @error ('pembimbing') is-invalid @enderror" name="pembimbing"></select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="tourcode" class="single-select tourcode @error ('tourcode') is-invalid @enderror" name="tourcode"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="load"></div>
                 <div id="container"></div>
                 <div class="col-md-12 d-flex">
                     <div class="col">
@@ -84,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
         </div>
     </div>
     <!--start switcher-->
