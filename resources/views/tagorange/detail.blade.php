@@ -68,11 +68,16 @@
                                     <input type="number" name="end"
                                         class="form-control @error('tourcode') is-invalid @enderror number" required>
                                 </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="label"
+                                        class="form-control @error('label') is-invalid @enderror" placeholder="Label, Ex: UMRAH GROUP" required>
+                                </div>
                                 <div class="col-md-3">
-                                    <a
+                                    <button type="submit" class="btn btn-sm btn-primary mt-1">Cetak</button>
+                                    {{-- <a
                                         onclick="event.preventDefault();
                                             document.getElementById('cetak').submit();"
-                                        class="btn btn-sm btn-primary mt-1">Cetak</a>
+                                        class="btn btn-sm btn-primary mt-1">Cetak</a> --}}
                                 </div>
                             </form>
                         </div>

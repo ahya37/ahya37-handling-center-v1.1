@@ -71,17 +71,20 @@
                         <p
                             style="
                 font-family: Monospace;
-                margin-left: 80px;
+                margin-left: 50px;
+                margin-right: 5px;
                 margin-top: -60px;
                 font-size: 17px;
                 font-weight: bold;
+                text-align: right;
               ">
-                            UMRAH GRUP
+                            {{$label}}
                         </p>
                         <p
                             style="
                 font-family: Sans-serif;
-                margin-left: 30px;
+                margin-left: 40px;
+                margin-right: 5px;
                 font-size: 12px;
                 font-weight: bold;
                 margin-top: -19px;
