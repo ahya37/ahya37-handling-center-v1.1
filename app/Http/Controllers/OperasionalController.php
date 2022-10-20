@@ -155,6 +155,7 @@ class OperasionalController extends Controller
     {
         $start = request()->start;
         $end  = request()->end;
+        $label = strtoupper(request()->label);
 
         // GET DATA DETAIL GROUP BY ID
         $tag  = TagOrangeModel::select('group_date')->where('id', $id)->first();
@@ -164,7 +165,7 @@ class OperasionalController extends Controller
         // $pdf = PDF::LoadView('report.tagorange',compact('data','tag'));
         // return $pdf->stream($id.'.pdf');
 
-        return view('report.tagorange', compact('data','tag'));
+        return view('report.tagorange', compact('data','tag','label'));
     }
 
     public function editJamaahDetailTag($id)
