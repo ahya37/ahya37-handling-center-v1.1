@@ -243,6 +243,7 @@ class PembimbingController extends Controller
                     ->select('b.id','b.nama')
                     ->whereMonth('a.created_at', $month)
                     ->whereYear('a.created_at', $year)
+                    ->groupBy('b.id','b.nama')
                     ->get();
 
             if($request->has('q')){
@@ -253,6 +254,7 @@ class PembimbingController extends Controller
                     ->whereMonth('a.created_at', $month)
                     ->whereYear('a.created_at', $year)
                     ->where('b.nama','LIKE',"%$search%")
+                    ->groupBy('b.id','b.nama')
                     ->get();
 
             }

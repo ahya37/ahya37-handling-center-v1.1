@@ -748,7 +748,6 @@ class AktivitasUmrahController extends Controller
         }
     }
     
-
     public function getDetailData($id)
     {
         $aktitivitasModel = new AktivitasUmrahModel();

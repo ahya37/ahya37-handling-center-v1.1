@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-2 mt-1">
+                            <div class="col-md-1 mt-1">
 								<div class="mb-4">
 									<button onclick="allMonth()"  class="btn btn-sm btn-outline-danger" title="Bulan">Reset</button>
 							</div>
@@ -38,71 +38,37 @@
                             <div class="col-md-3">
                                     <select id="pembimbing" class="single-select pembimbing @error ('pembimbing') is-invalid @enderror" name="pembimbing"></select>
                             </div>
-                            <div class="col-md-3">
+                            {{-- <div class="col-md-3">
                                 <select id="tourcode" class="single-select tourcode @error ('tourcode') is-invalid @enderror" name="tourcode"></select>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
                 <div id="load"></div>
-                <div id="container"></div>
-                <div class="col-md-12 d-flex">
+                <div class="col-md-12 d-flex d-none" id="error"></div>
+                <div class="col-md-12 d-flex d-none" id="containerGrade">
                     <div class="col">
                         <div class="card radius-10">
                             <div class="card-body">
-                                <div id="chart1"></div>
+                                <div id="grade"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 d-flex">
+                <div class="col-md-4 d-flex d-none" id="containerSopN">
                     <div class="card radius-10 w-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <h5 class="mb-0 font-weight-bold">SOP Nilai 0</h5>
-                                <p class="mb-0 ms-auto">
-                                    <i class="bx bx-dots-horizontal-rounded float-right font-22"></i>
-                                </p>
+                                <h5 class="mb-0 font-weight-bold"><i class="bx bxs-checkbox me-2 font-22 text-danger"></i>SOP Tidak Dilaksanakan</h5>
                             </div>
                             <div class="d-flex mt-2 mb-4">
-                                <h2 class="mb-0 font-weight-bold">2</h2>
+                                <h2 class="mb-0 font-weight-bold" id="count_sop"></h2>
                                 <p class="mb-0 ms-1 font-14 align-self-end text-secondary">
-                                    Total Tourcode
+                                    Tourcode
                                 </p>
                             </div>
-                            <div class="progress radius-10" style="height: 10px">
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"
-                                    aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
                             <div class="table-responsive mt-4">
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td class="px-0">
-                                                <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <i class="bx bxs-checkbox me-2 font-22 text-danger"></i>
-                                                    </div>
-                                                    <div>MK/MDN/20/01/2022</div>
-                                                </div>
-                                            </td>
-                                            <td>12</td>
-                                            <td class="px-0 text-right">20%</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-0">
-                                                <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <i class="bx bxs-checkbox me-2 font-22 text-danger"></i>
-                                                    </div>
-                                                    <div>MK/MDN/20/01/2022</div>
-                                                </div>
-                                            </td>
-                                            <td>12</td>
-                                            <td class="px-0 text-right">20%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <table class="table mb-0" id="datatourcode"></table>
                             </div>
                         </div>
                     </div>

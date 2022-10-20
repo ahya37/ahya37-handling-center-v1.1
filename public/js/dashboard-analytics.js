@@ -1,5 +1,6 @@
 let urlTourcode = "/api/getdataumrah";
 let urlPembimbing = "/api/getdatapembimbing";
+const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 
 $(".datepicker").datepicker(
 	{
@@ -63,6 +64,9 @@ let year = "";
 
 async function allMonth() {
 	$("#dates").val("");
+	$("#pembimbing").val("");
+	$("#grade").empty();
+	$('#containerGrade').addClass('d-none');
 	month = "";
 	year = "";
 	tourcode = "";
@@ -181,16 +185,62 @@ $(".tourcode").on("change", function () {
 $(".pembimbing").on("change", function () {
 	tourcode = "";
 	$("#tourcode").empty();
+	$('#containerGrade').addClass('d-none');
+	$('#error').addClass('d-none');
 	pembimbingId = $("select[name=pembimbing] option").filter(":selected").val();
 	// GET DATA TOURCODE BERDASARKAN PEMBIMBING
 	urlTourcode = `/api/getdataumrah/${pembimbingId}`;
-	initialSelectTorucode(urlTourcode);
+	// initialSelectTorucode(urlTourcode);
+	getDataPembimbing(pembimbingId);
+
+	// GET DATA GRADE PEMBIMBING
 });
+
+function getDataPembimbing(pembimbingId) {
+	$('#error').empty('d-none');
+	$.ajax({
+		url: `/api/grade/pembimbing`,
+		method: "POST",
+		data: { id: pembimbingId },
+		cache: false,
+		beforeSend: function () {
+			$('#load').append(
+				`<div class="text-center">
+					<div class="spinner-border text-warning" role="status">
+					  <span class="visually-hidden"></span>
+					</div>
+				  </div>`
+			)
+		},
+		success: function (data) {
+			if (data.data.tourcode.length === 0) {
+				$('#error').removeClass('d-none');
+				$('#error').append(`
+				<div class="col">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                               Tidak ada data
+                            </div>
+                        </div>
+                    </div>
+				`)
+			} else {
+				$('#error').addClass('d-none');
+				$('#containerGrade').removeClass('d-none');
+				initialGrafikGrade(data.data);
+				initialSopN(data.data.sop_n, data.data.count_sop_n);
+			}
+		},
+		complete: function () {
+			$('#load').empty();
+		}
+	});
+}
 
 // <a href='/aktivitas/report/tugas/${row.id}' class="btn btn-sm btn-primary">Cetak </a>
 
 function calculateGrade(data) {
-	let grade = "Dalam prosess";
+	let grade = "Dalam proses";
 	if (data >= 909 && data >= 957) {
 		grade = "A";
 	}
@@ -209,155 +259,78 @@ function calculateGrade(data) {
 
 
 // GRAFIK
-$(function () {
-	"use strict";
-	var e = {
-		series: [{
-			name: "Sessions",
-			data: [14, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5]
-		}],
+function initialGrafikGrade(data) {
+	Highcharts.chart('grade', {
 		chart: {
-			foreColor: "#9ba7b2",
-			height: 310,
-			type: "area",
-			zoom: {
-				enabled: !1
-			},
-			toolbar: {
-				show: !0
-			},
-			dropShadow: {
-				enabled: !0,
-				top: 3,
-				left: 14,
-				blur: 4,
-				opacity: .1
-			}
-		},
-		stroke: {
-			width: 5,
-			curve: "smooth"
-		},
-		xaxis: {
-			type: "datetime",
-			categories: ["1/11/2000", "2/11/2000", "3/11/2000", "4/11/2000", "5/11/2000", "6/11/2000", "7/11/2000", "8/11/2000", "9/11/2000", "10/11/2000", "11/11/2000", "12/11/2000"]
+			type: 'line'
 		},
 		title: {
-			text: "Grade",
-			align: "left",
-			style: {
-				fontSize: "16px",
-				color: "#666"
-			}
+			text: 'Trafik Grade'
 		},
-		fill: {
-			type: "gradient",
-			gradient: {
-				shade: "light",
-				gradientToColors: ["#0d6efd"],
-				shadeIntensity: 1,
-				type: "vertical",
-				opacityFrom: .7,
-				opacityTo: .2,
-				stops: [0, 100, 100, 100]
-			}
+		subtitle: {
+			text: ''
 		},
-		markers: {
-			size: 5,
-			colors: ["#0d6efd"],
-			strokeColors: "#fff",
-			strokeWidth: 2,
-			hover: {
-				size: 7
-			}
+		xAxis: {
+			categories: data.tourcode
 		},
-		dataLabels: {
-			enabled: !1
-		},
-		colors: ["#0d6efd"],
-		yaxis: {
+		yAxis: {
 			title: {
-				text: "Nilai"
-			}
-		}
-	};
-	new ApexCharts(document.querySelector("#chart1"), e).render();
-	e = {
-		series: [{
-			name: "Total Users",
-			data: [240, 160, 671, 414, 555, 257, 901, 613, 727, 414, 555, 257]
-		}],
-		chart: {
-			type: "bar",
-			height: 65,
-			toolbar: {
-				show: !1
-			},
-			zoom: {
-				enabled: !1
-			},
-			dropShadow: {
-				enabled: !0,
-				top: 3,
-				left: 14,
-				blur: 4,
-				opacity: .12,
-				color: "#17a00e"
-			},
-			sparkline: {
-				enabled: !0
+				text: 'Nilai'
 			}
 		},
-		markers: {
-			size: 0,
-			colors: ["#17a00e"],
-			strokeColors: "#fff",
-			strokeWidth: 2,
-			hover: {
-				size: 7
+		tooltip: {
+			borderColor: '#2c3e50',
+			shared: true,
+			formatter: function (tooltip) {
+				const header = `<span>${this.x}</span><br/>
+			  				  <span><b>Nilai : ${this.y}</b></span><br/>
+			  				  <span><b>Grade : ${calculateGrade(this.y)}</b></span>
+							  `;
+
+				return header;
 			}
 		},
 		plotOptions: {
-			bar: {
-				horizontal: !1,
-				columnWidth: "45%",
-				endingShape: "rounded"
+			line: {
+				dataLabels: {
+					enabled: true
+				},
+				enableMouseTracking: true
 			}
 		},
-		dataLabels: {
-			enabled: !1
-		},
-		stroke: {
-			show: !0,
-			width: 0,
-			curve: "smooth"
-		},
-		colors: ["#17a00e"],
-		xaxis: {
-			categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-		},
-		fill: {
-			opacity: 1
-		},
-		tooltip: {
-			theme: "dark",
-			fixed: {
-				enabled: !1
-			},
-			x: {
-				show: !1
-			},
-			y: {
-				title: {
-					formatter: function (e) {
-						return ""
-					}
-				}
-			},
-			marker: {
-				show: !1
-			}
+		series: [{
+			name: 'Grade',
+			data: data.nilai
 		}
-	};
+			// , 
+			// {
+			//     name: 'Tallinn',
+			//     data: [-2.9, -3.6, -0.6, 4.8, 10.2, 14.5, 17.6, 16.5, 12.0, 6.5,
+			//         2.0, -0.9]
+			// }
+		]
+	});
+}
 
-});
+// SOP N / tidak dilaksanakan
+function initialSopN(data, count) {
+	$('#containerSopN').removeClass('d-none');
+	$('#count_sop').text(count);
+	let divDataTourcode;
+	data.forEach(m => {
+		divDataTourcode += showDivDataTourcode(m);
+	});
+	let divHtmlContainer = $('#datatourcode');
+	divHtmlContainer.html(divDataTourcode);
+}
+
+function showDivDataTourcode(m) {
+	return `
+		<tr class="border-bottom p-1">
+			<td>
+				${m.tourcode}
+			</td>
+			<td>${m.total_tidak_dilaksanakan}</td>
+		</tr>
+	`;
+}

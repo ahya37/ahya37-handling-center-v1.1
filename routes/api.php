@@ -60,6 +60,9 @@ Route::group(['as' => 'api.'], function () {
     // PETUGAS
     Route::post('/petugas/dt/aktivitas', 'AktivitasUmrahPetugascontroller@dataTableListData');
 
+    // ANALYTIC
+    Route::post('/grade/pembimbing', 'DashboardController@dataGradeByPembimbing');
+
 });
 
 
