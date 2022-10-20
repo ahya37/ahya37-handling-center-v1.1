@@ -83,7 +83,7 @@
                         <p
                             style="
                 font-family: Sans-serif;
-                margin-left: 40px;
+                margin-left: 60px;
                 margin-right: 5px;
                 font-size: 12px;
                 font-weight: bold;
