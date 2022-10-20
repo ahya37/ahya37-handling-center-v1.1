@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="label"
-                                        class="form-control @error('label') is-invalid @enderror" placeholder="Label, Ex: UMRAH GROUP" required>
+                                        class="form-control @error('label') is-invalid @enderror" placeholder="Ex: UMRAH GROUP" required>
                                 </div>
                                 <div class="col-md-3">
                                     <button type="submit" class="btn btn-sm btn-primary mt-1">Cetak</button>
