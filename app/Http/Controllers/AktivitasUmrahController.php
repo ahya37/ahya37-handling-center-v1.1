@@ -1675,4 +1675,23 @@ class AktivitasUmrahController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function detailSopNByAktivitasUmrah($id)
+    {
+        $aktitivitas = new AktivitasUmrahModel;
+        $judul_sop   = $aktitivitas->getDetailSopNByAktivitasUmrah($id);
+        $status      = 'N';
+        
+        $results    = [];
+        foreach ($judul_sop as $value) {
+            $sop = $aktitivitas->getListSopByStatus($value->id,$status, $value->id_judul);
+            $results[] = [
+                'nomor' => $value->nomor,
+                'judul' => $value->nama,
+                'sop' => $sop
+            ];
+        }
+
+        return view('dashboard.analitik.detail-sop', compact('results'));
+    }
 }

@@ -312,4 +312,29 @@ class AktivitasUmrahModel extends Model
         return $sql;
     }
 
+    public function getDetailSopNByAktivitasUmrah($id)
+    {
+        $sql = DB::table('aktivitas_umrah as a')
+                ->join('detail_aktivitas_umrah as b','b.aktivitas_umrah_id','=','a.id')
+                ->join('master_judul_tugas as d','b.master_judul_tugas_id','=','d.id')
+                ->select('a.id','d.nomor','d.nama','d.id as id_judul')
+                ->where('a.id', $id)
+                ->where('b.status','N')
+                ->get();
+
+        return $sql;
+    }
+
+    public function getListSopByStatus($id,$status,$id_judul)
+    {
+        $sql = DB::table('detail_aktivitas_umrah')
+                ->select('id','nomor_tugas','nama_tugas','nilai_akhir','updated_at')
+                ->where('master_judul_tugas_id', $id_judul)
+                ->where('status',$status)
+                ->where('aktivitas_umrah_id', $id)
+                ->get();
+
+        return $sql;
+    }
+
 }

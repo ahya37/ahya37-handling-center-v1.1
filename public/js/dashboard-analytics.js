@@ -67,14 +67,13 @@ async function allMonth() {
 	$("#pembimbing").val("");
 	$("#grade").empty();
 	$('#containerGrade').addClass('d-none');
+	$('#containerSopN').addClass('d-none');
 	month = "";
 	year = "";
 	tourcode = "";
 	pembimbingId = "";
 	urlTourcode = "/api/getdataumrah";
 	urlPembimbing = "/api/getdatapembimbing";
-	// $('#pembimbing').empty();
-	// $('#tourcode').empty();
 
 	initialSelectTorucode(urlTourcode);
 	initialSelectPembimbing(urlPembimbing);
@@ -186,6 +185,7 @@ $(".pembimbing").on("change", function () {
 	tourcode = "";
 	$("#tourcode").empty();
 	$('#containerGrade').addClass('d-none');
+	$('#containerSopN').addClass('d-none');
 	$('#error').addClass('d-none');
 	pembimbingId = $("select[name=pembimbing] option").filter(":selected").val();
 	// GET DATA TOURCODE BERDASARKAN PEMBIMBING
@@ -227,6 +227,7 @@ function getDataPembimbing(pembimbingId) {
 			} else {
 				$('#error').addClass('d-none');
 				$('#containerGrade').removeClass('d-none');
+				$('#containerSopN').removeClass('d-none');
 				initialGrafikGrade(data.data);
 				initialSopN(data.data.sop_n, data.data.count_sop_n);
 			}
@@ -326,9 +327,11 @@ function initialSopN(data, count) {
 
 function showDivDataTourcode(m) {
 	return `
-		<tr class="border-bottom p-1">
+		<tr>
 			<td>
+				<a href="/dashboard/analytics/sop_n/detail/${m.id}" target="_blank">
 				${m.tourcode}
+				</a>
 			</td>
 			<td>${m.total_tidak_dilaksanakan}</td>
 		</tr>
