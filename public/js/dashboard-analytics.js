@@ -329,7 +329,7 @@ function showDivDataTourcode(m) {
 	return `
 		<tr>
 			<td>
-				<a href="/dashboard/analytics/sop_n/detail/${m.id}" target="_blank">
+				<a href="/dashboard/analytics/sop_n/detail/${m.id}">
 				${m.tourcode}
 				</a>
 			</td>

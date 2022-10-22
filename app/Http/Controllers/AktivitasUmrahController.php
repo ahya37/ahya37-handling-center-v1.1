@@ -1365,7 +1365,7 @@ class AktivitasUmrahController extends Controller
                 'status' => $status,
                 'alasan' => $alasan,
                 'file'   => $filename,
-                'nilai_akhir' => $nilai_akhir * $master_tugas->nilai_point,
+                'nilai_akhir' => $status == 'N' ? 0 : $nilai_akhir * $master_tugas->nilai_point,
                 'create_by'   => $user_id,
                 'created_at'   => $tugas->created_at,
                 'updated_at' => date('Y-m-d H:i:s')
@@ -1686,12 +1686,66 @@ class AktivitasUmrahController extends Controller
         foreach ($judul_sop as $value) {
             $sop = $aktitivitas->getListSopByStatus($value->id,$status, $value->id_judul);
             $results[] = [
+                'id' => $value->id,
                 'nomor' => $value->nomor,
                 'judul' => $value->nama,
                 'sop' => $sop
             ];
         }
 
-        return view('dashboard.analitik.detail-sop', compact('results'));
+        if (count($results) == 0) {
+            return redirect()->route('dashbaord.analytics');
+        }else{
+            return view('dashboard.analitik.detail-sop', compact('results'));
+        }
+
+    }
+
+    public function ReNilaiSop(Request $request)
+    {
+            
+        DB::beginTransaction();
+        try {
+
+            $id          =   $request->id;
+            $aktivitasId = $request->aktivitasId;
+
+            // GET master_tugas_id where id
+            foreach ($id as $key => $value) {
+                
+                // DB::table('detail_aktivitas_umrah')->where('aktivitas_umrah_id', $aktivitasId)->where('id', $value)
+                //    ->update(['validate' => 'Y']);
+                $master_tugas  = DB::table('detail_aktivitas_umrah as a')
+                                        ->select('b.nilai_point')
+                                        ->join('master_tugas as b','a.master_tugas_id','=','b.id')
+                                        ->where('a.aktivitas_umrah_id', $aktivitasId)
+                                        ->where('a.id', $value)
+                                        ->first();
+
+               $update =  DB::table('detail_aktivitas_umrah')
+                    ->where('aktivitas_umrah_id', $aktivitasId)
+                    ->where('id', $value)
+                    ->update([
+                        'validate' => 'Y',
+                        'status' => 'Y',
+                        'nilai_point' => $master_tugas->nilai_point,
+                        'nilai_akhir' => $master_tugas->nilai_point
+                    ]);
+            }
+
+            DB::commit();
+            return ResponseFormatter::success([
+                'data' => $update,
+                'message' => 'Berhasil ubah nilai'
+            ],200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
     }
 }

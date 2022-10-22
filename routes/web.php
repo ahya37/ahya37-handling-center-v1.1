@@ -203,6 +203,7 @@ Route::group(['middleware' => ['auth']], function () {
         // AKSES KETUA PEMBIMBING
         Route::get('/jadwal/umrah/active', 'AktivitasUmrahController@jadwalUmrahActive')->name('tugas.jadwalumrah-active');
         Route::post('/jadwal/umrah/active/validasi', 'AktivitasUmrahController@validasiTugasUmrah')->name('tugas.jadwalumrah-validasi');
+        Route::post('/jadwal/umrah/active/renilai', 'AktivitasUmrahController@ReNilaiSop');
         Route::get('/jadwal/umrah/detail/validasi/{id}', 'AktivitasUmrahController@getDetailDataValidasi');
         Route::post('/jadwal/umrah/detail/validasi/save/{id}', 'AktivitasUmrahController@storeValidasi');
         Route::get('/jadwal/umrah/active/detail/{id}', 'AktivitasUmrahController@jadwalUmrahActiveDetail')->name('tugas.jadwalumrah.detail');

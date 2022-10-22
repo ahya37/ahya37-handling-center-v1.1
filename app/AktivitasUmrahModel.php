@@ -320,6 +320,7 @@ class AktivitasUmrahModel extends Model
                 ->select('a.id','d.nomor','d.nama','d.id as id_judul')
                 ->where('a.id', $id)
                 ->where('b.status','N')
+                ->distinct()
                 ->get();
 
         return $sql;
