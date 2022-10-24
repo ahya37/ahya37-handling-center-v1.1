@@ -330,7 +330,7 @@ class AktivitasUmrahModel extends Model
     {
         $sql = DB::table('detail_aktivitas_umrah as a')
                 ->select('a.id','a.nomor_tugas','a.nama_tugas','a.nilai_akhir','a.updated_at','b.nilai_point','a.alasan')
-                ->join('master_tugas as b','a.master_tugas_id','=','b.id')
+                ->leftJoin('master_tugas as b','a.master_tugas_id','=','b.id')
                 ->where('a.master_judul_tugas_id', $id_judul)
                 ->where('a.status',$status)
                 ->where('a.aktivitas_umrah_id', $id)
