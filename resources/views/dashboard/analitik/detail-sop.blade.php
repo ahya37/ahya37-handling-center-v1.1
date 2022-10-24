@@ -49,7 +49,7 @@
 												<td>{{$sop->nama_tugas}}</td>
 												<td>{{$sop->nilai_akhir}}</td>
 												<td>{{$sop->alasan}}</td>
-												<td>{{$sop->nilai_point}}</td>
+												<td>{{$sop->nilai_point ?? ''}}</td>
 												<td>{{date('d-m-Y', strtotime($sop->updated_at))}}</td>
 											</tr>
 											@endforeach
