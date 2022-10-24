@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				@foreach ($results as $item)
-					<div class="col-md-6 card">
+					<div class="col-md-7 card">
 							<div class="card-header">{{$item['nomor']}}. {{$item['judul']}}</div>
 							<div class="card-body">
 								<div class="table">
@@ -33,6 +33,8 @@
 												<th class="col-1">No</th>
 												<th class="col-7">Tugas</th>
 												<th >Nilai</th>
+												<th >Keterangan</th>
+												<th >Nilai Poin</th>
 												<th >Tanggal</th>
 											</tr>
 										</thead>
@@ -46,6 +48,8 @@
 												<td>{{$sop->nomor_tugas}}</td>
 												<td>{{$sop->nama_tugas}}</td>
 												<td>{{$sop->nilai_akhir}}</td>
+												<td>{{$sop->alasan}}</td>
+												<td>{{$sop->nilai_point}}</td>
 												<td>{{date('d-m-Y', strtotime($sop->updated_at))}}</td>
 											</tr>
 											@endforeach

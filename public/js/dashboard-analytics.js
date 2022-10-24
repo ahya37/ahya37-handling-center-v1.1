@@ -333,7 +333,7 @@ function showDivDataTourcode(m) {
 				${m.tourcode}
 				</a>
 			</td>
-			<td>${m.total_tidak_dilaksanakan}</td>
+			<td class="text-right">${m.total_tidak_dilaksanakan}</td>
 		</tr>
 	`;
 }

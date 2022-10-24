@@ -68,7 +68,9 @@
                                 </p>
                             </div>
                             <div class="table-responsive mt-4">
-                                <table class="table mb-0" id="datatourcode"></table>
+                                <table class="table mb-0" >
+                                    <tbody id="datatourcode"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
