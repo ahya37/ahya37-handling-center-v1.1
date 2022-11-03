@@ -15,7 +15,7 @@
                                         @csrf
                                         <div class="col-md-6">
                                             <label class="form-label">No. Urut</label>
-                                            <input type="number" name="no_urut" class="form-control @error ('tourcode') is-invalid @enderror number" required>
+                                            <input type="number" name="no_urut" class="form-control @error ('tourcode') is-invalid @enderror number" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Nama</label>
-                                            <input type="text" name="name" class="form-control @error ('tourcode') is-invalid @enderror number" required>
+                                            <input type="text" name="name" class="form-control @error ('tourcode') is-invalid @enderror number" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -33,7 +33,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Telp.</label>
-                                            <input type="type" name="telp" class="form-control @error ('tourcode') is-invalid @enderror number" required>
+                                            <input type="type" name="telp" class="form-control @error ('tourcode') is-invalid @enderror number" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Email</label>
-                                            <input type="email" name="email" class="form-control @error ('tourcode') is-invalid @enderror number" required>
+                                            <input type="email" name="email" class="form-control @error ('tourcode') is-invalid @enderror number" >
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>
@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Alamat</label>
-                                            <textarea name="address" class="form-control @error ('tourcode') is-invalid @enderror number" required></textarea>
+                                            <textarea name="address" class="form-control @error ('tourcode') is-invalid @enderror number" ></textarea>
                                             @error('count')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>

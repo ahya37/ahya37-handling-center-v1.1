@@ -165,7 +165,10 @@ class OperasionalController extends Controller
         // $pdf = PDF::LoadView('report.tagorange',compact('data','tag'));
         // return $pdf->stream($id.'.pdf');
 
-        return view('report.tagorange', compact('data','tag','label'));
+        // get no.telp TL / nomor urut 1
+        $tl =  DetailTagOrangeModel::select('telp_jamaah')->where('tag_orange_id', $id)->where('no_urut','01')->first();
+
+        return view('report.tagorange', compact('data','tag','label','tl'));
     }
 
     public function editJamaahDetailTag($id)
