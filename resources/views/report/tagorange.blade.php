@@ -74,9 +74,10 @@
                 margin-left: 50px;
                 margin-right: 5px;
                 margin-top: -60px;
-                font-size: 17px;
+                font-size: 15px;
                 font-weight: bold;
                 text-align: right;
+                margin-bottom: 18px;
               ">
                             {{$label}}
                         </p>
@@ -85,7 +86,7 @@
                 font-family: Sans-serif;
                 margin-left: 60px;
                 margin-right: 5px;
-                font-size: 12px;
+                font-size: 11px;
                 font-weight: bold;
                 margin-top: -19px;
               ">
@@ -109,11 +110,11 @@
                         <img src="{{asset('/storage/'.$item->foto_jamaah)}}"
                             style="width: 100%; height: 100%; border-radius: 15px" />
                     </div>
-                    <p style="text-align: center; font-family: Sans-serif; font-weight; font-weight: bold;">
+                    <p style="text-align: center; font-family: Sans-serif; font-weight: bold; margin-top: 10px;">
                         {{ $item->nama_jamaah }}
                     </p>
                     <p
-                        style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -10px;"
+                    style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -9px;"
                     >
                         Contact Person TL : {{$tl->telp_jamaah ?? ''}}
                     </p>
