@@ -196,6 +196,7 @@ class KuisionerController extends Controller
                     ->addColumn('action', function($item){
                         return '
                         <a href="'.route('kuisioner.edit', $item->id).'"><i class="fa fa-edit"></i></a> 
+                        <button onclick="onCopy(this)" id="'.$item->id.'" data-name="'.$item->nama.'" class="fa fa-copy text-secondary" title="Copy"></button>
                         <button onclick="onDelete(this)" id="'.$item->id.'" value="'.$item->nama.'" class="fa fa-trash text-danger" title="Hapus"></button>';
                     })
                     ->rawColumns(['action'])
@@ -561,6 +562,64 @@ class KuisionerController extends Controller
             return ResponseFormatter::success([
                    null,
                    'message' => 'Berhasil hapus pilihan'
+            ],200); 
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function copyKuisioner()
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $id   = request()->id;
+            $nama = request()->nama;
+
+            $kusionerModel = new KuisionerModel(); 
+            // get kusioner where id
+            $kuisioner  = $kusionerModel->select('lokasi')->where('id', $id)->first();
+            // create kuisioner isi nya dari kuisioner yg di get by id
+            $save = $kusionerModel->create([
+                'nama' => $nama[0],
+                'lokasi' => $kuisioner->lokasi
+            ]);
+
+            // create pertanyaan_kuisioner dengan kuisoner_id terbaru $save
+            $pertanyaanKuisionerModel = new PertanyaanKuisionerModel();
+            $pertanyaan               = $pertanyaanKuisionerModel->where('kuisioner_id', $id)->get();
+            $pilihanModel             = new PilihanModel();
+
+            foreach($pertanyaan as $value) {
+               $save_pertantanyaan = $pertanyaanKuisionerModel->create([
+                    'kuisioner_id' => $save->id, // dari id kuisioner terbaru yg di copy
+                    'nomor' => $value->nomor,
+                    'isi' => $value->isi,
+                    'required' => $value->required
+                ]);
+
+                // get pilihan berdasarkan pertanyaan id 
+                $pilihan            = $pilihanModel->where('pertanyaan_id', $value->id)->get();
+                // create pilihan kuisioner
+                foreach ($pilihan as $item) {
+                    $pilihanModel->create([
+                        'pertanyaan_id' =>  $save_pertantanyaan->id, // dari id pertanyaan yg baru di copy
+                        'kategori_pilihan_jawaban_id' => $item->kategori_pilihan_jawaban_id,
+                        'nomor' => $item->nomor,
+                        'isi' => $item->isi
+                    ]);
+                }
+
+            }
+            
+            DB::commit();
+            return ResponseFormatter::success([
+                'message' => 'Berhasil copy Kuisioner'
             ],200); 
 
         } catch (\Exception $e) {

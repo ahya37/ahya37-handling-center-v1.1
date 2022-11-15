@@ -81,3 +81,53 @@ function onDelete(data) {
     table.ajax.reload();
   });
 }
+
+
+async function onCopy(data) {
+  const id = data.id;
+  const name = data.getAttribute("data-name");
+
+  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+
+  const { value: formValues } = await Swal.fire({
+    title: "SOP",
+    html: `
+      <input id="swal-input2" value="${name} Copy" class="swal2-input" placeholder="Nama SOP">`,
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    confirmButtonText: "Simpan",
+    timerProgressBar: true,
+    preConfirm: () => {
+      return [
+        document.getElementById("swal-input2").value,
+      ];
+    },
+  });
+
+  if (formValues) {
+    // ajax save judul
+    $.ajax({
+      url: "/kuisioner/copy",
+      method: "POST",
+      cache: false,
+      data: {
+        _token: CSRF_TOKEN,
+        id: id,
+        nama : formValues
+      },
+      success: function (data) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${data.data.message}`,
+          showConfirmButton: false,
+          width: 500,
+          timer: 900,
+        });
+        const table = $("#listData").DataTable();
+        table.ajax.reload(); 
+      },
+    });
+  }
+}

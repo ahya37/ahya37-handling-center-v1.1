@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/pertanyaan/create/{id}','KuisionerController@createPertanyaan')->name('kuisioner.pertanyaan.create');
         Route::post('/pertanyaan/save/{kuisioner_id}','KuisionerController@savePilihanPertanyaan')->name('kuisioner.pertanyaan.save');
         Route::post('/pilihanjawaban/delete','KuisionerController@deletePilihanJawaban');
+        Route::post('/copy','KuisionerController@copyKuisioner');
 
 
         // VIA SWEATALERT AJAX
