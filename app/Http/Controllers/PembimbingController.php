@@ -55,7 +55,6 @@ class PembimbingController extends Controller
                  'name' => $request->name,
                  'email' => $request->email,
                  'password' => Hash::make($password),
-                 'password_alias' => $request->password,
                  'aps_level_id' => 3
              ]);
      
