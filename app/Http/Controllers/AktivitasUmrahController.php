@@ -255,21 +255,42 @@ class AktivitasUmrahController extends Controller
                 'pembimbing' => 'required',
             ]);
 
-            $assisten = $request->asisten;
+            $assisten   = $request->asisten;
+            $pembimbing = $request->pembimbing;
+
             // jik ada asisten
             if ($assisten != '') {
-                // cek jika ada id sama antara pembilbing dan asisten
+                // cek jika ada id sama antara pembimbing dan asisten
+
                 $asist = [];
+                $pem   = [];
     
                 foreach ($assisten as $key => $value) {
                     $asist[] = [
                         'asisten' => $value
                     ];
                 }
+
+                foreach ($pembimbing as $key => $value) {
+                    $pem[] = [
+                        'asisten' => $value
+                    ];
+                }
     
-                $cek = array_search($request->pembimbing, array_column($asist,'asisten'));
+                // $cek = array_search($pembimbing, array_column($asist,'asisten'));
+
+                $cek = true;
+
+                foreach ($asist as $value) {
+                    if (in_array($value, $pem)) {
+                        $cek = false;
+                    }else{
+                        $cek = true;
+                    }
+                }
+
                 
-                if ($cek === false) { // JIKA TIDAK ADA YG SAMA
+                if ($cek === true) { // JIKA TIDAK ADA YG SAMA
                     // prosess store dengan asisten
                     // CEK TIDAK BOLEH ADA PM
                     $cek_aktivitas = AktivitasUmrahModel::where('pembimbing_id', $request->pembimbing)->where('umrah_id', $request->umrah)->count();
@@ -286,50 +307,9 @@ class AktivitasUmrahController extends Controller
                         return redirect()->route('aktivitas.create')->with(['error' => 'Gagal, Petugas dengan Tourcode tersebut telah tersedia']);
                     }else{
 
-                        // INSERT PEMBIMBING KE TB AKTIVITAS_UMRAH
-                        $aktitivitas = AktivitasUmrahModel::create([
-                            'pembimbing_id' => $request->pembimbing,
-                            'umrah_id' => $request->umrah,
-                            'status_tugas' => 'Pembimbing',
-                            'create_by' => Auth::user()->id
-                        ]);
-
-                        // INSERT PETUGAS KE TB AKTIVITAS_UMRAH_PETUGAS
-                        $aktitivitasPetugas = AktivitasUmrahPetugasModel::create([
-                            'petugas_id' => $request->petugas,
-                            'umrah_id' => $request->umrah,
-                            'status_tugas' => 'Petugas',
-                            'create_by' => Auth::user()->id
-                        ]);
-                       
-
-                         // CARI SOP ASISTEN_MASTER_SOP BERDASARKAN UMRAH
-                            // GET MASTER_SOP_ID DARI TABLE UMRAH WHERE $request->umrah
-                            $umrah = UmrahModel::select('master_sop_id','asisten_master_sop_id','master_sop_petugas_id')->where('id', $request->umrah)->first();
-                            $master_sop_id = $umrah->master_sop_id;
-                            $asisten_master_sop_id = $umrah->asisten_master_sop_id;
-                            $master_sop_petugas_id = $umrah->master_sop_petugas_id;
-
-                            $tugasModel = new TugasModel();
-
-                            // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PEMBIMBING BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
-                            $tugas = $tugasModel->select('id','nama','nomor','master_sop_id','master_judul_tugas_id','require_image')->where('master_sop_id', $master_sop_id)->get();
-
-                            foreach ($tugas  as $val) {
-                                $detailAktivitas = new DetailAktivitasUmrahModel();
-                                $detailAktivitas->aktivitas_umrah_id = $aktitivitas->id;
-                                $detailAktivitas->master_sop_id = $val->master_sop_id;
-                                $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
-                                $detailAktivitas->master_tugas_id = $val->id;
-                                $detailAktivitas->nomor_tugas = $val->nomor;
-                                $detailAktivitas->nama_tugas  = $val->nama;
-                                $detailAktivitas->require_image  = $val->require_image;
-                                $detailAktivitas->status = '';
-                                $detailAktivitas->alasan = '';
-                                $detailAktivitas->created_at = date('Y-m-d H:i:s');
-                                $detailAktivitas->updated_at = date('Y-m-d H:i:s');;
-                                $detailAktivitas->save();
-                            }
+                        $storeTugasPembimbing = $this->storeTugasPembimbing($pembimbing, $request);
+                        $asisten_master_sop_id = $storeTugasPembimbing;
+                        $tugasModel = new TugasModel();
 
                         // INSERT ASISTEN KE TB AKTIVITAS_UMRAH
                         foreach ($assisten as $key => $value) {
@@ -339,6 +319,7 @@ class AktivitasUmrahController extends Controller
                             $aktitivitas->status_tugas = 'Asisten Pembimbing';
                             $aktitivitas->create_by = Auth::user()->id;
                             $aktitivitas->save();
+
 
                              // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PEMBIMBING BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
                              $tugasAsisten =  $tugasModel->select('id','nama','nomor','master_sop_id','master_judul_tugas_id','require_image')->where('master_sop_id', $asisten_master_sop_id)->get();
@@ -358,27 +339,8 @@ class AktivitasUmrahController extends Controller
                                  $detailAktivitas->save();
                              }
 
-
-
                         }
 
-                        // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PETUGAS BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
-                        $tugas_petugas = TugasForPetugasModel::select('id','nama','nomor','master_sop_petugas_id','master_judul_tugas_id','require_image')->where('master_sop_petugas_id', $master_sop_petugas_id)->get();
-                        foreach ($tugas_petugas  as $val) {
-                            $detailAktivitas = new DetailAktivitasUmrahPetugasModel();
-                            $detailAktivitas->aktivitas_umrah_petugas_id = $aktitivitasPetugas->id;
-                            $detailAktivitas->master_sop_petugas_id = $val->master_sop_petugas_id;
-                            $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
-                            $detailAktivitas->master_tugas_petugas_id = $val->id;
-                            $detailAktivitas->nomor_tugas = $val->nomor;
-                            $detailAktivitas->nama_tugas  = $val->nama;
-                            $detailAktivitas->require_image  = $val->require_image;
-                            $detailAktivitas->status = '';
-                            $detailAktivitas->alasan = '';
-                            $detailAktivitas->created_at = date('Y-m-d H:i:s');
-                            $detailAktivitas->updated_at = date('Y-m-d H:i:s');;
-                            $detailAktivitas->save();
-                        }
 
                         DB::commit();
                         
@@ -398,62 +360,9 @@ class AktivitasUmrahController extends Controller
                     return redirect()->route('aktivitas.create')->with(['error' => 'Gagal, Pembimbing dengan Tourcode tersebut telah tersedia']);
 
                 }else{
-                    // INSERT KE TB AKTIVITAS_UMRAH
-                    $aktitivitas = AktivitasUmrahModel::create([
-                        'pembimbing_id' => $request->pembimbing,
-                        'umrah_id' => $request->umrah,
-                        'status_tugas' => 'Pembimbing',
-                        'create_by' => Auth::user()->id
-                    ]);
 
-                    // INSERT PETUGAS KE TB AKTIVITAS_UMRAH_PETUGAS
-                    $aktitivitasPetugas = AktivitasUmrahPetugasModel::create([
-                        'petugas_id' => $request->petugas,
-                        'umrah_id' => $request->umrah,
-                        'status_tugas' => 'Petugas',
-                        'create_by' => Auth::user()->id
-                    ]);
+                    $this->storeTugasPembimbing($pembimbing, $request);
 
-                    // GET MASTER_SOP_ID DARI TABLE UMRAH WHERE $request->umrah
-                    $umrah = UmrahModel::select('master_sop_id','master_sop_petugas_id')->where('id', $request->umrah)->first();
-                    $master_sop_id = $umrah->master_sop_id;
-                    $master_sop_petugas_id = $umrah->master_sop_petugas_id;
-            
-                    // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PEMBIMBING BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
-                    $tugas = TugasModel::select('id','nama','nomor','master_sop_id','master_judul_tugas_id','require_image')->where('master_sop_id', $master_sop_id)->get();
-                    foreach ($tugas  as $val) {
-                        $detailAktivitas = new DetailAktivitasUmrahModel();
-                        $detailAktivitas->aktivitas_umrah_id = $aktitivitas->id;
-                        $detailAktivitas->master_sop_id = $val->master_sop_id;
-                        $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
-                        $detailAktivitas->master_tugas_id = $val->id;
-                        $detailAktivitas->nomor_tugas = $val->nomor;
-                        $detailAktivitas->nama_tugas  = $val->nama;
-                        $detailAktivitas->require_image  = $val->require_image;
-                        $detailAktivitas->status = '';
-                        $detailAktivitas->alasan = '';
-                        $detailAktivitas->created_at = date('Y-m-d H:i:s');
-                        $detailAktivitas->updated_at = date('Y-m-d H:i:s');
-                        $detailAktivitas->save();
-                    }
-
-                    // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PETUGAS BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
-                    $tugas_petugas = TugasForPetugasModel::select('id','nama','nomor','master_sop_petugas_id','master_judul_tugas_id','require_image')->where('master_sop_petugas_id', $master_sop_petugas_id)->get();
-                    foreach ($tugas_petugas  as $val) {
-                        $detailAktivitas = new DetailAktivitasUmrahPetugasModel();
-                        $detailAktivitas->aktivitas_umrah_petugas_id = $aktitivitasPetugas->id;
-                        $detailAktivitas->master_sop_petugas_id = $val->master_sop_petugas_id;
-                        $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
-                        $detailAktivitas->master_tugas_petugas_id = $val->id;
-                        $detailAktivitas->nomor_tugas = $val->nomor;
-                        $detailAktivitas->nama_tugas  = $val->nama;
-                        $detailAktivitas->require_image  = $val->require_image;
-                        $detailAktivitas->status = '';
-                        $detailAktivitas->alasan = '';
-                        $detailAktivitas->created_at = date('Y-m-d H:i:s');
-                        $detailAktivitas->updated_at = date('Y-m-d H:i:s');;
-                        $detailAktivitas->save();
-                    }
                 }
             }
 
@@ -467,6 +376,76 @@ class AktivitasUmrahController extends Controller
         }
 
 
+    }
+
+
+    public function storeTugasPembimbing($pembimbing, $request)
+    {
+        // CARI SOP ASISTEN_MASTER_SOP BERDASARKAN UMRAH
+            // GET MASTER_SOP_ID DARI TABLE UMRAH WHERE $request->umrah
+            $umrah = UmrahModel::select('master_sop_id','asisten_master_sop_id','master_sop_petugas_id')->where('id', $request->umrah)->first();
+            $master_sop_id = $umrah->master_sop_id;
+            $asisten_master_sop_id = $umrah->asisten_master_sop_id;
+            $master_sop_petugas_id = $umrah->master_sop_petugas_id;
+
+                foreach ($pembimbing as $key => $value) {
+                    // INSERT PEMBIMBING KE TB AKTIVITAS_UMRAH
+                    $aktitivitas = AktivitasUmrahModel::create([
+                        'pembimbing_id' => $value,
+                        'umrah_id' => $request->umrah,
+                        'status_tugas' => 'Pembimbing',
+                        'create_by' => Auth::user()->id
+                    ]);
+
+    
+                    $tugasModel = new TugasModel();
+
+                    // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PEMBIMBING BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
+                    $tugas = $tugasModel->select('id','nama','nomor','master_sop_id','master_judul_tugas_id','require_image')->where('master_sop_id', $master_sop_id)->get();
+                    foreach ($tugas  as $val) {
+                            $detailAktivitas = new DetailAktivitasUmrahModel();
+                            $detailAktivitas->aktivitas_umrah_id = $aktitivitas->id;
+                            $detailAktivitas->master_sop_id = $val->master_sop_id;
+                            $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
+                            $detailAktivitas->master_tugas_id = $val->id;
+                            $detailAktivitas->nomor_tugas = $val->nomor;
+                            $detailAktivitas->nama_tugas  = $val->nama;
+                            $detailAktivitas->require_image  = $val->require_image;
+                            $detailAktivitas->status = '';
+                            $detailAktivitas->alasan = '';
+                            $detailAktivitas->created_at = date('Y-m-d H:i:s');
+                            $detailAktivitas->updated_at = date('Y-m-d H:i:s');;
+                            $detailAktivitas->save();
+                    }
+                }
+
+                // INSERT PETUGAS KE TB AKTIVITAS_UMRAH_PETUGAS
+                $aktitivitasPetugas = AktivitasUmrahPetugasModel::create([
+                    'petugas_id' => $request->petugas,
+                    'umrah_id' => $request->umrah,
+                    'status_tugas' => 'Petugas',
+                    'create_by' => Auth::user()->id
+                ]);
+
+                // INSERT KE DETAIL , MENAMPUNG SEMUA POIN TUGAS YANG DIBERIKAN KEDAPA PETUGAS BERDASARKAN TOURCODE DAN MASTER_SOP_ID NYA
+                $tugas_petugas = TugasForPetugasModel::select('id','nama','nomor','master_sop_petugas_id','master_judul_tugas_id','require_image')->where('master_sop_petugas_id', $master_sop_petugas_id)->get();
+                foreach ($tugas_petugas  as $val) {
+                    $detailAktivitas = new DetailAktivitasUmrahPetugasModel();
+                    $detailAktivitas->aktivitas_umrah_petugas_id = $aktitivitasPetugas->id;
+                    $detailAktivitas->master_sop_petugas_id = $val->master_sop_petugas_id;
+                    $detailAktivitas->master_judul_tugas_id = $val->master_judul_tugas_id;
+                    $detailAktivitas->master_tugas_petugas_id = $val->id;
+                    $detailAktivitas->nomor_tugas = $val->nomor;
+                    $detailAktivitas->nama_tugas  = $val->nama;
+                    $detailAktivitas->require_image  = $val->require_image;
+                    $detailAktivitas->status = '';
+                    $detailAktivitas->alasan = '';
+                    $detailAktivitas->created_at = date('Y-m-d H:i:s');
+                    $detailAktivitas->updated_at = date('Y-m-d H:i:s');;
+                    $detailAktivitas->save();
+                }
+
+            return $asisten_master_sop_id;
     }
 
     /**

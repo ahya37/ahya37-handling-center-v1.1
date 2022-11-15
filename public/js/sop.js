@@ -92,6 +92,55 @@ function onDelete(data) {
   });
 }
 
+async function onCopy(data) {
+  const id = data.id;
+  const name = data.getAttribute("data-name");
+
+  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+
+  const { value: formValues } = await Swal.fire({
+    title: "SOP",
+    html: `
+    <input type="hidden" id="swal-input1" placeholder="Label"  class="swal2-input" readonly>
+      <input id="swal-input2" class="swal2-input" placeholder="Nama SOP">`,
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    confirmButtonText: "Simpan",
+    timerProgressBar: true,
+    preConfirm: () => {
+      return [
+        document.getElementById("swal-input1").value,
+        document.getElementById("swal-input2").value,
+      ];
+    },
+  });
+
+  if (formValues) {
+    // ajax save judul
+    $.ajax({
+      url: "/tugas/sop/copy",
+      method: "POST",
+      cache: false,
+      data: {
+        id: id,
+        _token: CSRF_TOKEN,
+      },
+      success: function (data) {
+        console.log(data)
+        // Swal.fire({
+        //   position: "center",
+        //   icon: "success",
+        //   title: `${data.data.message}`,
+        //   showConfirmButton: false,
+        //   width: 500,
+        //   timer: 900,
+        // });
+        // window.location.reload();
+      },
+    });
+  }
+}
 
 $(function () {
   $("#sopPetugas").DataTable({

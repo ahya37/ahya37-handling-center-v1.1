@@ -32,7 +32,7 @@
                                         </div>
                                         <div class="col-md-6">
                                            <label class="form-label">Pembimbning</label>
-                                           <select class="single-select pembimbing @error ('pembimbing') is-invalid @enderror" name="pembimbing"></select>
+                                           <select class="single-select pembimbing @error ('pembimbing') is-invalid @enderror" multiple="multiple" name="pembimbing[]"></select>
                                             @error('pembimbing')
                                                 <span class="invalid-feedback">
                                                     <strong>{{ $message }}</strong>

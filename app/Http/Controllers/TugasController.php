@@ -61,7 +61,7 @@ class TugasController extends Controller
             return DataTables::of($sop)
                     ->addIndexColumn()
                     ->addColumn('action', function($item){
-                        return '<a href="'.route('tugas.sop.detail', $item->id).'" class="btn btn-sm text-primary fa fa-eye" title="Detail"></a>
+                        return '<a href="'.route('tugas.sop.detail', $item->id).'" class="btn btn-sm btn-warning mb-1" title="Detail">Detail</a>
                                 <a href="'.route('sop-export-pdf', $item->id).'" class="btn btn-sm btn-primary" title="PDF">PDF</a>
                                 <a href="'.route('sop-export-excel', $item->id).'" class="btn btn-sm btn-success" title="Excel">Excel</a>
                                 <button  class="btn btn-sm text-danger fa fa-trash" onclick="onDelete(this)" id="'.$item->id.'" data-name="'.$item->name.'" title="Hapus"></button>
@@ -835,6 +835,42 @@ class TugasController extends Controller
 
         return redirect()->route('tugas.index')->with(['success' => 'Tugas berhasil diubah']);
 
+    }
+
+    public function copySop()
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = request()->id;
+
+            // SopModel::where('id', $id)->delete();
+
+            // get sop where id
+
+            // simpan sop baru dari sop yg di get
+            
+            // get judul berdasasrkan sop yang di get
+
+            // simpan dalam looping judul yang di get berdasrkan sop id
+
+            // get id judul dari sop yang baru
+
+
+            DB::commit();
+            return ResponseFormatter::success([
+                   'data' => $id,
+                   'message' => 'Berhasil copy sop'
+            ],200); 
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
     }
     
 }

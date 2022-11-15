@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/sop/count/tugas/{id}', 'TugasController@countNumberMasteTugasByJudul');
         Route::post('/sop/judul/tugas/save', 'TugasController@saveTugasByJudul');
         Route::post('/sop/judul/tugas/update', 'TugasController@updateTugas');
+        Route::post('/sop/copy', 'TugasController@copySop');
 
         // SOP PETUGAS
         Route::get('/create/petugas', 'TugasController@sopPetugas')->name('tugas.create.petugas');
