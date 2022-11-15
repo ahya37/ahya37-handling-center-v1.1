@@ -78,7 +78,7 @@ class UmrahController extends Controller
                    
            $dates_request = explode('-', $request->dates);
            
-           $kuisioner = KuisionerModel::select('id','nama')->where('id', $request->kuisioner)->first();
+           $kuisioner = KuisionerModel::select('id','nama','lokasi')->where('id', $request->kuisioner)->first();
 
            $umrah = UmrahModel::create([
                'master_sop_id' => $request->sop,
@@ -93,7 +93,7 @@ class UmrahController extends Controller
            ]);
    
            // PROSES MEMBUAT KUISIONER BERDASARKAN JADWAL UMRAH / TOURCODE
-           $label     = "PERCIK Tours. $kuisioner->nama $request->dates (hanya berlaku untuk satu kali pengisian)";
+           $label     = "PERCIK Tours. Kuisioner  $kuisioner->lokasi $request->dates (hanya berlaku untuk satu kali pengisian)";
    
            KuisionerUmrahModel::create([
                'umrah_id' => $umrah->id,
