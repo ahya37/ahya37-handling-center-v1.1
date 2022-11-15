@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Petugas</label>
-                                            <select class="single-select petugas @error ('petugas') is-invalid @enderror" name="petugas"></select>
+                                            <select class="single-select petugas @error ('petugas') is-invalid @enderror" name="petugas[]" multiple="multiple"></select>
                                              @error('petugas')
                                                  <span class="invalid-feedback">
                                                      <strong>{{ $message }}</strong>
