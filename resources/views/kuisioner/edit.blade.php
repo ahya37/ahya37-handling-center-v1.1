@@ -15,7 +15,7 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1 ms-2">
-                                            <h5 class="mt-0"> {{ $kuisioner->nama }} <button type="button"  class="btn fa fa-edit" title="Edit Kuisioner" data-bs-toggle="modal" data-bs-target="#exampleFullScreenModal" data-whatever="{{ $kuisioner->nama }}" data-id="{{ $kuisioner->id }}"></button> </h5>
+                                            <h5 class="mt-0"> {{ $kuisioner->nama }} <button type="button"  class="btn fa fa-edit" title="Edit Kuisioner" data-bs-toggle="modal" data-bs-target="#exampleFullScreenModal" data-whatever="{{ $kuisioner->nama }}" data-lokasi="{{ $kuisioner->lokasi }}" data-id="{{ $kuisioner->id }}" ></button> </h5>
                                             
                                         </div>
                                     </div>
@@ -94,6 +94,9 @@
                 <div class="form-group col-md-12 mb-3">
                     <input type="hidden" class="form-control" name="id" id="recipient-id">
                     <input type="text" class="form-control" name="name" id="recipient-name" autocomplete="off">
+                </div>
+                <div class="form-group col-md-12 mb-3">
+                    <input type="text" class="form-control" name="lokasi" id="recipient-lokasi" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-sm btn-primary">Simpan</button>

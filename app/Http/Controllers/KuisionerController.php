@@ -45,10 +45,12 @@ class KuisionerController extends Controller
     {
         $request->validate([
                        'name' => 'required',
+                       'lokasi' => 'required',
                    ]);
 
         KuisionerModel::create([
             'nama' => $request->name,
+            'lokasi' => $request->lokasi,
         ]);
 
         return redirect()->route('kusioner.index')->with(['success' => 'Kuisioner telah ditambahkan']);
@@ -113,7 +115,7 @@ class KuisionerController extends Controller
     public function update(Request $request)
     {
         $kuisioner = KuisionerModel::where('id', $request->id)->first();
-        $kuisioner->update(['nama' => $request->name]);
+        $kuisioner->update(['nama' => $request->name,'lokasi' => $request->lokasi]);
         return redirect()->back()->with(['success' => 'Kuisioner telah diubah']);
     }
 

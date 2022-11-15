@@ -32,6 +32,15 @@
                                                 </span>
                                             @enderror
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Lokasi</label>
+                                            <input type="text" name="lokasi" class="form-control @error ('lokasi') is-invalid @enderror" required placeholder="Lokasi disini...">
+                                            @error('lokasi')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                         <div class="col-12">
                                             <button type="submit" class="btn btn-sm btn-primary px-5">Simpan</button>
                                         </div>

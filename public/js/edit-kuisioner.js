@@ -1,11 +1,13 @@
 $("#exampleFullScreenModal").on("show.bs.modal", function (event) {
   let button = $(event.relatedTarget);
   let recipient = button.data("whatever");
+  let location = button.data("lokasi");
   let id = button.data("id");
   let modal = $(this);
   modal.find(".modal-title").text("Edit " + recipient);
   modal.find(".modal-body input[name='id']").val(id);
   modal.find(".modal-body input[name='name']").val(recipient);
+  modal.find(".modal-body input[name='lokasi']").val(location);
 });
 
 // delete
