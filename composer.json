@@ -19,6 +19,7 @@
         "laravel/ui": "^2.4.1",
         "maatwebsite/excel": "^3.1",
         "mckenziearts/laravel-notify": "^2.1",
+        "mpdf/mpdf": "^8.1",
         "unisharp/laravel-filemanager": "^2.5",
         "yajra/laravel-datatables": "^1.5"
     },

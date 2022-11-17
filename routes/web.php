@@ -127,7 +127,10 @@ Route::group(['middleware' => ['auth']], function () {
 		
 		Route::post('/tag/orange/jamaah/import/{id}', 'OperasionalController@importJamaahTag')->name('tagorange.jamaah.import');  
 
-		Route::post('/tag/orange/jamaah/uploadfoto', 'OperasionalController@uploadFotoJamaahByModal')->name('tagorange.jamaah.uploadfoto');   
+		Route::post('/tag/orange/jamaah/uploadfoto', 'OperasionalController@uploadFotoJamaahByModal')->name('tagorange.jamaah.uploadfoto');  
+        
+		Route::get('/tag/orange/exportpdf/{id}', 'TestController@TagOrangePdf')->name('tagorange.exportpdf');     
+        
 
 
     });

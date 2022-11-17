@@ -386,4 +386,27 @@ class OperasionalController extends Controller
         }
     }
 
+    public function TagOrangePdf($id)
+    {
+        // $start = request()->start;
+        // $end  = request()->end;
+        // $label = strtoupper(request()->label);
+
+        // // GET DATA DETAIL GROUP BY ID
+        // $tag  = TagOrangeModel::select('group_date')->where('id', $id)->first();
+        // // $data = DetailTagOrangeModel::where('tag_orange_id', $id)->whereBetween('no_urut',[$start, $end])->get();
+        // $sql  = "select * from detail_tag_orange where tag_orange_id = $id";
+        // $data = DB::select($sql);
+        // // $pdf = PDF::LoadView('report.tagorange',compact('data','tag'));
+        // // return $pdf->stream($id.'.pdf');
+
+        // // get no.telp TL / nomor urut 1
+        // $tl =  DetailTagOrangeModel::select('telp_jamaah')->where('tag_orange_id', $id)->where('no_urut','01')->first();
+
+        // $pdf = PDF::LoadView('report.tagorangepdf', compact('data','tag','label','tl'))->setPaper('a4', 'landscape');
+        // return $pdf->stream('TAG.pdf');
+        $pdf = PDF::LoadView('report.tagorangepdf')->setPaper('a4', 'landscape');
+        return $pdf->stream('TAG.pdf');
+    }
+
 }
