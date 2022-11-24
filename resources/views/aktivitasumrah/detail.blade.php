@@ -104,7 +104,7 @@
                                                         <button onclick="NilaiPertimbangan(this)" data-id="{{$list->id}}" class="text-primary">
                                                             {{ $list->nilai_akhir }}
                                                         </button>
-                                                        @elseif($list->status == 'Y' && $list->nilai_akhir == 0)
+                                                        @elseif($list->status == 'Y')
                                                             <button onclick="NilaiPertimbangan(this)" data-id="{{$list->id}}" class="text-primary">
                                                                 {{ $list->nilai_akhir }}
                                                             </button>
