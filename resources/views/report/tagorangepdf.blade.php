@@ -49,7 +49,7 @@
                                   margin-top: 2px;
                                   margin-bottom: -5px;
                                 ">
-                                          <img src="/" class="polygon" />
+                                         <img src="{{asset('assets/images/tag/polygontop.svg')}}" class="polygon" />
                                       <div>
                                         <p style="
                                       font-family: Impact, sans-serif;
@@ -108,7 +108,7 @@
                                             box-sizing: border-box;
                                             border-radius: 15px;
                                           ">
-                                          <img src="/" style="width: 100px; height:130px; border-radius: 15px; margin-top:-99px" />
+                                          <img src="{{asset('/storage/'.$row->foto_jamaah)}}" style="width: 100px; height:130px; border-radius: 15px; margin-top:-99px" />
                                       </div>
                                       <p style="text-align: center; font-family: Sans-serif; font-weight: bold; margin-top: 6px;">
                                         {{$row->nama_jamaah}}
