@@ -373,7 +373,7 @@ class OperasionalController extends Controller
 
             return ResponseFormatter::success([
                 null,
-                'message' => 'Berhasil hapus jamaah'
+                'message' => 'Berhasil upload foto jamaah'
             ],200); 
      
             

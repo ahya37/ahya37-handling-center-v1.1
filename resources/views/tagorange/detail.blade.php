@@ -81,7 +81,9 @@
                                 </div>
                             </form>
 
-                            <div class="mb-2"></div>
+                            <div class="mb-2">
+                                <hr>
+                            </div>
 
                             <form id="cetak" class="row g-3" action="{{ route('tagorange.exportpdf', $id) }}"
                                 method="GET" enctype="multipart/form-data">
@@ -91,7 +93,7 @@
                                         class="form-control @error('label') is-invalid @enderror" placeholder="Ex: UMRAH GROUP" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-sm btn-primary mt-1">Cetak PDF</button>
+                                    <button type="submit" class="btn btn-sm btn-primary mt-1">Cetak Semua (PDF)</button>
                                 </div>
                             </form>
                         </div>
