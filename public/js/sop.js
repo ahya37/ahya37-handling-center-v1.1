@@ -72,8 +72,8 @@ function onDelete(data) {
             title: `${data.data.message}`,
           });
 
-          window.location.reload();
-
+          const table = $("#tablePlace").DataTable();
+          table.ajax.reload();
         },
         error: function (error) {
           Swal.fire({
@@ -87,8 +87,6 @@ function onDelete(data) {
         },
       });
     }
-    const table = $("#tablePlace").DataTable();
-    table.ajax.reload();
   });
 }
 
@@ -99,10 +97,10 @@ async function onCopy(data) {
   const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 
   const { value: formValues } = await Swal.fire({
-    title: "SOP",
+    title: "Copy SOP",
     html: `
-    <input type="hidden" id="swal-input1" placeholder="Label"  class="swal2-input" readonly>
-      <input id="swal-input2" class="swal2-input" placeholder="Nama SOP">`,
+      <input id="swal-input2" class="swal2-input" value="${name} Copy" placeholder="Nama SOP">
+      `,
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Batal",
@@ -110,7 +108,6 @@ async function onCopy(data) {
     timerProgressBar: true,
     preConfirm: () => {
       return [
-        document.getElementById("swal-input1").value,
         document.getElementById("swal-input2").value,
       ];
     },
@@ -124,19 +121,31 @@ async function onCopy(data) {
       cache: false,
       data: {
         id: id,
+        name: formValues,
         _token: CSRF_TOKEN,
       },
       success: function (data) {
-        console.log(data)
-        // Swal.fire({
-        //   position: "center",
-        //   icon: "success",
-        //   title: `${data.data.message}`,
-        //   showConfirmButton: false,
-        //   width: 500,
-        //   timer: 900,
-        // });
-        // window.location.reload();
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${data.data.message}`,
+          showConfirmButton: false,
+          width: 500,
+          timer: 900,
+        },
+        );
+        const table = $("#tablePlace").DataTable();
+        table.ajax.reload();
+      },
+      error: function (error) {
+        Swal.fire({
+          position: "center",
+          icon: "danger",
+          title: `${data.data.message}`,
+          showConfirmButton: false,
+          width: 500,
+          timer: 900,
+        });
       },
     });
   }

@@ -90,7 +90,7 @@ async function onCopy(data) {
   const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 
   const { value: formValues } = await Swal.fire({
-    title: "SOP",
+    title: "Copy Kuisioner",
     html: `
       <input id="swal-input2" value="${name} Copy" class="swal2-input" placeholder="Nama SOP">`,
     focusConfirm: false,

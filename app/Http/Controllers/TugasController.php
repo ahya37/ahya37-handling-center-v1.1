@@ -64,6 +64,7 @@ class TugasController extends Controller
                         return '<a href="'.route('tugas.sop.detail', $item->id).'" class="btn btn-sm btn-warning mb-1" title="Detail">Detail</a>
                                 <a href="'.route('sop-export-pdf', $item->id).'" class="btn btn-sm btn-primary" title="PDF">PDF</a>
                                 <a href="'.route('sop-export-excel', $item->id).'" class="btn btn-sm btn-success" title="Excel">Excel</a>
+                                <button  class="btn btn-sm btn-info" onclick="onCopy(this)" id="'.$item->id.'" data-name="'.$item->name.'" title="Copy">Copy</button>
                                 <button  class="btn btn-sm text-danger fa fa-trash" onclick="onDelete(this)" id="'.$item->id.'" data-name="'.$item->name.'" title="Hapus"></button>
                                 '
                                 ;
@@ -232,7 +233,7 @@ class TugasController extends Controller
             $id = request()->id;
             TugasModel::where('id', $id)->delete();
 
-            DB::commit();
+            DB::commit(); 
             return ResponseFormatter::success([
                    null,
                    'message' => 'Berhasil hapus tugas'
@@ -255,6 +256,8 @@ class TugasController extends Controller
 
             $id = request()->id;
             SopModel::where('id', $id)->delete();
+            JudulSopModel::where('master_sop_id', $id)->delete();
+            TugasModel::where('master_sop_id', $id)->delete();
 
             DB::commit();
             return ResponseFormatter::success([
@@ -843,23 +846,57 @@ class TugasController extends Controller
         try {
 
             $id = request()->id;
-
-            // SopModel::where('id', $id)->delete();
+            $name = request()->name;
+            
+            $sopModel   = new SopModel();
+            $judulModel = new JudulSopModel();
 
             // get sop where id
+            $sop = $sopModel->select('id','name')->where('id', $id)->first();
 
             // simpan sop baru dari sop yg di get
+            $copy_sop = $sopModel->create([
+                'name' => $name[0],
+                'created_by' => Auth::user()->id
+            ]);
             
             // get judul berdasasrkan sop yang di get
+            $judul = $judulModel->where('master_sop_id', $id)->get();
 
             // simpan dalam looping judul yang di get berdasrkan sop id
+            $new_judul = [];
+            foreach ($judul as $value) {
+                $saveJudul = new JudulSopModel();
+                $saveJudul->master_sop_id = $copy_sop->id;
+                $saveJudul->nomor         = $value->nomor;
+                $saveJudul->nama          = $value->nama;
+                $saveJudul->create_by     =  Auth::user()->id;
+                $saveJudul->save();
 
-            // get id judul dari sop yang baru
+                // get id judul dari sop yang baru
+                // $new_judul[]  = [
+                //     'new_judul' =>  $judulModel->where('id', $saveJudul->id)->get()
+                // ];   
+
+                // get master_tugas berdasarkan master_sop_id dan master_judul_id lama
+                $tugas = TugasModel::where('master_sop_id', $id)->where('master_judul_tugas_id', $value->id)
+                        ->orderBy('master_judul_tugas_id','asc')->get();
+                foreach ($tugas as $item) {
+                    $tugasModel = new TugasModel();
+                    $tugasModel->master_sop_id = $copy_sop->id;
+                    $tugasModel->master_judul_tugas_id = $saveJudul->id;
+                    $tugasModel->nomor = $item->nomor;
+                    $tugasModel->nama = $item->nama;
+                    $tugasModel->nilai_point = $item->nilai_point;
+                    $tugasModel->require_image = $item->require_image;
+                    $tugasModel->require_doc = $item->require_doc;
+                    $tugasModel->save();
+                }
+            }
 
 
             DB::commit();
             return ResponseFormatter::success([
-                   'data' => $id,
                    'message' => 'Berhasil copy sop'
             ],200); 
 

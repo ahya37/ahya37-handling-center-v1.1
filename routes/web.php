@@ -78,7 +78,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/sop/petugas/delete', 'TugasController@deleteTugasForPetugas');
         Route::post('/sop/petugas/settinguploadfile', 'TugasController@settingUploadFileSopPetugas');
 
-
         // EXPORT
         Route::get('/listdatasop/export/pdf/{id}', 'TugasController@exportDataSopPDF')->name('sop-export-pdf');
         Route::get('/listdatasop/export/excel/{id}', 'TugasController@exportDataSopExcel')->name('sop-export-excel');
