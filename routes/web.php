@@ -129,9 +129,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 		Route::post('/tag/orange/jamaah/uploadfoto', 'OperasionalController@uploadFotoJamaahByModal')->name('tagorange.jamaah.uploadfoto');  
         
-		Route::get('/tag/orange/exportpdf/{id}', 'TestController@TagOrangePdf')->name('tagorange.exportpdf');     
-        
-
+        Route::get('/tag/orange/exportpdf/{id}', 'TestController@TagOrangePdf')->name('tagorange.exportpdf');
 
     });
     
