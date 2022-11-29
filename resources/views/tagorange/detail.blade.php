@@ -80,6 +80,20 @@
                                         class="btn btn-sm btn-primary mt-1">Cetak</a> --}}
                                 </div>
                             </form>
+
+                            <div class="mb-2"></div>
+
+                            <form id="cetak" class="row g-3" action="{{ route('tagorange.exportpdf', $id) }}"
+                                method="GET" enctype="multipart/form-data">
+                                @csrf
+                                <div class="col-md-2">
+                                    <input type="text" name="label"
+                                        class="form-control @error('label') is-invalid @enderror" placeholder="Ex: UMRAH GROUP" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-sm btn-primary mt-1">Cetak PDF</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
