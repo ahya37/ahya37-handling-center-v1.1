@@ -110,7 +110,7 @@ class TestController extends Controller
 
                 $card_tags[] = [
                     'tags' => [
-                        $i => DetailTagOrangeModel::select('no_urut','nama_jamaah','foto_jamaah','telp_jamaah','email_jamaah','alamat_jamaah','tl')->where('tag_orange_id', $id)
+                        $i => DetailTagOrangeModel::select('no_urut','nama_jamaah','foto_jamaah','telp_jamaah','email_jamaah','alamat_jamaah')->where('tag_orange_id', $id)
                               ->where('no_urut','>=', $no_start)
                               ->where('no_urut','<=', $no_end)
                               ->get()
