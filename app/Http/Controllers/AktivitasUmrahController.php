@@ -1518,6 +1518,114 @@ class AktivitasUmrahController extends Controller
         }
     }
 
+    public function uploadPelaksanaanTanpaResizaImage(Request $request)
+    {
+		// return $request->all();
+		
+        DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(), [
+               'image' => 'nullable|image|mimes:jpg,png,jpeg,JPG',
+                'docx' => 'mimes:doc,pdf,docx,zip,ppt,pptx'
+
+            ]);
+
+            // $this->validate($request, [
+                // 'image' => 'nullable|image|mimes:jpg,png,jpeg,JPG',
+                // 'docx' => 'mimes:doc,pdf,docx,zip,ppt,pptx'
+            // ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->with(['warning' => 'Cek kembali format file yang di upload, coba lagi']);
+            }
+
+            $id = $request->id;
+            $status = $request->status;
+
+            $tugasModel = new DetailAktivitasUmrahModel();
+    
+            // jika status Y, tidak perlu alasan, jadi kosongkan saja
+            $aktitivitas_umrah_id = $request->aktivitasUmrahId;
+
+            $tugas = $tugasModel->where('id', $id)->first();
+            $image = $tugas->file;
+            $docx = $tugas->file_doc;
+            $alasan=  $request->note == '' ? $tugas->alasan : $request->note;
+
+            $require_image = $tugas->require_image;
+            $nilai_akhir   = 0;
+
+            if ($require_image == 'Y') { // JIKA REEQUIRE FILE UPLOAD FOTO
+                if ($request->image != '' AND $status == 'Y') {
+                    $nilai_akhir = 2; // 1 + 1 (NILAI TAMBAHAN KUSUSUS UNTUK REQUIRE FOTO)
+                }else{
+                    $nilai_akhir = 0;
+                }
+            }else{
+                if ($status == 'Y') {
+                    $nilai_akhir  = 2;
+                }else {
+                    $nilai_akhir  = 0;
+                }
+            }
+			
+			if($request->image != ''){
+			 if ($request->file('image')) {
+                //  cek jika file tidak kosong, hapus file di direktori
+                if ($image != null) {
+                    File::delete(storage_path('app/public/'.$tugas->file));
+                }
+                $filename = $request->image->store('tugas','public');
+
+                $fileName = $filename;
+				}else{
+					$fileName = $image;
+				}
+			}else{
+				$fileName = $image;
+			}
+
+            
+            if ($request->hasFile('docx')) {
+                //  cek jika file tidak kosong, hapus file di direktori
+                if ($docx != null) {
+                    File::delete(storage_path('app/public/'.$tugas->file_doc));
+                }
+                $fileDocx = $request->docx->store('tugas/docx','public');
+                $fileDocxName = $request->docx->getClientOriginalName();
+            }else{
+                $fileDocx = NULL;
+                $fileDocxName = NULL;
+            }
+
+            // GET NILAI_POINT DARI MASTER_TUGAS
+            $master_tugas = TugasModel::select('nilai_point')->where('id',  $tugas->master_tugas_id)->first(); 
+            $tugas->update([
+                'status' => $status,
+                'alasan' => $alasan,
+                'nilai_point' => $master_tugas->nilai_point,
+                'file' =>  $fileName,
+                'file_doc' => $fileDocx,
+                'file_doc_name' => $fileDocxName,
+                'nilai_akhir' => $nilai_akhir * $master_tugas->nilai_point,
+                'create_by'   => Auth::user()->id,
+                'created_at'   => $tugas->created_at,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            DB::commit();
+
+            return redirect()->back()->with(['success' => 'Berhasil Simpan Tugas SOP']);
+
+
+        } catch (\Exception $e) {
+            DB::rollback();
+			return $e->getMessage();
+            return redirect()->back()->with(['warning' => 'Gagal Simpan Tugas SOP']);
+        }
+    }
+
     public function saveJumlahPotensialJamaahByPembimbing(Request $request)
     {
        
