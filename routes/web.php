@@ -245,8 +245,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         // ISI TUGAS BESERTA FILE GAMBAR
         Route::post('/createTugaswithfile', 'AktivitasUmrahController@createStatusTugasByPembimbingWithFile');
-        // Route::post('/createTugaswithfileUpload', 'AktivitasUmrahController@uploadPelaksanaan')->name('user.create.aktivitas');
-        Route::post('/createTugaswithfileUpload', 'AktivitasUmrahController@uploadPelaksanaanTanpaResizaImage')->name('user.create.aktivitas');
+        Route::post('/createTugaswithfileUpload', 'AktivitasUmrahController@uploadPelaksanaan')->name('user.create.aktivitas');
+        // Route::post('/createTugaswithfileUpload', 'AktivitasUmrahController@uploadPelaksanaanTanpaResizaImage')->name('user.create.aktivitas');
 
         Route::get('/history', 'AktivitasUmrahController@historyTugasJadwalUmrah')->name('user.aktivitas.history');
         Route::get('/history/all', 'AktivitasUmrahController@historyTugasJadwalUmrahAll')->name('user.aktivitas.history.all');
