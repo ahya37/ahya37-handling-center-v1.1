@@ -181,6 +181,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
 
+
     ],
 
     /*
@@ -233,7 +234,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'GF' => App\Providers\GrafikProvider::class,
-		'Image' => Intervention\Image\Facades\Image::class
+		'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

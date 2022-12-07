@@ -43,7 +43,7 @@
             margin-bottom: -5px;
           ">
                     <div>
-                        <img src="/assets/images/tag/polygontop.svg" class="polygon" />
+                        <img src="{{asset('assets/images/tag/polygontop.svg')}}" class="polygon" />
                         <p
                             style="
                 font-family: impact;

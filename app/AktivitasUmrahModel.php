@@ -164,6 +164,20 @@ class AktivitasUmrahModel extends Model
         return $sql;
     }
 
+    public function getNameTourcodeByPembimbingByAkunPembimbingNew($user_id, $aktitivitas_umrah_id)
+    {
+        $sql = DB::table('aktivitas_umrah as a')
+                ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                ->join('umrah as c','c.id','=','a.umrah_id')
+                ->select('a.id','c.tourcode','c.count_jamaah','a.jumlah_potensial_jamaah_before','a.jumlah_potensial_jamaah_after')
+                ->where('b.user_id', $user_id)    
+                ->where('a.id', $aktitivitas_umrah_id)    
+                ->where('a.status','active')    
+                ->where('a.isdelete',0)    
+                ->first();
+        return $sql;
+    }
+
     
 
     public function getNameTourcodeByAktivitasUmrahId($id)
