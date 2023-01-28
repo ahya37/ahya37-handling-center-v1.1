@@ -16,7 +16,7 @@ $(".tourcode").select2({
       return {
         results: $.map(data, function (item) {
           return {
-            text: item.tourcode,
+            text: `${item.id} - ${item.tourcode}`,
             id: item.id,
           };
         }),

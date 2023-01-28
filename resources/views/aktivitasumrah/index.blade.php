@@ -42,10 +42,11 @@
 							<table id="data" class="table table-hover" style="width:100%">
 								<thead>
 									<tr>
-                                        <th>Tourcode</th>
+										<th>Tourcode</th>
                                         <th>Pembimbing / Asisten</th>
                                         <th>Grade</th>
                                         <th>Opsi</th>
+                                        <th>ID</th>
 									</tr>
 								</thead>
 								<tbody></tbody>

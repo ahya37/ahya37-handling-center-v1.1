@@ -244,7 +244,7 @@ const table = $("#data").DataTable({
   bInfo: true,
   processing: true,
   bServerSide: true,
-  order: [[0, "desc"]],
+  order: [[0, "asc"]],
   autoWidth: false,
   ajax: {
     url: "/api/dt/aktivitas",
@@ -301,10 +301,16 @@ const table = $("#data").DataTable({
             : "";
         return `
                 <a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>
-                <a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">Kuisioner</a>
+                <a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">${row.kuisioner}</a>
                 ${btnSelesai}
-                <button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm text-danger"><i class='fa fa-trash'></i></button>
+                <button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-danger">Hapus</button>
         `;
+      },
+    },
+    {
+      targets: 4,
+      render: function (data, type, row, meta) {
+        return `<span>${row.umrah_id}</span>`;
       },
     },
   ],
