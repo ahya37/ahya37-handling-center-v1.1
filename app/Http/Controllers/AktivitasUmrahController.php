@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\TugasModel;
 use PDF;
 use App\AktivitasUmrahModel;
+use App\KuisionerModel;
 use Illuminate\Http\Request;
 use App\DetailAktivitasUmrahModel;
 use App\Helpers\ResponseFormatter;
@@ -1836,5 +1837,37 @@ class AktivitasUmrahController extends Controller
             ]);
 
         }
+    }
+
+    public function kuisionerByTourcodePembimbing($umrah_id, $aktivitasumrahId){
+
+        $kuisionerModel = new KuisionerModel();
+        
+        #get kuisioner by umrah id dan aktivitas umrah id
+        $kuisioner = $kuisionerModel->getKuisionerByAktivitasUmrah($umrah_id, $aktivitasumrahId);
+
+        #get pertanyaan by umrah_id dan aktivitas_umrah_id
+        $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
+
+        $result_kuisioner = [];
+        foreach ($pertanyaan as $value) {
+            $jawaban = $kuisionerModel->getJumlahJawaban($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
+            $result_kuisioner[] = [
+                'id' => $value->id,
+                'nomor' => $value->nomor,
+                'isi' => $value->isi,
+                'jawaban' => $jawaban
+            ];
+        }
+
+        // $data = [
+        //     'kuisioner' => $kuisioner,
+        //     'kuisioner' => $result_kuisioner
+        // ];
+
+        // return $data;
+
+        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner'));
+
     }
 }

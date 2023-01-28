@@ -297,12 +297,12 @@ const table = $("#data").DataTable({
       render: function (data, type, row, meta) {
         const btnSelesai =
           row.status === `active`
-            ? `<button onclick="onFinish(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-primary">Selesai</button>`
+            ? `<button onclick="onFinish(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-warning">Selesai</button>`
             : "";
         return `
                 <a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>
+                <a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">Kuisioner</a>
                 ${btnSelesai}
-                
                 <button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm text-danger"><i class='fa fa-trash'></i></button>
         `;
       },
