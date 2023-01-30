@@ -41,6 +41,21 @@ class KuisionerModel extends Model
         return $sql;
     }
 
+    public function getPertanyaanEssayByUmrahIdAndAktivitasUmrahId($kuisioner_umrah_id, $aktivitas_umrah_id){
+
+        $sql = DB::table('essay_jawaban_kuisioner_umrah as a')
+                ->join('pertanyaan_kuisioner as b','a.pertanyaan_id','=','b.id')
+                ->join('aktivitas_umrah as c','a.umrah_id','=','c.umrah_id')
+                ->select('b.id','b.isi','b.nomor')
+                ->where('a.kuisioner_umrah_id', $kuisioner_umrah_id)
+                ->where('c.id', $aktivitas_umrah_id)
+                ->groupBy('b.id','b.isi','b.nomor')
+                ->orderBy('b.nomor','asc')
+                ->get();
+
+        return $sql;
+    }
+
     public function getJumlahJawaban($umrah_id, $aktivitas_umrah_id, $pertanyaan_id){
 
         $sql = DB::table('jawaban_kuisioner_umrah as a')
@@ -52,6 +67,22 @@ class KuisionerModel extends Model
                 ->where('c.id', $aktivitas_umrah_id)
                 ->where('a.pertanyaan_id', $pertanyaan_id)
                 ->groupBy('a.umrah_id','a.pertanyaan_id','a.pilihan_id','b.isi')
+                ->distinct()
+                ->get();
+
+        return $sql;
+    }
+
+    public function getJumlahJawabanEssay($umrah_id, $aktivitas_umrah_id, $pertanyaan_id){
+
+        $sql = DB::table('essay_jawaban_kuisioner_umrah as a')
+                ->join('kuisioner_umrah as b', 'b.id', '=', 'a.kuisioner_umrah_id')
+                ->join('aktivitas_umrah as c', 'c.umrah_id','=', 'b.umrah_id')
+                ->select('a.kuisioner_umrah_id' , 'a.umrah_id' , 'a.pertanyaan_id','c.id as aktivitas_umrah_id','a.essay')
+                ->where('c.id', $aktivitas_umrah_id)
+                ->where('a.pertanyaan_id', $pertanyaan_id)
+                ->where('a.umrah_id', $umrah_id)
+                ->whereNotNull('a.essay')
                 ->distinct()
                 ->get();
 

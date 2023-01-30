@@ -12,7 +12,7 @@ class PertanyaanKuisionerModel extends Model
 
     public function getPertanyaanByKuisionerId($id){
 
-        $sql = DB::table('pertanyaan_kuisioner')->where('kuisioner_id', $id)->whereNotNull('nomor')->get();
+        $sql = DB::table('pertanyaan_kuisioner')->where('kuisioner_id', $id)->get();
         return $sql;
     }
 }

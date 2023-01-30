@@ -61,6 +61,9 @@
 				</div>
 
 				<div class="row">
+					<div class="col-md-12">
+						<h5>Pilihan</h5>
+					</div>
 					@php
 						$no_pertanyaan = 1;
 					@endphp
@@ -103,6 +106,39 @@
 						</div>
 					</div>
 					@endforeach
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h5>Essay</h5>
+					</div>
+					
+					<div class="col-md-12">
+						<div class="card">
+							<div  class="card-body">
+								@php
+									$no_essay = 1;
+								@endphp
+								@foreach ($result_kuisioner_essay as $item)
+									<div class="card-header"><b>{{$item['isi']}}</b></div>
+									<table class="table">
+										<tr>
+											<th>No</th>
+											<th>Jawaban</th>
+										</tr>
+										@foreach ($item['jawaban'] as $val)
+										<tr>
+											<td>{{$no_essay++}}</td>
+											<td>{{$val->essay}}</td>
+										</tr>
+										@endforeach
+									</table>
+
+								@endforeach
+							</div>
+						</div>
+					</div>
+
 				</div>
     </div>
 </div>

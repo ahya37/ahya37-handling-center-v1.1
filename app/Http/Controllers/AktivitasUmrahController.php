@@ -1853,6 +1853,8 @@ class AktivitasUmrahController extends Controller
         #get pertanyaan by umrah_id dan aktivitas_umrah_id
         $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
 
+
+
         $result_kuisioner = [];
         foreach ($pertanyaan as $value) {
             $jawaban = $kuisionerModel->getJumlahJawaban($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
@@ -1864,12 +1866,26 @@ class AktivitasUmrahController extends Controller
             ];
         }
 
+        #pertanyaan essay
+        $pertanyaan_essay = $kuisionerModel->getPertanyaanEssayByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
+
+        $result_kuisioner_essay = [];
+        foreach ($pertanyaan_essay as $key => $value) {
+            $jawaban_essay = $kuisionerModel->getJumlahJawabanEssay($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
+            $result_kuisioner_essay[] = [
+                'id' => $value->id,
+                'isi' => $value->isi,
+                'jawaban' => $jawaban_essay
+            ];
+
+        }
+
         // $data = [
         //     'kuisioner' => $kuisioner,
         //     'kuisioner' => $result_kuisioner
         // ];
 
-        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf'));
+        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay'));
 
     }
 }
