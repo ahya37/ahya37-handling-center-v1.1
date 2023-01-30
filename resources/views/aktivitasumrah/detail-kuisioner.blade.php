@@ -103,10 +103,10 @@
 										<td align="right">{{round($avg)}} %</td>
 									</tr>
 									@endforeach
-									<tr>
+									{{-- <tr>
 										<td colspan="3"><b>Nilai</b></td>
 										<td style="text-align: right"><b>0</b></td>
-									</tr>
+									</tr> --}}
 								</table>
 							</div>
 						</div>
