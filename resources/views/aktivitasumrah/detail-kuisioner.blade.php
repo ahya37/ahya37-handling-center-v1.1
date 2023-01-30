@@ -114,30 +114,32 @@
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-md-12">
 						<div class="card">
-							<div  class="card-body">
-								@php
-									$no_essay = 1;
-									$no_essay_jawaban = 1;
-								@endphp
-								@foreach ($result_kuisioner_essay as $item)
-									<div class="card-header"><b>{{$no_essay++}}. {{$item['isi']}}</b></div>
-									<table class="table">
-										<tr>
-											<th>No</th>
-											<th>Jawaban</th>
-										</tr>
-										@foreach ($item['jawaban'] as $val)
-										<tr>
-											<td>{{$no_essay_jawaban++}}</td>
-											<td>{{$val->essay}}</td>
-										</tr>
-										@endforeach
-									</table>
+							@php
+								$no_essay = 1;
+								$no_essay_jawaban = 1;
+							@endphp
+							@foreach ($result_kuisioner_essay as $item)
+								<div class="card-header"><b>{{$no_essay++}}. {{$item['isi']}}</b></div>
+								<div  class="card-body">
+										<table class="table">
+											<tr>
+												<th>No</th>
+												<th>Jawaban</th>
+											</tr>
+											@foreach ($item['jawaban'] as $val)
+											<tr>
+												<td>{{$no_essay_jawaban++}}</td>
+												<td>{{$val->essay}}</td>
+											</tr>
+											@endforeach
+										</table>
 
-								@endforeach
-							</div>
+									@endforeach
+								</div>
 						</div>
+					</div>
 				</div>
     </div>
 </div>
