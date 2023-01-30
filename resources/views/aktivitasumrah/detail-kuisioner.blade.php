@@ -94,8 +94,8 @@
 										<td>{{$no_jawaban++}}</td>
 										<td>{{$val->jawaban}}</td>
 										<td>{{$val->jml_jawaban}}</td>
-										<td>{{$avg}}</td>
-										<td>{{$v}}</td>
+										<td>-</td>
+										<td>-</td>
 									</tr>
 									@endforeach
 								</table>
