@@ -190,6 +190,8 @@ class KuisionerController extends Controller
 
     public function listData()
     {
+        // <a href="'.route('kuisioner.detail', $item->id).'" class="btn btn-sm btn-primary">Detail</a> 
+        
         $kusioner = KuisionerModel::select('id','nama')->orderBy('nama','asc')->get();
         if (request()->ajax()) 
         {
@@ -197,7 +199,7 @@ class KuisionerController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($item){
                         return '
-                        <a href="'.route('kuisioner.detail', $item->id).'" class="btn btn-sm btn-primary">Detail</a> 
+                        
                         <a href="'.route('kuisioner.edit', $item->id).'" class="btn btn-sm btn-secondary"><i class="fa fa-edit"></i></a> 
                         <button onclick="onCopy(this)" id="'.$item->id.'" data-name="'.$item->nama.'" title="Copy" class="btn btn-sm btn-secondary"><i class="fa fa-copy"></i></button>
                         <button onclick="onDelete(this)" id="'.$item->id.'" value="'.$item->nama.'" title="Hapus" class="btn btn-sm btn-secondary"><i  class="fa fa-trash"></i></button>';
@@ -641,6 +643,11 @@ class KuisionerController extends Controller
 
         $pertanyaan      = $pertanyaanModel->getPertanyaanByKuisionerId($id);
 
+        #total jamaah yang mengisi semua kuisioner tersebut
+        
+
+        #total responden yang mengisi semua kuisioner tersebut
+
         #get jawaban dari setiap pertanyaaan
         $results = [];
         foreach ($pertanyaan as $value) {
@@ -655,7 +662,7 @@ class KuisionerController extends Controller
         #untuk nilai rata2 :
         # jumlah jawaban / jumlah responden * 100
         
-        return $results;
+        return view('kuisioner.detail');
 
     }
    

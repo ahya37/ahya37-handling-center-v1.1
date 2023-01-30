@@ -53,6 +53,13 @@
 										<div class="col-md-2">
 											<h6 class="text-success">: <b>{{$kuisioner->jumlah_responden}}</b></h6>
 										</div>
+										<div class="col-md-8"><h6>Persentasi</h6></div>
+										<div class="col-md-2">
+											@php
+												$persentage = ($kuisioner->jumlah_responden/$kuisioner->count_jamaah)*100;
+											@endphp
+											<h6 class="text-success">: <b>{{round($persentage) }} %</b></h6>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -61,9 +68,6 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-12">
-						<h5>Pilihan</h5>
-					</div>
 					@php
 						$no_pertanyaan = 1;
 					@endphp
@@ -80,27 +84,29 @@
 									<div class="col-md-2">{{$no_jawaban++}}. {{$val->jawaban}}</div>
 									<div class="col-md-2"><span>{{$val->jml_jawaban}}</span></div>
 								</div> --}}
-								<table class="table">
+								<table class="table" style="width: 100%">
 									<tr>
-										<th class="col-md-1">No</th>
-										<th class="col-md-2">Jawaban</th>
-										<th class="col-md-2">Jumlah</th>
-										<th class="col-md-2">Rata-Rata</th>
-										<th class="col-md-2">Nilai</th>
+										<th>No</th>
+										<th >Jawaban</th>
+										<th style="text-align: right">Jumlah</th>
+										<th style="text-align: right">Rata-Rata</th>
 									</tr>
 									@foreach ($item['jawaban'] as $val)
 									@php
-										$avg = ceil($val->jml_jawaban/$kuisioner->count_jamaah*100);
-										$v   = $gf->generateNilaiKuisioner($no_jawaban_rumus++)
+										$avg = ($val->jml_jawaban/$kuisioner->jumlah_responden)*100;
+										$v   = $gf->generateNilaiKuisioner($no_jawaban_rumus++);
 									@endphp
 									<tr>
 										<td>{{$no_jawaban++}}</td>
 										<td>{{$val->jawaban}}</td>
-										<td>{{$val->jml_jawaban}}</td>
-										<td>-</td>
-										<td>-</td>
+										<td align="right">{{$val->jml_jawaban}}</td>
+										<td align="right">{{round($avg)}} %</td>
 									</tr>
 									@endforeach
+									<tr>
+										<td colspan="3"><b>Nilai</b></td>
+										<td style="text-align: right"><b>0</b></td>
+									</tr>
 								</table>
 							</div>
 						</div>
@@ -108,12 +114,8 @@
 					@endforeach
 				</div>
 
-				<div class="row">
-					<div class="col-md-12">
-						<h5>Essay</h5>
-					</div>
-				</div>
-				
+				<div class="row mt-4"></div>
+
 				@foreach ($result_kuisioner_essay as $item)
 				<div class="row">
 					<div class="col-md-12">

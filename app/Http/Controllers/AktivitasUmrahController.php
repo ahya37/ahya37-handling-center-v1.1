@@ -1880,11 +1880,6 @@ class AktivitasUmrahController extends Controller
 
         }
 
-        // $data = [
-        //     'kuisioner' => $kuisioner,
-        //     'kuisioner' => $result_kuisioner
-        // ];
-
         return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay'));
 
     }
