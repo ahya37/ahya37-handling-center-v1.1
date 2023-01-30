@@ -1844,6 +1844,8 @@ class AktivitasUmrahController extends Controller
     public function kuisionerByTourcodePembimbing($umrah_id, $aktivitasumrahId){
 
         $kuisionerModel = new KuisionerModel();
+
+        $gf = new Globalprovider();
         
         #get kuisioner by umrah id dan aktivitas umrah id
         $kuisioner = $kuisionerModel->getKuisionerByAktivitasUmrah($umrah_id, $aktivitasumrahId);
@@ -1867,9 +1869,7 @@ class AktivitasUmrahController extends Controller
         //     'kuisioner' => $result_kuisioner
         // ];
 
-        // return $data;
-
-        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner'));
+        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf'));
 
     }
 }

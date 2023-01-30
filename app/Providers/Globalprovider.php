@@ -86,4 +86,29 @@ class Globalprovider extends ServiceProvider
 
         return $grade;
     }
+
+    public function generateNilaiKuisioner($nomor){
+
+        $nilai = 0;
+
+        if ($nomor == 1) {
+
+             $nilai = 100;
+
+        }elseif ($nomor == 2) {
+
+             $nilai = 50;
+
+        }elseif ($nomor == 3) {
+
+             $nilai = 50;
+
+        }elseif ($nomor == 4) {
+
+         $nilai = 100;
+
+        }
+
+        return $nilai;
+    }
 }

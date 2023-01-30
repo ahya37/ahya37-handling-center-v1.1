@@ -14,25 +14,45 @@
         @include('layouts.message')
 				<h6 class="mb-0 ">Kuisioner Pembimbing Umrah</h6>
 				<hr/>
-				<div class="col-md-8">
-					<div class="card">
-						<div class="card-body">
-							<div class="col-md-12">
-								<div class="row">
-									<div class="col-md-12">
-										<h6><b>{{$kuisioner->label}}</b></h6>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="card">
+							<div class="card-body">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-12">
+											<h6><b>{{$kuisioner->label}}</b></h6>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-2"><h6>Tourcode</h6></div>
+										<div class="col-md-10">
+											<h6 class="text-success">: {{$kuisioner->tourcode}}</h6>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-2"><h6>Pembimbing</h6></div>
+										<div class="col-md-10">
+											<h6>: {{$kuisioner->pembimbing}}</h6>
+										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-2"><h6>Tourcode</h6></div>
-									<div class="col-md-10">
-										<h6 class="text-success">: {{$kuisioner->tourcode}}</h6>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-2"><h6>Pembimbing</h6></div>
-									<div class="col-md-10">
-										<h6>: {{$kuisioner->pembimbing}}</h6>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-8"><h6>Jumlah Jama'ah</h6></div>
+										<div class="col-md-2">
+											<h6 class="text-success">: <b>{{$kuisioner->count_jamaah}}</b></h6>
+										</div>
+										<div class="col-md-8"><h6>Jumlah Responden</h6></div>
+										<div class="col-md-2">
+											<h6 class="text-success">: <b>{{$kuisioner->jumlah_responden}}</b></h6>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -45,16 +65,41 @@
 						$no_pertanyaan = 1;
 					@endphp
 					@foreach ($result_kuisioner as $item)
-					<div class="col-md-6">
+					<div class="col-md-8">
 						<div class="card">
-							<div class="card-header"><b>{{$item['nomor']}}. <br>{{$item['isi']}}</b></div>
+							<div class="card-header"><b>{{$item['nomor']}}. {{$item['isi']}}</b></div>
 							<div class="card-body">
-								@foreach ($item['jawaban'] as $val)
-								<div class="row">
-									<div class="col-md-6">{{$val->jawaban}}</div>
+								@php
+									$no_jawaban = 1;
+									$no_jawaban_rumus = 1;
+								@endphp
+								{{-- <div class="row">
+									<div class="col-md-2">{{$no_jawaban++}}. {{$val->jawaban}}</div>
 									<div class="col-md-2"><span>{{$val->jml_jawaban}}</span></div>
-								</div>
-								@endforeach
+								</div> --}}
+								<table class="table">
+									<tr>
+										<th class="col-md-1">No</th>
+										<th class="col-md-2">Jawaban</th>
+										<th class="col-md-2">Jumlah</th>
+										<th class="col-md-2">Rata-Rata</th>
+										<th class="col-md-2">Nilai</th>
+									</tr>
+									@foreach ($item['jawaban'] as $val)
+									@php
+										$avg = ceil($val->jml_jawaban/$kuisioner->count_jamaah*100);
+										$v   = $gf->generateNilaiKuisioner($no_jawaban_rumus++)
+										$nilai =  
+									@endphp
+									<tr>
+										<td>{{$no_jawaban++}}</td>
+										<td>{{$val->jawaban}}</td>
+										<td>{{$val->jml_jawaban}}</td>
+										<td>{{$avg}}</td>
+										<td>{{$v}}</td>
+									</tr>
+									@endforeach
+								</table>
 							</div>
 						</div>
 					</div>

@@ -197,9 +197,10 @@ class KuisionerController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($item){
                         return '
-                        <a href="'.route('kuisioner.edit', $item->id).'"><i class="fa fa-edit"></i></a> 
-                        <button onclick="onCopy(this)" id="'.$item->id.'" data-name="'.$item->nama.'" class="fa fa-copy text-secondary" title="Copy"></button>
-                        <button onclick="onDelete(this)" id="'.$item->id.'" value="'.$item->nama.'" class="fa fa-trash text-danger" title="Hapus"></button>';
+                        <a href="'.route('kuisioner.detail', $item->id).'" class="btn btn-sm btn-primary">Detail</a> 
+                        <a href="'.route('kuisioner.edit', $item->id).'" class="btn btn-sm btn-secondary"><i class="fa fa-edit"></i></a> 
+                        <button onclick="onCopy(this)" id="'.$item->id.'" data-name="'.$item->nama.'" title="Copy" class="btn btn-sm btn-secondary"><i class="fa fa-copy"></i></button>
+                        <button onclick="onDelete(this)" id="'.$item->id.'" value="'.$item->nama.'" title="Hapus" class="btn btn-sm btn-secondary"><i  class="fa fa-trash"></i></button>';
                     })
                     ->rawColumns(['action'])
                     ->make(true);
@@ -630,6 +631,32 @@ class KuisionerController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function detailKuisioner($id){
+
+        #get pertanyaan berdasarkan kuisioner
+        $pertanyaanModel = new PertanyaanKuisionerModel();
+        $pilihanModel    = new PilihanModel();
+
+        $pertanyaan      = $pertanyaanModel->getPertanyaanByKuisionerId($id);
+
+        #get jawaban dari setiap pertanyaaan
+        $results = [];
+        foreach ($pertanyaan as $value) {
+            $jawaban = $pilihanModel->getPilihanJawabanByPertanyaanId($value->id);
+            $results[] = [
+                'nomor' => $value->nomor,
+                'pertanyaan' => $value->isi,
+                'jawaban' => $jawaban           
+            ];
+        }
+
+        #untuk nilai rata2 :
+        # jumlah jawaban / jumlah responden * 100
+        
+        return $results;
+
     }
    
 }

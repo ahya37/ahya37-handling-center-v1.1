@@ -17,7 +17,7 @@ class KuisionerModel extends Model
                 ->join('pembimbing as c','a.pembimbing_id','=','c.id')
                 ->join('umrah as d','a.umrah_id','=','d.id')
                 ->select('a.id as aktivitas_umrah_id', 'b.id as kuisioner_umrah_id','b.label',
-                         'a.pembimbing_id', 'a.status_tugas','c.nama as pembimbing','d.tourcode')
+                         'a.pembimbing_id', 'a.status_tugas','c.nama as pembimbing','d.tourcode','d.count_jamaah','b.jumlah_responden')
                 ->where('b.umrah_id', $umrah_id)
                 ->where('a.id', $aktivitas_umrah_id)
                 ->first();
