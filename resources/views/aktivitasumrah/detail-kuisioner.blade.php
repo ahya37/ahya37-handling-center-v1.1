@@ -112,15 +112,16 @@
 					<div class="col-md-12">
 						<h5>Essay</h5>
 					</div>
-					
-					<div class="col-md-12">
+				</div>
+				<div class="row">
 						<div class="card">
 							<div  class="card-body">
 								@php
 									$no_essay = 1;
+									$no_essay_jawaban = 1;
 								@endphp
 								@foreach ($result_kuisioner_essay as $item)
-									<div class="card-header"><b>{{$item['isi']}}</b></div>
+									<div class="card-header"><b>{{$no_essay++}}. {{$item['isi']}}</b></div>
 									<table class="table">
 										<tr>
 											<th>No</th>
@@ -128,7 +129,7 @@
 										</tr>
 										@foreach ($item['jawaban'] as $val)
 										<tr>
-											<td>{{$no_essay++}}</td>
+											<td>{{$no_essay_jawaban++}}</td>
 											<td>{{$val->essay}}</td>
 										</tr>
 										@endforeach
@@ -137,8 +138,6 @@
 								@endforeach
 							</div>
 						</div>
-					</div>
-
 				</div>
     </div>
 </div>
