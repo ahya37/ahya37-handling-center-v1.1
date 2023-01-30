@@ -89,7 +89,6 @@
 									@php
 										$avg = ceil($val->jml_jawaban/$kuisioner->count_jamaah*100);
 										$v   = $gf->generateNilaiKuisioner($no_jawaban_rumus++)
-										$nilai =  
 									@endphp
 									<tr>
 										<td>{{$no_jawaban++}}</td>
