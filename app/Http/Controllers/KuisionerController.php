@@ -652,12 +652,16 @@ class KuisionerController extends Controller
         $results = [];
         foreach ($pertanyaan as $value) {
             $jawaban = $pilihanModel->getPilihanJawabanByPertanyaanId($value->id);
+
+
             $results[] = [
                 'nomor' => $value->nomor,
                 'pertanyaan' => $value->isi,
-                'jawaban' => $jawaban           
+                'jawaban' => $jawaban,
+                'nilai' => $count           
             ];
         }
+
 
         #untuk nilai rata2 :
         # jumlah jawaban / jumlah responden * 100

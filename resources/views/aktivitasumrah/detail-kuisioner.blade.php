@@ -79,6 +79,7 @@
 								@php
 									$no_jawaban = 1;
 									$no_jawaban_rumus = 1;
+
 								@endphp
 								{{-- <div class="row">
 									<div class="col-md-2">{{$no_jawaban++}}. {{$val->jawaban}}</div>
@@ -92,21 +93,27 @@
 										<th style="text-align: right">Rata-Rata</th>
 									</tr>
 									@foreach ($item['jawaban'] as $val)
+									
 									@php
 										$avg = ($val->jml_jawaban/$kuisioner->jumlah_responden)*100;
-										$v   = $gf->generateNilaiKuisioner($no_jawaban_rumus++);
+										$r_persentage   = $gf->generateNilaiKuisioner($no_jawaban_rumus++);
+										$n_avg = ceil($avg);	
+										$result_nilai = ceil(($n_avg*$r_persentage) / 100);
+
 									@endphp
+									
 									<tr>
 										<td>{{$no_jawaban++}}</td>
 										<td>{{$val->jawaban}}</td>
 										<td align="right">{{$val->jml_jawaban}}</td>
-										<td align="right">{{round($avg)}} %</td>
+										<td align="right">{{$n_avg}}</td>
+										{{-- <td style="text-align: right">{{$result_nilai}}</td> --}}
 									</tr>
 									@endforeach
-									{{-- <tr>
+									<tr>
 										<td colspan="3"><b>Nilai</b></td>
-										<td style="text-align: right"><b>0</b></td>
-									</tr> --}}
+										<td style="text-align: right"><b>{{$item['nilai']}}</b></td>
+									</tr>
 								</table>
 							</div>
 						</div>

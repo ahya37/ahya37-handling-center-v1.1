@@ -1853,18 +1853,36 @@ class AktivitasUmrahController extends Controller
         #get pertanyaan by umrah_id dan aktivitas_umrah_id
         $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
 
-
-
         $result_kuisioner = [];
         foreach ($pertanyaan as $value) {
             $jawaban = $kuisionerModel->getJumlahJawaban($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
+
+            $jml_jawaban = count($jawaban);
+
+            $rata  = [];
+            $index = [];
+            $nilai_sementara = [];
+
+            foreach ($jawaban as $key => $n) {
+                
+                $index[] = $key;
+                $rata[] = ($n->jml_jawaban/$kuisioner->jumlah_responden) * 100;
+                // $nilai_sementara[] = $gf->generateNilaiKuisionerV2($jml_jawaban, $key);
+                
+            }
+
             $result_kuisioner[] = [
                 'id' => $value->id,
                 'nomor' => $value->nomor,
                 'isi' => $value->isi,
-                'jawaban' => $jawaban
+                'jawaban' => $jawaban,
+                // 'rata' => $rata,
+                // 'index' => $index,
+                'nilai' => $gf->generateNilaiKuisionerV2($jml_jawaban, $rata)
             ];
         }
+
+        // dd($result_kuisioner);
 
         #pertanyaan essay
         $pertanyaan_essay = $kuisionerModel->getPertanyaanEssayByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);

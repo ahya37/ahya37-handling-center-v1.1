@@ -111,4 +111,88 @@ class Globalprovider extends ServiceProvider
 
         return $nilai;
     }
+
+    public function generateNilaiAkhirKuisioner($data, $kuisioner, $no_jawaban_rumus, $result_nilai){
+
+        // $sum = collect($data)->sum(function($q) use ($kuisioner) {
+        //     $avg = ($q->jml_jawaban/$kuisioner->jumlah_responden)*100;
+
+        //     return $avg;
+        // });
+
+        // #hitung jawaban
+        $count = count($data);
+
+        // if ($count = 2) {
+            
+        // }
+
+        $result_nilai = 0;
+        foreach ($data as $val) {
+
+            $avg = ($val->jml_jawaban/$kuisioner->jumlah_responden)*100;
+            $r_persentage = $this->generateNilaiKuisioner($no_jawaban_rumus++);
+            $n_avg = round($avg);
+            $result_nilai = ($n_avg*$r_persentage)/$n_avg;
+        }
+
+        if ($couunt = 2) {
+            $result_nilai = $result_nilai;  
+        }elseif ($count = 3) {
+            $result_nilai = ($result_nilai + 50) - 100;  
+        }elseif ($count = 4) {
+            $result_nilai = ($result_nilai + 50) - 50 - 100;  
+        }
+
+        return $result_nilai;
+
+    }
+
+    public function generateNilaiKuisionerV2($jml_jawaban, $rata_rata){
+
+        // if ($nomor == 0) {
+
+        //      $nilai = 100;
+
+        // }elseif ($nomor == 1) {
+
+        //      $nilai = 50;
+
+        // }elseif ($nomor == 2) {
+
+        //      $nilai = 50;
+
+        // }elseif ($nomor == 3) {
+
+        //  $nilai = 100;
+
+        // }
+
+        // return $nilai;
+
+        $result = 0;
+
+        if ($jml_jawaban == 1) {
+            #jika jumlah jawaban = 1, maka tampilkan nilai $rata_rata langsung
+            $result = (($rata_rata[0]*100)/100);
+
+        }elseif ($jml_jawaban == 2) {
+            # jika jumlah jawaban = 2, maka 
+                #(($rata_rata[0] * 100)/100) + (($rata_rata[1] * 50)/100) - 0 - 0;
+            $result = (($rata_rata[0]*100)/100) + (($rata_rata[1]*50)/100) - 0 - 0;
+
+        }elseif ($jml_jawaban == 3) {
+            #jika jumlah jawaban = 3, maka
+                #(($rata_rata[0] * 100) / 100) + (($rata_rata[1] * 50) / 100) - (($rata_rata[2]*50)/100) - 0;
+            $result = (($rata_rata[0]*100)/100) + (($rata_rata[1]*50)/100) - (($rata_rata[2]*50)/100) - 0;
+
+        }elseif ($jml_jawaban == 4) {
+            #jika jumlah jawaban = 4, maka
+                #(($rata_rata[0] * 100) / 100) + (($rata_rata[1] * 50) / 100) - (($rata_rata[2]*50)/100) - 0 - 0;
+            $result = (($rata_rata[0]*100)/100) + (($rata_rata[1]*50)/100) - (($rata_rata[2]*50)/100) - (($rata_rata[3]*100)/100);
+
+        }
+
+       return ceil($result);
+    }
 }
