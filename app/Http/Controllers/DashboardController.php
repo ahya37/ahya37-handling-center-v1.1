@@ -268,8 +268,8 @@ class DashboardController extends Controller
         // - tampilkan tourcode
         $tourcode = DB::table('aktivitas_umrah as a')
                     ->join('umrah as b','b.id','=','a.umrah_id')
-                    ->select('b.tourcode','a.umrah_id')
-                    ->groupBy('b.tourcode','a.umrah_id')
+                    ->select('b.tourcode')
+                    ->groupBy('b.tourcode')
                     ->get();
 
         
@@ -280,8 +280,10 @@ class DashboardController extends Controller
             #get pembimbing by umrah
             $pembimbing = DB::table('aktivitas_umrah as a')
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                          ->join('umrah as c','a.umrah_id','=','c.id')
                           ->select('b.nama','a.status_tugas')
-                          ->where('a.umrah_id', $item->umrah_id)
+                          ->where('c.tourcode', $item->tourcode)
+                          ->groupBy('b.nama','a.status_tugas')
                           ->get();
 
             #get kuisioner by tourcode

@@ -41,10 +41,12 @@
 								</thead>
 								@php
 									$no = 1;
-									$no_pembimbing = 1;
 								@endphp
 								<tbody>
 									@foreach ($results as $tr)
+									@php
+										$no_pembimbing = 1;
+									@endphp
 										<tr>
 											<td>{{$no++}}</td>
 											<td>{{$tr['tourcode']}}</td>
