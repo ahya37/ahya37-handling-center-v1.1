@@ -43,7 +43,7 @@
 										@foreach ($sub['pertanyaan'] as $pertanyaan)
 										<tr>
 											<td>{{$pertanyaan['jawaban']}}</td>
-											<td style="text-align: right">{{$pertanyaan['avg']}}%</td>
+											<td style="text-align: right">{{$pertanyaan['avg']}}</td>
 										</tr>
 										@endforeach
 									</table>
