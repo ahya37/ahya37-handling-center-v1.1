@@ -11,63 +11,67 @@
         <div class="page-content">
                 {{-- <x:notify-messages /> --}}
 				@include('layouts.message')
-				<h6 class="mb-0 ">Detail Kuisioner</h6>
+					<h6 class="mb-0 "><b>Nilai Bimbingan Umrah : {{$responden->tourcode}}</b></h6>
+					<h6><b>Bersasarkan Kuisioner Jamaah</b></h6>
+					<h6><b>Pembimbing Ibadah : </b></h6>
+					@foreach ($pembimbing as $item)
+						<h6><b>UST.{{$item->nama}}</b> ({{$item->status_tugas}})</h6>
+					@endforeach
 				<hr/>
-				<div class="card">
-					<div class="card-body">
-						{{-- <div class="row">
-							<div class="col-md-2 mt-1">
-								<div class="mb-4">
-									<button onclick="allMonth()"  class="btn btn-sm btn-outline-secondary ml-1" title="Bulan">Tampilkan Semua</button>
-							</div>
-							</div>
 
-							<div class="col-md-4">
-								<select id="tourcode" class="single-select tourcode @error ('tourcode') is-invalid @enderror" name="tourcode"></select>
-							</div>
-							<div class="col-md-1 mt-1">
-								<a href="{{ route('umrah.create') }}" class="btn btn-sm float-right mb-4 text-primary" title="Tambah Baru"><i class="lni lni-circle-plus"></i> </a>
-							</div>
-						</div> --}}
-						<div class="table">
-							<table id="tablePlace" class="table table-hover" style="width:100%">
-								<thead>
-									<tr>
-                                        <th>No</th>
-                                        <th>Tourcode</th>
-                                        <th>Pembimbing</th>
-                                        <th>Resume</th>
-									</tr>
-								</thead>
-								@php
-									$no = 1;
-									$no_pembimbing = 1;
-								@endphp
-								<tbody>
-									@foreach ($results as $tr)
+				<span class="mb-4"><i>Total Jamaah  = {{$responden->count_jamaah}}, Data yang masuk  = {{$responden->jumlah_responden}}</i></span>
+
+				<br>
+
+				<div class="col-md-8 mt-4">
+					@foreach ($result_kategori as $kategori)
+					<div class="card">
+						<div class="card-header"><b>{{$kategori['nomor']}}. {{$kategori['kategori']}}</b></div>
+						<div class="card-body">
+							@php
+								$no = 1;	
+							@endphp
+							@foreach ($kategori['sub_kategori'] as $sub)
+							<div class="card">
+								<div class="card-header">{{$no++}} . {{$sub['nama']}}</div>
+								<div class="card-body">
+									<table class="table">
 										<tr>
-											<td>{{$no++}}</td>
-											<td>{{$tr['tourcode']}}</td>
-											<td>
-												<ol>
-													@foreach ($tr['pembimbing'] as $pembimbing)
-														<li>
-															{{$no_pembimbing++}}. {{$pembimbing->nama}} ({{$pembimbing->status_tugas}})
-														</li>
-													@endforeach
-												</ol>
-											</td>
-											<td>
-												<a class="btn btn-sm btn-primary" href="/dashboard/resumekuisioner/detail/?tourcode={{$tr['tourcode']}}" >Resume</a>
-												{{-- <form action="{{route('dashbaord.resume.kuisioner.detail')}}" method="GET">
-													<input type="hidden" name="tourcode" value="{{$tr['tourcode']}}">
-													<button class="btn btn-sm btn-primary">Resume</button>
-												</form> --}}
-											</td>
+											<th class="col-md-1">Jawaban</th>
+											<th class="col-md-1" style="text-align: right">Nilai</th>
+										</tr>
+										@foreach ($sub['pertanyaan'] as $pertanyaan)
+										<tr>
+											<td>{{$pertanyaan['jawaban']}}</td>
+											<td style="text-align: right">{{$pertanyaan['avg']}}%</td>
 										</tr>
 										@endforeach
-								</tbody>
-							</table>
+									</table>
+								</div>
+							</div>
+							@endforeach
+						</div>
+					</div>
+					@endforeach
+				</div>
+
+				<div class="row mt-3">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header"><b>Catatan evaluasi dari jamaah</b></div>
+							<div class="card-body">
+								<table class="table">
+									@php
+										$no_essay = 1;	
+									@endphp
+									@foreach ($essay as $item)
+										<tr>
+											<td>{{$no_essay++}}</td>
+											<td>{{$item->essay}}</td>
+										</tr>
+									@endforeach
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -85,7 +89,7 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 {{-- <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script> --}}
 {{-- <script src="{{ asset('/js/detail-kuisioner-dashboard.js') }}"></script> --}}
-<script>
+{{-- <script>
 	$('#tablePlace').DataTable();
-</script>
+</script> --}}
 @endpush

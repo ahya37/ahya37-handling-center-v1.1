@@ -280,7 +280,7 @@ class DashboardController extends Controller
             #get pembimbing by umrah
             $pembimbing = DB::table('aktivitas_umrah as a')
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
-                          ->select('b.nama')
+                          ->select('b.nama','a.status_tugas')
                           ->where('a.umrah_id', $item->umrah_id)
                           ->get();
 
@@ -300,9 +300,9 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('dashboard.kuisioner.resume-kuisioner');
-
         // return $results;
+        return view('dashboard.kuisioner.resume-kuisioner', compact('results'));
+
 	    // - RESUME
 		// - tampilkan nama pembimbing by  tourcode
 		// - tampilkan resume kuisioner by tourcode
@@ -315,6 +315,12 @@ class DashboardController extends Controller
         $kategori = DB::table('kategori_pertanyaan_kuisioner');
 
         #hitung jumlah responden by tourcode
+        $responden  = DB::table('kuisioner_umrah as a')
+                        ->join('umrah as b','a.umrah_id','=','b.id')
+                        ->where('b.tourcode', $tourcode)
+                        ->orderBy('a.jumlah_responden','desc')
+                        ->select('a.jumlah_responden','b.count_jamaah','b.tourcode')
+                        ->first();
                               
         $kategori_pertanyaan = DB::table('kategori_pertanyaan_kuisioner')
                             ->select('id','number','nama')
@@ -357,7 +363,7 @@ class DashboardController extends Controller
                     $rata_rata_pertanyaan[] = [
                         'jawaban' => $itempertanyaan->isi,
                         // 'jml_jawaban' => $itempertanyaan->jml_jawaban,
-                        'avg' => ceil(($itempertanyaan->jml_jawaban/$total_jawaban)*100)
+                        'avg' => round(($itempertanyaan->jml_jawaban/$total_jawaban)*100)
                     ];
                 }
 
@@ -368,6 +374,20 @@ class DashboardController extends Controller
                 ];
             }
 
+            #get pembimbing by umrah
+            $pembimbing = DB::table('aktivitas_umrah as a')
+                          ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                          ->join('umrah as c','a.umrah_id','c.id')
+                          ->select('b.nama','a.status_tugas')
+                          ->where('c.tourcode', $tourcode)
+                          ->groupBy('b.nama','a.status_tugas')
+                          ->get();
+
+            #get essay 
+            $essay = DB::select("SELECT a.essay  from essay_jawaban_kuisioner_umrah  as a 
+                                join umrah as b on a.umrah_id = b.id 
+                                where b.tourcode = '$tourcode' and a.essay is not null group by a.essay");
+
             $result_kategori[] = [
                 'id_kategori' => $item->id,
                 'nomor' => $item->number,
@@ -376,7 +396,8 @@ class DashboardController extends Controller
             ];
         }
 
-        return $result_kategori;
+        // return $result_kategori;
+        return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay'));
     }
 
 }
