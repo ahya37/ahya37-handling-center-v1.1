@@ -11,7 +11,7 @@
         <div class="page-content">
                 {{-- <x:notify-messages /> --}}
 				@include('layouts.message')
-				<h6 class="mb-0 ">Detail Kuisioner</h6>
+				<h6 class="mb-0 ">Resume Kuisioner</h6>
 				<hr/>
 				<div class="card">
 					<div class="card-body">
