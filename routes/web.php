@@ -30,6 +30,9 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/kuisioner','DashboardController@dashboardKuisioner')->name('dashbaord.kuisioner');
     Route::get('/analytics','DashboardController@dashboardAnalitycs')->name('dashbaord.analytics');
     Route::get('/analytics/sop_n/detail/{id}','AktivitasUmrahController@detailSopNByAktivitasUmrah');
+    Route::get('/resumekuisioner','DashboardController@resumeKuisioner')->name('dashbaord.resume.kuisioner');
+    Route::get('/resumekuisioner/detail/','DashboardController@getDetailResumeByTourcode')->name('dashbaord.resume.kuisioner.detail');
+
 });
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {

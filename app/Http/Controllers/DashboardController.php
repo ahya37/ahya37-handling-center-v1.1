@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\KategoriPilihanJawaban;
 use DB;
+use App\KuisionerModel;
 
 class DashboardController extends Controller
 {
@@ -260,6 +261,122 @@ class DashboardController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    public function resumeKuisioner(){
+
+        // - tampilkan tourcode
+        $tourcode = DB::table('aktivitas_umrah as a')
+                    ->join('umrah as b','b.id','=','a.umrah_id')
+                    ->select('b.tourcode','a.umrah_id')
+                    ->groupBy('b.tourcode','a.umrah_id')
+                    ->get();
+
+        
+
+        $results = [];
+        foreach($tourcode as $item){
+
+            #get pembimbing by umrah
+            $pembimbing = DB::table('aktivitas_umrah as a')
+                          ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                          ->select('b.nama')
+                          ->where('a.umrah_id', $item->umrah_id)
+                          ->get();
+
+            #get kuisioner by tourcode
+            $kuisioner = DB::select("SELECT b.id as aktivitas_umrah_id, e.nama as kuisioner from umrah as a 
+                            left join aktivitas_umrah as b on a.id = b.umrah_id
+                            left join kuisioner_umrah as d on d.umrah_id = a.id 
+                            left join kuisioner as e on d.kuisioner_id = e.id 
+                            where a.tourcode = '$item->tourcode'
+                            order by a.tourcode asc");
+
+            #get kategori pertanyaan
+            $results[] = [
+                'tourcode' => $item->tourcode,
+                'pembimbing' => $pembimbing,
+                'kuisioner' => $kuisioner,
+            ];
+        }
+
+        return view('dashboard.kuisioner.resume-kuisioner');
+
+        // return $results;
+	    // - RESUME
+		// - tampilkan nama pembimbing by  tourcode
+		// - tampilkan resume kuisioner by tourcode
+    }
+
+    public function getDetailResumeByTourcode(){
+
+        $tourcode = request('tourcode');
+
+        $kategori = DB::table('kategori_pertanyaan_kuisioner');
+
+        #hitung jumlah responden by tourcode
+                              
+        $kategori_pertanyaan = DB::table('kategori_pertanyaan_kuisioner')
+                            ->select('id','number','nama')
+                            ->orderBy('number','asc')
+                            ->whereNull('parent_id')->get();
+
+        $result_kategori       = [];
+        foreach($kategori_pertanyaan as $item){
+
+            #get sub kategori
+            $sub_kategori = DB::table('kategori_pertanyaan_kuisioner')
+                            ->where('parent_id', $item->id)
+                            ->select('id','nama')
+                            ->get();
+
+            # get pertanyaan by subkategori
+            # get pilihan jawaban by pertanyan
+            $result_pertanyaan = [];
+            foreach($sub_kategori as $sub){
+
+                // $pertanyaan = DB::table('pertanyaan_kuisioner')
+                //                     ->select('id as id_pertanyaan','kuisioner_id','nomor','isi as pertanyaan')
+                //                     ->where('kategori_id', $sub->id)
+                //                     ->get();
+
+               $pertanyaan = DB::select("SELECT b.isi, count(a.jawaban)  as jml_jawaban
+                            from jawaban_kuisioner_umrah as a 
+                            join pilihan as b on a.pilihan_id = b.id
+                            join umrah as c on a.umrah_id = c.id
+                            join pertanyaan_kuisioner as d on a.pertanyaan_id = d.id
+                            where c.tourcode = '$tourcode' and d.kategori_id = $sub->id  group by b.isi");
+
+                $total_jawaban = collect($pertanyaan)->sum(function($q){
+                    return $q->jml_jawaban;
+                });
+
+                $rata_rata_pertanyaan = [];
+                foreach($pertanyaan as $itempertanyaan){
+
+                    $rata_rata_pertanyaan[] = [
+                        'jawaban' => $itempertanyaan->isi,
+                        // 'jml_jawaban' => $itempertanyaan->jml_jawaban,
+                        'avg' => ceil(($itempertanyaan->jml_jawaban/$total_jawaban)*100)
+                    ];
+                }
+
+                $result_pertanyaan[] = [
+                    'id_sub' => $sub->id,
+                    'nama'  => $sub->nama,
+                    'pertanyaan' => $rata_rata_pertanyaan,
+                ];
+            }
+
+            $result_kategori[] = [
+                'id_kategori' => $item->id,
+                'nomor' => $item->number,
+                'kategori' => $item->nama,
+                'sub_kategori' => $result_pertanyaan
+            ];
+        }
+
+        return $result_kategori;
     }
 
 }
