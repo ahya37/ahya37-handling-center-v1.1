@@ -23,37 +23,53 @@
 
 				<br>
 
-				<div class="col-md-8 mt-4">
-					@foreach ($result_kategori as $kategori)
-					<div class="card">
-						<div class="card-header"><b>{{$kategori['nomor']}}. {{$kategori['kategori']}}</b></div>
-						<div class="card-body">
-							@php
-								$no = 1;	
-							@endphp
-							@foreach ($kategori['sub_kategori'] as $sub)
-							<div class="card">
-								<div class="card-header">{{$no++}} . {{$sub['nama']}}</div>
-								<div class="card-body">
-									<table class="table">
-										<tr>
-											<th class="col-md-1">Jawaban</th>
-											<th class="col-md-1" style="text-align: right">Nilai</th>
-										</tr>
-										@foreach ($sub['pertanyaan'] as $pertanyaan)
-										<tr>
-											<td>{{$pertanyaan['jawaban']}}</td>
-											<td style="text-align: right">{{$pertanyaan['avg']}}</td>
-										</tr>
-										@endforeach
-									</table>
+				<div class="row">
+					<div class="col-md-8 mt-4">
+						@foreach ($result_kategori as $kategori)
+						<div class="card">
+							<div class="card-header"><b>{{$kategori['nomor']}}. {{$kategori['kategori']}}</b></div>
+							<div class="card-body">
+								@php
+									$no = 1;	
+								@endphp
+								@foreach ($kategori['sub_kategori'] as $sub)
+								<div class="card">
+									<div class="card-header">{{$no++}} . {{$sub['nama']}}</div>
+									<div class="card-body">
+										<table class="table">
+											<tr>
+												<th class="col-md-1">Jawaban</th>
+												<th class="col-md-1" style="text-align: right">Nilai</th>
+											</tr>
+											@foreach ($sub['pertanyaan'] as $pertanyaan)
+											<tr>
+												<td>{{$pertanyaan['jawaban']}}</td>
+												<td style="text-align: right">{{$pertanyaan['avg']}}</td>
+											</tr>
+											@endforeach
+										</table>
+									</div>
 								</div>
+								@endforeach
 							</div>
-							@endforeach
+						</div>
+						@endforeach
+					</div>
+
+					<div class="col-md-4">
+						<div class="card">
+							<div class="card-header">Jenis Kuisioner</div>
+							<div class="card-body">
+								<ul>
+									@foreach ($kuisioner_tourcode as $ks)
+										<li class="mt-2"><a class="btn btn-sm btn-primary" href="/aktivitas/tourcode/kuisioner/umrah/{{$ks->umrah_id}}/aktivitasumrahid/{{$ks->id}}">{{$ks->kuisioner}} ></a></li>
+									@endforeach
+								</ul>
+							</div>
 						</div>
 					</div>
-					@endforeach
 				</div>
+
 
 				<div class="row mt-3">
 					<div class="col-md-12">

@@ -284,6 +284,7 @@ class DashboardController extends Controller
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                           ->join('umrah as c','a.umrah_id','=','c.id')
                           ->select('b.nama','a.status_tugas')
+                          ->where('a.nonaktif',0)
                           ->where('c.tourcode', $item->tourcode)
                           ->groupBy('b.nama','a.status_tugas')
                           ->get();
@@ -378,11 +379,23 @@ class DashboardController extends Controller
                 ];
             }
 
+            #kuisioner per tourcode
+            $kuisioner_tourcode = DB::select("SELECT e.nama as kuisioner , d.nama as pembimbing, c.id, c.umrah_id  from kuisioner_umrah as a
+                                    join umrah as b on b.id = a.umrah_id
+                                    join aktivitas_umrah as c on c.umrah_id = b.id
+                                    join pembimbing as d on d.id = c.pembimbing_id
+                                    join kuisioner as e on e.id = a.kuisioner_id
+                                    WHERE b.tourcode = '$tourcode'
+                                    GROUP by e.nama , d.nama , c.id , c.umrah_id");
+            //  $kuisioner_tourcode = array_unique($kuisioner_tourcode);                
+
+            //  $kuisioner_tourcode =  array_map("unserialize", array_unique(array_map("serialize", $kuisioner_tourcode)));
             #get pembimbing by umrah
             $pembimbing = DB::table('aktivitas_umrah as a')
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                           ->join('umrah as c','a.umrah_id','c.id')
                           ->select('b.nama','a.status_tugas')
+                          ->where('a.nonaktif',0)
                           ->where('c.tourcode', $tourcode)
                           ->groupBy('b.nama','a.status_tugas')
                           ->get();
@@ -401,7 +414,7 @@ class DashboardController extends Controller
         }
 
         // return $result_kategori;
-        return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay'));
+        return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay','kuisioner_tourcode'));
     }
 
 }

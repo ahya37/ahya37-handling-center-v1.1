@@ -267,7 +267,11 @@ const table = $("#data").DataTable({
     {
       targets: 1,
       render: function (data, type, row, meta) {
-        return `<p>${row.pembimbing} (${row.status_tugas})</p>`;
+        if (row.nonaktif === 1) {
+          return '-';
+        }else{
+          return `<p>${row.pembimbing} (${row.status_tugas})</p>`;
+        }
       },
     },
     {
@@ -305,9 +309,9 @@ const table = $("#data").DataTable({
             : "";
         const btnDetailTugas = row.nonaktif === 1 ? "" : `<a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>`;
         const btnHapus = row.nonaktif === 1 ? "" : `<button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-danger">Hapus</button>`;
+        // const btnKuisioner =  `<a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">${row.kuisioner}</a>`;
         return `
                 ${btnDetailTugas}
-                <a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">${row.kuisioner}</a>
                 ${btnSelesai}
                 ${btnHapus}
         `;

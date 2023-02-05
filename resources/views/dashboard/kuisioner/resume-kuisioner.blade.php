@@ -30,7 +30,7 @@
 							</div>
 						</div> --}}
 						<div class="table">
-							<table id="tablePlace" class="table table-hover" style="width:100%">
+							<table id="tablePlace" class="table table-hover striped" style="width:100%">
 								<thead>
 									<tr>
                                         <th>No</th>
