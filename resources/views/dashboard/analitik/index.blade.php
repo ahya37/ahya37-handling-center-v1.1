@@ -15,12 +15,12 @@
 @section('content')
     <div class="page-wrapper">
         <div class="page-content">
-            <h5>DEVELOPMENT MODE</h6>
-                <ul style="list-style-type:circle">
+            <h5>ANALITIK SOP</h6>
+                {{-- <ul style="list-style-type:circle">
                     <li>
-                        {{-- Grafik yang ditampilkan adalah data penilaian dari semua penugasan pembimbing --}}
-                </ul>
-                </li>
+                        Grafik yang ditampilkan adalah data penilaian dari semua penugasan pembimbing
+                    </li>
+                </ul> --}}
                 <hr />
                 <div class="card">
                     <div class="card-body">
