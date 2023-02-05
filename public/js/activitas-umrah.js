@@ -273,22 +273,26 @@ const table = $("#data").DataTable({
     {
       targets: 2,
       render: function (data, type, row, meta) {
-        if (row.status === "finish") {
-          let nilai_akhir = calculateGrade(row.nilai_akhir);
-          if (nilai_akhir === "A") {
-            return `<span class='text-success'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "B") {
-            return `<span class='text-primary'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "C") {
-            return `<span class='text-warning'>${nilai_akhir}</span>`;
-          }
-          if (nilai_akhir === "D") {
-            return `<span class='text-danger'>${nilai_akhir}</span>`;
-          }
+        if (row.nonaktif === 1) {
+          return '-'
         }else{
-          return `<span>Dalam proses mengerjakan</span>`;
+          if (row.status === "finish") {
+            let nilai_akhir = calculateGrade(row.nilai_akhir);
+            if (nilai_akhir === "A") {
+              return `<span class='text-success'>${nilai_akhir}</span>`;
+            }
+            if (nilai_akhir === "B") {
+              return `<span class='text-primary'>${nilai_akhir}</span>`;
+            }
+            if (nilai_akhir === "C") {
+              return `<span class='text-warning'>${nilai_akhir}</span>`;
+            }
+            if (nilai_akhir === "D") {
+              return `<span class='text-danger'>${nilai_akhir}</span>`;
+            }
+          }else{
+            return `<span>Dalam proses mengerjakan</span>`;
+          }
         }
       },
     },
@@ -299,11 +303,13 @@ const table = $("#data").DataTable({
           row.status === `active`
             ? `<button onclick="onFinish(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-warning">Selesai</button>`
             : "";
+        const btnDetailTugas = row.nonaktif === 1 ? "" : `<a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>`;
+        const btnHapus = row.nonaktif === 1 ? "" : `<button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-danger">Hapus</button>`;
         return `
-                <a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>
+                ${btnDetailTugas}
                 <a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">${row.kuisioner}</a>
                 ${btnSelesai}
-                <button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-danger">Hapus</button>
+                ${btnHapus}
         `;
       },
     },

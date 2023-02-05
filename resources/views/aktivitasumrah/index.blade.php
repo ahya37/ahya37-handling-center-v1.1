@@ -46,7 +46,7 @@
                                         <th>Pembimbing / Asisten</th>
                                         <th>Grade</th>
                                         <th>Opsi</th>
-                                        <th>ID</th>
+                                        <th>ID Umrah</th>
 									</tr>
 								</thead>
 								<tbody></tbody>

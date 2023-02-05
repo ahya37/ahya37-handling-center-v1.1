@@ -582,7 +582,7 @@ class AktivitasUmrahController extends Controller
                             ->join('umrah as c','c.id','=','a.umrah_id')
                             ->join('kuisioner_umrah as d','d.umrah_id','=','c.id')
                             ->join('kuisioner as e','e.id','=','d.kuisioner_id')
-                            ->select('a.id','b.nama as pembimbing','c.tourcode', 'a.status','c.dates','c.id as umrah_id','c.start_date','c.end_date','a.status_tugas','e.nama as kuisioner',
+                            ->select('a.id','b.nama as pembimbing','c.tourcode', 'a.status','c.dates','c.id as umrah_id','c.start_date','c.end_date','a.status_tugas','e.nama as kuisioner','a.nonaktif',
                             DB::raw('(select sum(nilai_akhir) from detail_aktivitas_umrah where aktivitas_umrah_id = a.id) as nilai_akhir'))
                             ->where('a.isdelete', 0);
 

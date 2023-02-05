@@ -220,11 +220,12 @@ class DashboardController extends Controller
             $id = request()->id;
 
             $grade = DB::table('aktivitas_umrah as a')
-                    ->select('a.id','c.tourcode','c.start_date',DB::raw('sum(b.nilai_akhir) as nilai'))
+                    ->select('c.tourcode','c.start_date',DB::raw('sum(b.nilai_akhir) as nilai'))
                     ->join('detail_aktivitas_umrah as b','a.id','=','b.aktivitas_umrah_id')
                     ->join('umrah as c','a.umrah_id','=','c.id')
                     ->where('a.pembimbing_id', $id)
-                    ->groupBy('a.id','c.tourcode','c.start_date')
+                    ->where('a.nonaktif', 0)
+                    ->groupBy('c.tourcode','c.start_date')
                     ->orderBy('c.start_date','asc')
                     ->get();
 
@@ -235,6 +236,7 @@ class DashboardController extends Controller
                         ->join('umrah as b','a.umrah_id','=','b.id')
                         ->join('detail_aktivitas_umrah as c','c.aktivitas_umrah_id','=','a.id')
                         ->where('c.status','N')
+                        ->where('a.nonaktif', 0)
                         ->where('a.pembimbing_id',$id)
                         ->groupBy('a.id','b.tourcode')
                         ->orderBy('b.start_date','asc')
