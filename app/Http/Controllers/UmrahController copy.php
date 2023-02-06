@@ -66,23 +66,40 @@ class UmrahController extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $request->validate([
                        'tourcode' => 'required',
+                       'kuisioner' => 'required',
+                       'sop' => 'required',
                        'dates' => 'required',
                        'count' => 'required',
                    ]);
-            
+                   
            $dates_request = explode('-', $request->dates);
+           
+           $kuisioner = KuisionerModel::select('id','nama','lokasi')->where('id', $request->kuisioner)->first();
 
            $umrah = UmrahModel::create([
+               'master_sop_id' => $request->sop,
+               'asisten_master_sop_id' => $request->asisten_sop,
+               'master_sop_petugas_id' => $request->sop_petugas,
                'tourcode' => $request->tourcode,
                'count_jamaah' => $request->count,
                'dates' => $request->dates,
                'start_date' => date('Y-m-d', strtotime($dates_request[1])),
                'end_date' => date('Y-m-d', strtotime($dates_request[0])),
                'create_by' => Auth::user()->id
+           ]);
+   
+           // PROSES MEMBUAT KUISIONER BERDASARKAN JADWAL UMRAH / TOURCODE
+           $label     = "PERCIK Tours. Kuisioner  $kuisioner->lokasi $request->dates (hanya berlaku untuk satu kali pengisian)";
+   
+           KuisionerUmrahModel::create([
+               'umrah_id' => $umrah->id,
+               'label'    => $label,
+               'url' => Str::random(10),
+               'kuisioner_id' => $kuisioner->id,
            ]);
            
             DB::commit();
@@ -190,6 +207,33 @@ class UmrahController extends Controller
 
     public function listData(Request $request)
     {
+        // $umrahModel = new UmrahModel();
+        // $umrah   = $umrahModel->getDataUmrah();
+        // if (request()->ajax()) 
+        // {
+        //     return DataTables::of($umrah)
+        //             ->addIndexColumn()
+        //             ->addColumn('action', function($item){
+        //                 $url = $item->url == null ? '<span class="text-danger">Dihapus</span>' : '<a class="btn btn-sm text-primary" href="'.route('umrah.kuisioner.show', $item->id).'">Responden Kuisoner</a>';
+        //                 $kuisioner = $item->url == null ? '<span class="text-danger">Dihapus</span>' : '<a class="btn btn-sm text-primary" href="'.route('umrah.kuisioner.result', $item->id).'">Hasil Kuisoner</a>';
+        //                 return '
+        //                 '.$url.'
+        //                 '.$kuisioner.'
+        //                 <a href="'.route('umrah.edit', $item->id).'" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
+        //                 <button onclick="onDelete(this)" id="'.$item->id.'" value="'.$item->tourcode.'" title="Hapus" class="fa fa-trash text-danger"></button>
+        //                 ';
+        //             })
+        //             ->addColumn('createdAt', function($item){
+        //                 return date('d-m-Y H:i', strtotime($item->created_at));
+        //             })
+        //             ->addColumn('urlKuisioner', function($item){
+        //                 $url = $item->url == null ? '<span class="text-danger">Dihapus</span>' : '<a target="_blank" href="'.route('kuisioner.umrah.view', $item->url).'">'.$item->url.'</a>';
+        //                 return $url;
+        //             })
+        //             ->rawColumns(['action','createdAt','urlKuisioner'])
+        //             ->make(true);
+        // }
+
         $orderBy = 'a.tourcode';
         switch ($request->input('order.0.column')) {
             case '1':
@@ -201,8 +245,9 @@ class UmrahController extends Controller
         }
 
         $data =  DB::table('umrah as a')
+            ->leftJoin('kuisioner_umrah as b','b.umrah_id','=','a.id')
             ->where('a.isdelete',0)
-            ->select('a.id','a.tourcode','a.dates','a.created_at','a.count_jamaah');
+            ->select('a.id','a.tourcode','a.dates','a.created_at','b.url','a.count_jamaah');
 
         if($request->input('search.value')!=null){
                 $data = $data->where(function($q)use($request){
@@ -310,12 +355,12 @@ class UmrahController extends Controller
     public function getDataUmrahByTourcode(Request $request,$month,$year)
     {
 
-        $data = UmrahModel::select('id','tourcode')
+            $data = UmrahModel::select('id','tourcode')
                     ->whereMonth('start_date', $month)
-                    ->whereYear('start_date', $year)
+                    ->whereYear('end_date', $year)
                     ->get();
            
-        if($request->has('q')){
+            if($request->has('q')){
             $search = $request->q;
 
             $data = UmrahModel::select("id","tourcode")

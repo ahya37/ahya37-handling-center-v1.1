@@ -19,22 +19,6 @@
 							<div class="col-md-2 mt-1">
 								<div class="mb-4">
 									<button onclick="allMonth()"  class="btn btn-sm btn-outline-secondary ml-1" title="Bulan">Tampilkan Semua</button>
-									{{-- <button id="dates" class="datepicker filter" title="Bulan">Kalender</button> --}}
-
-									{{-- <div class="dropdown">
-									<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-										Bulan
-									</button>
-									<ul class="row dropdown-menu" aria-labelledby="dropdownMenuButton1">
-										<li>
-											<button id="dates" class="datepicker filter" title="Bulan">Kalender</button>
-										</li>
-										<li>
-											<button onclick="allMonth()"  class="ml-1" title="Bulan">Semua</button>
-										</li>
-									</ul>
-								</div>
-								 --}}
 							</div>
 							</div>
 							<div class="col-md-2 mt-1">
@@ -55,8 +39,7 @@
 									<tr>
                                         <th>Tourcode</th>
                                         <th>Tanggal</th>
-                                        <th>Jumlah Jamaah</th>
-                                        <th>Link Kuisoner</th>
+                                        <th style="text-align: right">Jumlah Jamaah</th>
                                         <th>Opsi</th>
 									</tr>
 								</thead>

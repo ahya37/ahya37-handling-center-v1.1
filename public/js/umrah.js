@@ -60,13 +60,13 @@ $(".datepicker").datepicker(
   })
 );
 
-$(".filter").on("changeDate", async function (selected) {
+$("#dates").on("changeDate", async function (selected) {
   const monthSelected = selected.date.getMonth() + 1;
   const yearSelected = selected.date.getFullYear();
   month = monthSelected;
   year = yearSelected;
-  (urlTourcode = `/api/getdataumrahbymonth/${month}/${year}`),
-    initialSelectTorucode(urlTourcode);
+  urlTourcode = `/api/getdataumrahbymonth/${month}/${year}`;
+  initialSelectTorucode(urlTourcode);
   table.ajax.reload(null, false);
 });
 
@@ -153,27 +153,7 @@ const table = $("#tablePlace").DataTable({
     {
       targets: 3,
       render: function (data, type, row, meta) {
-        const urlKuisioner =
-          row.url === null
-            ? '<span class="text-danger">Dihapus</span>'
-            : `<a target="_blank" class="btn btn-sm text-primary" href="/kuisioner/view/${row.url}">${row.url}</a>`;
-        return urlKuisioner;
-      },
-    },
-    {
-      targets: 4,
-      render: function (data, type, row, meta) {
-        const respondenKuisioner =
-          row.url === null
-            ? '<span class="text-danger">Dihapus</span>'
-            : `<a  class="btn btn-sm text-primary" href="/umrah/show/kuisioner/${row.id}">Responden Kuisoner</a>`;
-        const resultKuisioner =
-          row.url === null
-            ? '<span class="text-danger">Dihapus</span>'
-            : `<a  class="btn btn-sm text-primary" href="/umrah/result/kuisioner/${row.id}">Hasil Kuisoner</a>`;
         return `
-                ${respondenKuisioner}
-                ${resultKuisioner}
                 <a href="/umrah/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
                 <button onclick="onDelete(this)" id="${row.id}" value="${row.tourcode}" title="Hapus" class="fa fa-trash text-danger"></button>
               `;
