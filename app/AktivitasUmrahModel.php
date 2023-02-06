@@ -35,7 +35,7 @@ class AktivitasUmrahModel extends Model
         $sql = DB::table('aktivitas_umrah as a')
                 ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                 ->join('umrah as c','c.id','=','a.umrah_id')
-                ->select('b.nama as pembimbing','c.tourcode','a.status_tugas','c.master_sop_id','c.asisten_master_sop_id','a.id')
+                ->select('b.nama as pembimbing','c.tourcode','a.status_tugas','a.master_sop_id','a.asisten_master_sop_id','a.id')
                 ->where('a.id', $id)    
                 ->first();
         return $sql;
@@ -251,7 +251,7 @@ class AktivitasUmrahModel extends Model
     {
         $sql = DB::table('aktivitas_umrah as a')
                 ->join('pembimbing as b','a.pembimbing_id','=','b.id')
-                ->select('b.nama','a.id as aktivitas_umrah_id')
+                ->select('b.nama','a.id as aktivitas_umrah_id','a.status_tugas')
                 ->where('a.umrah_id', $id)
                 ->get();
         return $sql;

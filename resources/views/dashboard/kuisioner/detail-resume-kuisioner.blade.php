@@ -61,9 +61,9 @@
 							<div class="card-header">Jenis Kuisioner</div>
 							<div class="card-body">
 								<ul>
-									@foreach ($kuisioner_tourcode as $ks)
-										<li class="mt-2"><a class="btn btn-sm btn-primary" href="/aktivitas/tourcode/kuisioner/umrah/{{$ks->umrah_id}}/aktivitasumrahid/{{$ks->id}}">{{$ks->kuisioner}} ></a></li>
-									@endforeach
+									<li class="mt-2"><a class="btn btn-sm btn-primary" href="{{route('aktivitas.kuisioner.detail', $kuisioner_tourcode->umrah_id)}}">{{$kuisioner_tourcode->kuisioner}} ></a></li>
+									{{-- @foreach ($kuisioner_tourcode as $ks)
+									@endforeach --}}
 								</ul>
 							</div>
 						</div>

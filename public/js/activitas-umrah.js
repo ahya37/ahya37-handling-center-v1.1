@@ -317,12 +317,6 @@ const table = $("#data").DataTable({
         `;
       },
     },
-    {
-      targets: 4,
-      render: function (data, type, row, meta) {
-        return `<span>${row.umrah_id}</span>`;
-      },
-    },
   ],
 });
 

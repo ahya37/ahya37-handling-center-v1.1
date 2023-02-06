@@ -270,10 +270,9 @@ class DashboardController extends Controller
         // - tampilkan tourcode
         $tourcode = DB::table('aktivitas_umrah as a')
                     ->join('umrah as b','b.id','=','a.umrah_id')
-                    ->select('b.tourcode')
-                    ->groupBy('b.tourcode')
+                    ->select('b.tourcode','b.id')
+                    ->groupBy('b.tourcode','b.id')
                     ->get();
-
         
 
         $results = [];
@@ -284,26 +283,17 @@ class DashboardController extends Controller
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                           ->join('umrah as c','a.umrah_id','=','c.id')
                           ->select('b.nama','a.status_tugas')
-                          ->where('a.nonaktif',0)
-                          ->where('c.tourcode', $item->tourcode)
+                          ->where('c.id', $item->id)
                           ->groupBy('b.nama','a.status_tugas')
                           ->get();
-
-            #get kuisioner by tourcode
-            $kuisioner = DB::select("SELECT b.id as aktivitas_umrah_id, e.nama as kuisioner from umrah as a 
-                            left join aktivitas_umrah as b on a.id = b.umrah_id
-                            left join kuisioner_umrah as d on d.umrah_id = a.id 
-                            left join kuisioner as e on d.kuisioner_id = e.id 
-                            where a.tourcode = '$item->tourcode'
-                            order by a.tourcode asc");
 
             #get kategori pertanyaan
             $results[] = [
                 'tourcode' => $item->tourcode,
                 'pembimbing' => $pembimbing,
-                'kuisioner' => $kuisioner,
             ];
         }
+
 
         // return $results;
         return view('dashboard.kuisioner.resume-kuisioner', compact('results'));
@@ -331,6 +321,7 @@ class DashboardController extends Controller
                             ->select('id','number','nama')
                             ->orderBy('number','asc')
                             ->whereNull('parent_id')->get();
+
 
         $result_kategori       = [];
         foreach($kategori_pertanyaan as $item){
@@ -380,13 +371,20 @@ class DashboardController extends Controller
             }
 
             #kuisioner per tourcode
-            $kuisioner_tourcode = DB::select("SELECT e.nama as kuisioner , d.nama as pembimbing, c.id, c.umrah_id  from kuisioner_umrah as a
-                                    join umrah as b on b.id = a.umrah_id
-                                    join aktivitas_umrah as c on c.umrah_id = b.id
-                                    join pembimbing as d on d.id = c.pembimbing_id
-                                    join kuisioner as e on e.id = a.kuisioner_id
-                                    WHERE b.tourcode = '$tourcode'
-                                    GROUP by e.nama , d.nama , c.id , c.umrah_id");
+            // $kuisioner_tourcode = DB::select("SELECT e.nama as kuisioner , d.nama as pembimbing, a.id  from kuisioner_umrah as a
+            //                         join umrah as b on b.id = a.umrah_id
+            //                         join aktivitas_umrah as c on c.umrah_id = b.id
+            //                         join pembimbing as d on d.id = c.pembimbing_id
+            //                         join kuisioner as e on e.id = a.kuisioner_id
+            //                         WHERE b.tourcode = '$tourcode'
+            //                         GROUP by e.nama , d.nama , a.id,");
+
+            $kuisioner_tourcode = DB::table('kuisioner_umrah as a')
+                                  ->join('umrah as b','a.umrah_id','=','b.id')
+                                  ->join('kuisioner as c','c.id','=','a.kuisioner_id')
+                                  ->select('b.id as umrah_id','c.nama as kuisioner')
+                                  ->where('b.tourcode', $tourcode)
+                                  ->first();
             //  $kuisioner_tourcode = array_unique($kuisioner_tourcode);                
 
             //  $kuisioner_tourcode =  array_map("unserialize", array_unique(array_map("serialize", $kuisioner_tourcode)));
@@ -395,7 +393,6 @@ class DashboardController extends Controller
                           ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                           ->join('umrah as c','a.umrah_id','c.id')
                           ->select('b.nama','a.status_tugas')
-                          ->where('a.nonaktif',0)
                           ->where('c.tourcode', $tourcode)
                           ->groupBy('b.nama','a.status_tugas')
                           ->get();

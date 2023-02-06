@@ -33,7 +33,14 @@
 									<div class="row">
 										<div class="col-md-2"><h6>Pembimbing</h6></div>
 										<div class="col-md-10">
-											<h6>: {{$kuisioner->pembimbing}}</h6>
+											<ol>
+												@php
+													$no_pemb = 1;
+												@endphp
+												@foreach ($aktivitas as $item)
+													<li>{{$no_pemb++}}. {{$item->nama}} ({{$item->status_tugas}})</li>
+												@endforeach
+											</ol>
 										</div>
 									</div>
 								</div>

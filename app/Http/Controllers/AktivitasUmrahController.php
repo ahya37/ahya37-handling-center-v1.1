@@ -146,7 +146,7 @@ class AktivitasUmrahController extends Controller
 
             #save ke tb jadwal_umrah_pembimbing status pembimbing
             foreach($pembimbing as $key => $value){
-                
+
                 $status_tugas = 'Pembimbing';
                 #call fungsi save jadwal tugas pembimbing
                 $aktitivitasModel = $this->setStoreJadwalUmrahPembimbing($request, $sop['sop_id'][$key], $status_tugas, $value);
@@ -220,8 +220,8 @@ class AktivitasUmrahController extends Controller
     public function setStoreDetailJadwalUmrahPembimbing($judulTugasSop,$aktitivitasModel){
 
         foreach($judulTugasSop as $tugas){
-            $detailJadwalUmrahPembimbing = new DetailJadwalUmrahPembimbing();
-            $detailJadwalUmrahPembimbing->detail_jadwal_umrah_pembimbing_id = $aktitivitasModel->id; 
+            $detailJadwalUmrahPembimbing = new DetailAktivitasUmrahModel();
+            $detailJadwalUmrahPembimbing->aktivitas_umrah_id = $aktitivitasModel->id; 
             $detailJadwalUmrahPembimbing->master_sop_id = $tugas->master_sop_id; 
             $detailJadwalUmrahPembimbing->master_judul_tugas_id = $tugas->master_judul_tugas_id; 
             $detailJadwalUmrahPembimbing->master_tugas_id = $tugas->id; 
@@ -240,7 +240,7 @@ class AktivitasUmrahController extends Controller
 
     public function setStoreJadwalUmrahPembimbing($request, $sop_id, $status_tugas, $value){
         
-        $aktitivitasModel = new JadwalUmrahPembimbing();
+        $aktitivitasModel = new AktivitasUmrahModel();
         $aktitivitasModel->pembimbing_id = $value;
         $aktitivitasModel->umrah_id = $request->umrah;
         $aktitivitasModel->asisten_master_sop_id = $status_tugas == 'Asisten Pembimbing' ? $sop_id : null; #jika status tugas Asisten , maka isi
@@ -449,16 +449,13 @@ class AktivitasUmrahController extends Controller
                 break;
         }
 
-        // $aktitivitasModel = new AktivitasUmrahModel();
+        $aktitivitasModel = new AktivitasUmrahModel();
         $data             = DB::table('aktivitas_umrah as a')
                             ->join('pembimbing as b','b.id','=','a.pembimbing_id')
                             ->join('umrah as c','c.id','=','a.umrah_id')
-                            // ->join('kuisioner_umrah as d','d.umrah_id','=','c.id')
-                            // ->join('kuisioner as e','e.id','=','d.kuisioner_id')
-                            ->select('a.id','b.nama as pembimbing','c.tourcode', 'a.status','c.dates','c.id as umrah_id','c.start_date','c.end_date','a.status_tugas','a.nonaktif',
+                            ->select('a.id','b.nama as pembimbing','c.tourcode', 'a.status','c.dates','c.id as umrah_id','c.start_date','c.end_date','a.status_tugas',
                             DB::raw('(select sum(nilai_akhir) from detail_aktivitas_umrah where aktivitas_umrah_id = a.id) as nilai_akhir'))
-                            ->where('a.isdelete', 0)
-                            ->where('a.nonaktif',0);
+                            ->where('a.isdelete', 0);
 
         if($request->input('search.value')!=null){
             $data = $data->where(function($q)use($request){
@@ -1716,21 +1713,24 @@ class AktivitasUmrahController extends Controller
         }
     }
 
-    public function kuisionerByTourcodePembimbing($umrah_id, $aktivitasumrahId){
+    public function kuisionerByTourcodePembimbing($umrah_id){
 
         $kuisionerModel = new KuisionerModel();
 
         $gf = new Globalprovider();
         
         #get kuisioner by umrah id dan aktivitas umrah id
-        $kuisioner = $kuisionerModel->getKuisionerByAktivitasUmrah($umrah_id, $aktivitasumrahId);
+        // $kuisioner = $kuisionerModel->getKuisionerByAktivitasUmrah($umrah_id, $aktivitasumrahId);
+        
+        #get kuisioner by umrah / tourcode
+        $kuisioner = $kuisionerModel->getKuisionerByUmrahId($umrah_id);
 
         #get pertanyaan by umrah_id dan aktivitas_umrah_id
-        $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
+        $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id);
 
         $result_kuisioner = [];
         foreach ($pertanyaan as $value) {
-            $jawaban = $kuisionerModel->getJumlahJawaban($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
+            $jawaban = $kuisionerModel->getJumlahJawaban($umrah_id, $value->id);
 
             $jml_jawaban = count($jawaban);
 
@@ -1757,14 +1757,14 @@ class AktivitasUmrahController extends Controller
             ];
         }
 
-        // dd($result_kuisioner);
 
         #pertanyaan essay
-        $pertanyaan_essay = $kuisionerModel->getPertanyaanEssayByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id, $kuisioner->aktivitas_umrah_id);
+        $pertanyaan_essay = $kuisionerModel->getPertanyaanEssayByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id);
+
 
         $result_kuisioner_essay = [];
         foreach ($pertanyaan_essay as $key => $value) {
-            $jawaban_essay = $kuisionerModel->getJumlahJawabanEssay($umrah_id,$kuisioner->aktivitas_umrah_id, $value->id);
+            $jawaban_essay = $kuisionerModel->getJumlahJawabanEssay($umrah_id, $value->id);
             $result_kuisioner_essay[] = [
                 'id' => $value->id,
                 'isi' => $value->isi,
@@ -1773,7 +1773,12 @@ class AktivitasUmrahController extends Controller
 
         }
 
-        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay'));
+        #get pembimbing by umrah
+        $aktivitasModel = new AktivitasUmrahModel();
+        $aktivitas      = $aktivitasModel->getPembimbingByUmrahId($umrah_id);
+
+
+        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay','aktivitas'));
 
     }
 
