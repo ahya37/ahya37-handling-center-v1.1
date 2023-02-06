@@ -635,21 +635,29 @@ class AktivitasUmrahController extends Controller
         // $jadwal      = $aktitivitasModel->getNameTourcodeByPembimbing($user_id);
 
         $user_id = Auth::user()->id;
+
+        $kuisionerModel = new KuisionerModel();
+
         $aktitivitasModel = new AktivitasUmrahModel();
-        $jadwal      = $aktitivitasModel->getHistoryNameTourcodeByPembimbingListJudul($user_id);
+        $jadwal      = $aktitivitasModel->getHistoryNameTourcodeByPembimbingListJudulNew($user_id);
 
         $gf         = new Globalprovider();
         $result     = [];
         foreach ($jadwal as $value) {
+
+            #get kuisioner by umrah_id
+            $kuisioner = $kuisionerModel->getKuisionerByUmrahIdPanelPembimbing($value->id);
             $result[] = [
                 'id' => $value->id,
                 'tourcode' => $value->tourcode,
-				'url' => $value->url,
-                'count_jamaah' => $value->count_jamaah,
-                'responden_kuisioner' => $value->total_responden
+                'kuisioner' => $kuisioner
+				// 'url' => $value->url,
+                // 'count_jamaah' => $value->count_jamaah,
+                // 'responden_kuisioner' => $value->total_responden
             ];
         }
 
+        // dd($result);
         // return $result;
 
         return view('users.tugas.index', compact('jadwal','aktitivitasModel','result'));
@@ -1713,7 +1721,7 @@ class AktivitasUmrahController extends Controller
         }
     }
 
-    public function kuisionerByTourcodePembimbing($umrah_id){
+    public function kuisionerByTourcodePembimbing($umrah_id, $kuisioner_umrah_id){
 
         $kuisionerModel = new KuisionerModel();
 
@@ -1723,7 +1731,7 @@ class AktivitasUmrahController extends Controller
         // $kuisioner = $kuisionerModel->getKuisionerByAktivitasUmrah($umrah_id, $aktivitasumrahId);
         
         #get kuisioner by umrah / tourcode
-        $kuisioner = $kuisionerModel->getKuisionerByUmrahId($umrah_id);
+        $kuisioner = $kuisionerModel->getKuisionerByUmrahId($umrah_id, $kuisioner_umrah_id);
 
         #get pertanyaan by umrah_id dan aktivitas_umrah_id
         $pertanyaan = $kuisionerModel->getPertanyaanByUmrahIdAndAktivitasUmrahId($kuisioner->kuisioner_umrah_id);

@@ -11,20 +11,34 @@
                     <div class="d-flex align-items-center">
                         <div class="font-35 text-success"><i class='bx bxs-check-circle'></i></div>
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-12 col-sm-12">
                                 <div class="row">
                                     <div class="col-md-10">
                                         <h6 class="mb-0 text-success">Tourcode : {{ $item['tourcode'] }} </h6>
     
                                         <a href="{{ route('user.form.isitugas', $item['id']) }}"
                                             class="mt-2 btn btn-sm btn-primary">Klik untuk mengisi SOP</a>
-                                        <a target="_blank" href="{{ route('kuisioner.umrah.view', $item['url']) }}" 
-                                            class="mt-2 btn btn-sm btn-primary">Link Kuisioner (Silahkan klik dan copy link nya untuk dibagikan)</a>
+
+                                        <div class="row">
+                                            @foreach ($item['kuisioner'] as $kuisioner)
+                                            <div class="col-md-8">
+                                                    <a target="_blank" href="{{ route('kuisioner.umrah.view', $kuisioner->url) }}" 
+                                                        class="mt-2 btn btn-sm btn-primary"> {{$kuisioner->kuisioner}} <br>Link Kuisioner (Silahkan klik dan copy link nya untuk dibagikan)
+                                                    </a>
+                                            </div>
+                                            <div class="col-md-4">
+                                                Jamaah : {{$kuisioner->count_jamaah}}
+                                                <br>
+                                                Responden : {{$kuisioner->jumlah_responden}}
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
-                                    <table class="table mb-0 table-borderless">
+                                    {{-- <table class="table mb-0 table-borderless">
                                         <tbody>
                                             <tr>
                                                 <td class="px-0">
@@ -49,7 +63,7 @@
                                                 <td>{{$item['responden_kuisioner']}}</td>
                                             </tr>
                                         </tbody>
-                                    </table>
+                                    </table> --}}
                             </div>
                         </div>
                     </div>

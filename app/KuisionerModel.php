@@ -26,14 +26,28 @@ class KuisionerModel extends Model
 
     }
 
-    public function getKuisionerByUmrahId($umrah_id){
+    public function getKuisionerByUmrahId($umrah_id, $kuisioner_umrah_id){
 
         $sql = DB::table('kuisioner_umrah as a')
             ->join('umrah as b','a.umrah_id','=','b.id')
             ->join('kuisioner as c','c.id','=','a.kuisioner_id')
             ->select('b.id as umrah_id','c.nama as kuisioner','a.label','a.id as kuisioner_umrah_id','a.jumlah_responden','b.tourcode','b.count_jamaah')
             ->where('b.id', $umrah_id)
+            ->where('a.id', $kuisioner_umrah_id)
             ->first();
+
+        return $sql;
+
+    }
+
+    public function getKuisionerByUmrahIdPanelPembimbing($umrah_id){
+
+        $sql = DB::table('kuisioner_umrah as a')
+            ->join('umrah as b','a.umrah_id','=','b.id')
+            ->join('kuisioner as c','c.id','=','a.kuisioner_id')
+            ->select('b.id as umrah_id','c.nama as kuisioner','a.label','a.id as kuisioner_umrah_id','a.jumlah_responden','b.tourcode','b.count_jamaah','a.url')
+            ->where('b.id', $umrah_id)
+            ->get();
 
         return $sql;
 

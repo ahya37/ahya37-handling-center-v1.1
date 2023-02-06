@@ -382,9 +382,9 @@ class DashboardController extends Controller
             $kuisioner_tourcode = DB::table('kuisioner_umrah as a')
                                   ->join('umrah as b','a.umrah_id','=','b.id')
                                   ->join('kuisioner as c','c.id','=','a.kuisioner_id')
-                                  ->select('b.id as umrah_id','c.nama as kuisioner')
+                                  ->select('b.id as umrah_id','c.nama as kuisioner','a.id as kuisioner_id')
                                   ->where('b.tourcode', $tourcode)
-                                  ->first();
+                                  ->get();
             //  $kuisioner_tourcode = array_unique($kuisioner_tourcode);                
 
             //  $kuisioner_tourcode =  array_map("unserialize", array_unique(array_map("serialize", $kuisioner_tourcode)));
@@ -410,7 +410,6 @@ class DashboardController extends Controller
             ];
         }
 
-        // return $result_kategori;
         return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay','kuisioner_tourcode'));
     }
 

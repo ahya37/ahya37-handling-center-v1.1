@@ -203,7 +203,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/detailactivitas/{id}', 'AktivitasUmrahController@getDetailData');
         Route::get('/report/tugas/{id}', 'AktivitasUmrahController@downloadPdfByAktivitasUmrahId')->name('tugas.report');
         Route::get('/jadwal/tugas/me', 'AktivitasUmrahController@jadwalTugasKetuaPembimbing')->name('aktivitas.tugas.me');
-        Route::get('/tourcode/kuisioner/umrah/{umrahid}', 'AktivitasUmrahController@kuisionerByTourcodePembimbing')->name('aktivitas.kuisioner.detail');
+        Route::get('/tourcode/kuisioner/umrah/{umrahid}/kuisionerid/{kuisionerid}', 'AktivitasUmrahController@kuisionerByTourcodePembimbing')->name('aktivitas.kuisioner.detail');
 
        
         Route::post('/cek/perbarui/tugas', 'AktivitasUmrahController@cekAndPerbaruiTugas');

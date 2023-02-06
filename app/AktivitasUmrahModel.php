@@ -219,6 +219,19 @@ class AktivitasUmrahModel extends Model
         return $sql;
     }
 
+    public function getHistoryNameTourcodeByPembimbingListJudulNew($user_id)
+    {
+        $sql = DB::table('aktivitas_umrah as a')
+                ->select('c.id','c.tourcode')
+                ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                ->join('umrah as c','c.id','=','a.umrah_id')
+                ->where('b.user_id', $user_id)    
+                ->where('a.status','active')    
+                ->where('a.isdelete',0)    
+                ->get();
+        return $sql;
+    }
+
     public function getAllHistory()
     {
         $sql = DB::table('aktivitas_umrah as a')
