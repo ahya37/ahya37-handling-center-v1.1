@@ -35,6 +35,8 @@ Route::post('searchpanduan', 'PanduanController@searchPanduan');
 Route::get('/getdatapetugas', 'PetugasController@getDataPetugas');
 Route::get('/getdatapetugas/umrah/{month}/{year}', 'PetugasController@getDataPetugasUmrahByMonth');
 
+Route::post('/add/form/pembimbing', 'AktivitasUmrahController@addElementFormPembimbing');
+Route::post('/add/form/asistenpembimbing', 'AktivitasUmrahController@addFormAsistenPembimbing');
 
 
 Route::group(['as' => 'api.'], function () {
@@ -50,6 +52,15 @@ Route::group(['as' => 'api.'], function () {
     Route::post('/umrah/count', 'UmrahController@countJumlahJamaahByUmrahId');
 
     Route::get('/getasisten', 'AktivitasUmrahController@addElementFormAsistenPembimbing');
+
+    #get kuisioner from element
+    Route::post('/getkuisioner', 'AktivitasUmrahController@getDataOptionKuisionerForElement');
+
+    #get pembimbing from element
+    Route::post('/getpembimbing', 'AktivitasUmrahController@getDataOptionPembimbingForElement');
+
+    #get sop from element
+    Route::post('/getsop', 'AktivitasUmrahController@getDataOptionSopForElement');
 
     Route::post('/kuisioner/dashboard/detail/listdata/{id}','DashboardController@listDetailKuisionerByDashboard');
 	

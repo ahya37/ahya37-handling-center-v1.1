@@ -42,9 +42,6 @@ class UmrahController extends Controller
      */
     public function create()
     {
-        $kuisioner = KuisionerModel::pluck('nama','id');
-        $sop = SopModel::pluck('name','id');
-        $sop_petugas = SopPetugasModel::pluck('name','id');
 
         $MaxTahun=date('Y')+5;
         $MinTahun=1900;
@@ -55,7 +52,7 @@ class UmrahController extends Controller
             $MaxTahun--;
         }
 
-        return view('umrah.create', ['kuisioner' => $kuisioner, 'sop' => $sop,'ArrTahun' => $ArrTahun, 'sop_petugas' => $sop_petugas]);
+        return view('umrah.create', ['ArrTahun' => $ArrTahun]);
     }
 
     /**

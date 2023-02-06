@@ -4,8 +4,8 @@ $(".tourcode").select2({
   width: $(this).data("width")
     ? $(this).data("width")
     : $(this).hasClass("w-100")
-    ? "100%"
-    : "style",
+      ? "100%"
+      : "style",
   placeholder: "Pilih Tourcode",
   allowClear: Boolean($(this).data("allow-clear")),
   ajax: {
@@ -25,61 +25,14 @@ $(".tourcode").select2({
   },
 });
 
-// CEK JIKA TOURCODE MEMILIKI SOP ASISTEN
-$(".tourcode").on("change", function () {
-  const id = $("select[name=umrah] option").filter(":selected").val();
-  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
-
-  // ajax cek asisten
-  $.ajax({
-    url: "/api/getcekasisten",
-    method: "POST",
-    data: { id: id, _token: CSRF_TOKEN },
-    beforeSend: function () {
-      $(".asisten").hide();
-      $(".loading").show();
-      $(".loading").append(
-        `<div class="text-center">
-              <button class="btn btn-primary" type="button" disabled>
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Cek Asisten ...
-            </button>
-          </div>`
-      );
-    },
-    success: function (data) {
-      const result = data.data.data;
-      if (result !== null) {
-        $(".asisten").show();
-        $(".asisten").attr("required", true);
-      } else {
-        $(".asisten").hide();
-        $(".asisten").attr("required", false);
-      }
-      // Swal.fire({
-      //   position: "center",
-      //   icon: "success",
-      //   title: `${data.data.message}`,
-      //   showConfirmButton: false,
-      //   width: 500,
-      //   timer: 900,
-      // });
-      // window.location.reload();
-    },
-    complete: function () {
-      $(".loading").hide();
-      $(".loading").empty();
-    },
-  });
-});
-
+// GET DATA PEMBIMBING
 $(".pembimbing").select2({
   theme: "bootstrap4",
   width: $(this).data("width")
     ? $(this).data("width")
     : $(this).hasClass("w-100")
-    ? "100%"
-    : "style",
+      ? "100%"
+      : "style",
   placeholder: "Pilih Pembimbing",
   allowClear: Boolean($(this).data("allow-clear")),
   ajax: {
@@ -99,55 +52,217 @@ $(".pembimbing").select2({
   },
 });
 
-$(".multiple-select").select2({
-  theme: "bootstrap4",
-  width: $(this).data("width")
-    ? $(this).data("width")
-    : $(this).hasClass("w-100")
-    ? "100%"
-    : "style",
-  placeholder: $(this).data("placeholder"),
-  allowClear: Boolean($(this).data("allow-clear")),
-  ajax: {
-    dataType: "json",
-    url: "/api/getasisten",
-    delay: 250,
-    processResults: function (data) {
-      return {
-        results: $.map(data, function (item) {
-          return {
-            text: item.nama,
-            id: item.id,
-          };
-        }),
-      };
+// GET DATA ASISTEN
+// $(".multiple-select").select2({
+//   theme: "bootstrap4",
+//   width: $(this).data("width")
+//     ? $(this).data("width")
+//     : $(this).hasClass("w-100")
+//     ? "100%"
+//     : "style",
+//   placeholder: $(this).data("placeholder"),
+//   allowClear: Boolean($(this).data("allow-clear")),
+//   ajax: {
+//     dataType: "json",
+//     url: "/api/getasisten",
+//     delay: 250,
+//     processResults: function (data) {
+//       return {
+//         results: $.map(data, function (item) {
+//           return {
+//             text: item.nama,
+//             id: item.id,
+//           };
+//         }),
+//       };
+//     },
+//   },
+// });
+
+// GET DATA KUISIONER
+$(".kuisioner").select2(
+  {
+    theme: "bootstrap4",
+    width: $(this).data("width")
+      ? $(this).data("width")
+      : $(this).hasClass("w-100")
+        ? "100%"
+        : "style",
+    placeholder: "Pilih kuisioner",
+    allowClear: Boolean($(this).data("allow-clear")),
+    ajax: {
+      dataType: "json",
+      url: "/api/getkuisioner",
+      type: "POST",
+      delay: 250,
+      processResults: function (data) {
+        return {
+          results: $.map(data, function (item) {
+            return {
+              text: item.nama,
+              id: item.id,
+            };
+          }),
+        };
+      },
     },
-  },
-});
+  }
+);
 
 
-$(".petugas").select2({
-  theme: "bootstrap4",
-  width: $(this).data("width")
-    ? $(this).data("width")
-    : $(this).hasClass("w-100")
-    ? "100%"
-    : "style",
-  placeholder: "Pilih Petugas",
-  allowClear: Boolean($(this).data("allow-clear")),
-  ajax: {
-    dataType: "json",
-    url: "/api/getdatapetugas",
-    delay: 250,
-    processResults: function (data) {
-      return {
-        results: $.map(data, function (item) {
+function initialSelectSop(classFormSop) {
+  // GET DATA SOP
+  $(classFormSop).select2(
+    {
+      theme: "bootstrap4",
+      width: $(this).data("width")
+        ? $(this).data("width")
+        : $(this).hasClass("w-100")
+          ? "100%"
+          : "style",
+      placeholder: "Pilih SOP",
+      allowClear: Boolean($(this).data("allow-clear")),
+      ajax: {
+        dataType: "json",
+        url: "/api/getsop",
+        type: "POST",
+        delay: 250,
+        processResults: function (data) {
           return {
-            text: item.nama,
-            id: item.id,
+            results: $.map(data, function (item) {
+              return {
+                text: item.name,
+                id: item.id,
+              };
+            }),
           };
-        }),
-      };
-    },
-  },
+        },
+      },
+    }
+  );
+}
+
+
+function initialSelectPembimbing(classForm) {
+  // GET DATA PEMBIMBING
+  $(classForm).select2(
+    {
+      theme: "bootstrap4",
+      width: $(this).data("width")
+        ? $(this).data("width")
+        : $(this).hasClass("w-100")
+          ? "100%"
+          : "style",
+      placeholder: "Pilih Pembimbing",
+      allowClear: Boolean($(this).data("allow-clear")),
+      ajax: {
+        dataType: "json",
+        url: "/api/getpembimbing",
+        type: "POST",
+        delay: 250,
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+              return {
+                text: item.nama,
+                id: item.id,
+              };
+            }),
+          };
+        },
+      },
+    }
+  );
+}
+
+// ADD MORE PEMBIMBING DAN SOP
+$(document).ready(function () {
+  //melakukan proses multiple input
+  $("#addMoreEssay").click(function () {
+    $.ajax({
+      url: "/api/add/form/pembimbing",
+      type: "post",
+      data: { data: 2 },
+      beforeSend: function () {
+        $('#load-form').text('Loading form...')
+      },
+      success: function (response) {
+        $("#elements-pembimbing").append(response);
+        const classFormPembimbing = ".pembimbing";
+        const classFormSop = ".sop"
+        initialSelectPembimbing(classFormPembimbing, classFormSop);
+        initialSelectSop(classFormSop);
+      },
+      complete: function () {
+        $('#load-form').empty()
+      }
+    });
+  });
+
+
+  // remove fields group
+  $("body").on("click", ".remove-essay", function () {
+    $(this).parents(".fieldGroupEssay").remove();
+  });
 });
+
+// ADD MORE ASISTEN PEMBIMBING DAN SOP ASISTEN
+$(document).ready(function () {
+  //melakukan proses multiple input
+  $("#addMoreAsisten").click(function () {
+    $.ajax({
+      url: "/api/add/form/asistenpembimbing",
+      type: "post",
+      data: { data: 2 },
+      beforeSend: function () {
+        $('#load-form').text('Loading form...')
+      },
+      success: function (response) {
+        $("#elements-asistenpembimbing").append(response);
+        const classFormPembimbing = ".asistenpembimbing";
+        const classFormSop = ".asistensop";
+        initialSelectPembimbing(classFormPembimbing);
+        initialSelectSop(classFormSop);
+
+      },
+      complete: function () {
+        $('#load-form').empty()
+      }
+    });
+  });
+
+
+  $("body").on("click", ".remove-essay", function () {
+    $(this).parents(".fieldGroupEssay").remove();
+  });
+});
+
+function checkDuplicatData(arr) {
+  return new Set(arr).size !== arr.length;
+}
+
+function check() {
+  document.getElementById("btnSave").type = "button";
+  const selectPembimbing = document.getElementsByName('pembimbing_id[]');
+  let idPembimbing = [];
+  for (let i = 0; i < selectPembimbing.length; i++) {
+    const e = selectPembimbing[i];
+    idPembimbing.push(e.value);
+  }
+
+  const selectAsistenPembimbing = document.getElementsByName('asisten_pembimbing_id[]');
+  let idAsistenPembimbing = [];
+  for (let i = 0; i < selectAsistenPembimbing.length; i++) {
+    const e = selectAsistenPembimbing[i];
+    idAsistenPembimbing.push(e.value);
+  }
+
+  const mergePembimbing = [...idPembimbing, ...idAsistenPembimbing];
+  const checkArray = checkDuplicatData(mergePembimbing);
+  if (checkArray) {
+    alert('Tidak boleh duplikat pembimbing!')
+  } else {
+    document.getElementById("btnSave").type = "submit";
+  }
+
+}
