@@ -260,7 +260,11 @@ function check() {
   const mergePembimbing = [...idPembimbing, ...idAsistenPembimbing];
   const checkArray = checkDuplicatData(mergePembimbing);
   if (checkArray) {
-    alert('Tidak boleh duplikat pembimbing!')
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Tidak boleh duplikat pembimbing!',
+    })
   } else {
     document.getElementById("btnSave").type = "submit";
   }

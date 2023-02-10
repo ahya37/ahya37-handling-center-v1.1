@@ -60,5 +60,6 @@
 @endsection
 @push('scripts')
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('/js/create-activitas-umrah.js') }}"></script>
 @endpush
