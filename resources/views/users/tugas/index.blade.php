@@ -16,7 +16,7 @@
                                     <div class="col-md-10">
                                         <h6 class="mb-0 text-success">Tourcode : {{ $item['tourcode'] }} </h6>
     
-                                        <a href="{{ route('user.form.isitugas', $item['id']) }}"
+                                        <a href="{{ route('user.form.isitugas', $item['aktivitas_umrah_id']) }}"
                                             class="mt-2 btn btn-sm btn-primary">Klik untuk mengisi SOP</a>
 
                                         <div class="row">

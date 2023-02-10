@@ -129,5 +129,91 @@ class TestController extends Controller
         
     }
 
+    public function mergeDataKuisioner(Request $request){
+
+        DB::beginTransaction();
+        try{
+
+            #tourcode
+            $tourcode           = $request->tourcode;
+            #umrah aktif
+            $umrah_id_aktif     = $request->umrah_id_aktif;
+            #umrah non aktif
+            $umrah_id_non_aktif = $request->umrah_id_non_aktif;
+            #aktivitas umrah id
+    
+            #get kuisioner by tourcode
+            $kuisioner = DB::select("SELECT a.id as kuisioner_umrah_id, a.kuisioner_id, b.id as umrah_id , a.jumlah_responden  from kuisioner_umrah as a
+                            join umrah as b on b.id = a.umrah_id
+                            where b.tourcode = '$tourcode'");
+            
+            #get id / kuisioner_umrah_id di tb kuisioner_umrah where id  umrah non aktif
+            $kuisioner_umrah_id = DB::select("SELECT a.id as kuisioner_umrah_id, a.kuisioner_id, b.id as umrah_id , a.jumlah_responden  from kuisioner_umrah as a
+                                    join umrah as b on b.id = a.umrah_id
+                                    where b.tourcode = '$tourcode' and b.id = $umrah_id_non_aktif");
+            $kuisioner_umrah_id = collect($kuisioner_umrah_id)->first();
+                
+            if($kuisioner_umrah_id != null){
+                    #update umrah_id = $umrah_id_aktif  di tb kuisioner_umrah where kuisioner_umrah_id
+                    // $update_kuisioner_umrah = DB::update("UPDATE kuisioner_umrah set umrah_id = $umrah_id_aktif where id = $kuisioner_umrah_id->kuisioner_umrah_id");
+                    $update_kuisioner_umrah = DB::table('kuisioner_umrah')->where('id', $kuisioner_umrah_id->kuisioner_umrah_id)->update(['umrah_id' => $umrah_id_aktif]);
+
+                    // #update umrah_id di tb jawaban kuisioner umrah where kuisioner_umrah_id
+                    $update_jawaban_kuisioner = DB::update("UPDATE jawaban_kuisioner_umrah set umrah_id = $umrah_id_aktif where kuisioner_umrah_id = $kuisioner_umrah_id->kuisioner_umrah_id");
+                    
+                    // #update jawaban essay
+                    $update_jawaban_essay = DB::update("UPDATE essay_jawaban_kuisioner_umrah set umrah_id = $umrah_id_aktif where kuisioner_umrah_id = $kuisioner_umrah_id->kuisioner_umrah_id");
+
+    
+            }
+            
+    
+            #get id / aktivitas_umrah_id di tb aktivitas_umrah where id umrah non aktif
+            $aktivitas_umrah_id = collect(\DB::select("SELECT id from aktivitas_umrah where umrah_id = $umrah_id_non_aktif"))->first();
+
+            if($aktivitas_umrah_id != null){
+
+                #delete detail_aktivitas_umrah where aktivitas_umrah_id
+                $delete_detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')->where('aktivitas_umrah_id', $aktivitas_umrah_id->id)->delete();
+                
+                // #delete aktivitas_umrah where aktivitas_umrah_id
+                $delete_aktivitas_umrah = DB::delete("DELETE from aktivitas_umrah where id = $aktivitas_umrah_id->id");
+                
+            }
+
+            #lihat hasil
+            $kuisioner_umrah = DB::select("SELECT b.id , b.umrah_id , c.nama as kuisioner, b.jumlah_responden, f.count_jamaah , e.nama as pembimbing  from jawaban_kuisioner_umrah as a 
+                                join kuisioner_umrah as b on b.id = a.kuisioner_umrah_id
+                                join kuisioner as c on c.id = b.kuisioner_id
+                                join aktivitas_umrah as d on d.umrah_id = b.umrah_id
+                                join pembimbing as e on e.id = d.pembimbing_id 
+                                join umrah as f on f.id = d.umrah_id
+                                where a.umrah_id = $umrah_id_aktif
+                                group by b.id , b.umrah_id , c.nama, e.nama, b.jumlah_responden , f.count_jamaah");
+
+            $jadwal_aktif = DB::table('aktivitas_umrah')->where('umrah_id', $umrah_id_aktif)->get();
+            $jadwal_non_aktif = DB::table('aktivitas_umrah')->where('umrah_id', $umrah_id_non_aktif)->get();
+
+            $result = [
+                'kuisioner_umrah' => $kuisioner_umrah,
+                'jadwal_aktif' => $jadwal_aktif,
+                'jadwal_non_aktif' => $jadwal_non_aktif
+            ];
+
+            
+            DB::commit();
+           return response()->json([
+                'message' => 'Sukses!',
+                'data' => $result
+           ]);
+
+        }catch(\Exception $e){
+            DB::rollback();
+            return $e->getMessage();
+        }
+
+
+    }
+
 
 }

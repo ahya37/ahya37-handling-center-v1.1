@@ -322,7 +322,6 @@ class DashboardController extends Controller
                             ->orderBy('number','asc')
                             ->whereNull('parent_id')->get();
 
-
         $result_kategori       = [];
         foreach($kategori_pertanyaan as $item){
 
@@ -347,7 +346,7 @@ class DashboardController extends Controller
                             join pilihan as b on a.pilihan_id = b.id
                             join umrah as c on a.umrah_id = c.id
                             join pertanyaan_kuisioner as d on a.pertanyaan_id = d.id
-                            where c.tourcode = '$tourcode' and d.kategori_id = $sub->id  group by b.isi");
+                            where c.tourcode = '$tourcode' and d.kategori_id = $sub->id  group by b.isi order by count(a.jawaban) desc");
 
                 $total_jawaban = collect($pertanyaan)->sum(function($q){
                     return $q->jml_jawaban;
@@ -409,6 +408,7 @@ class DashboardController extends Controller
                 'sub_kategori' => $result_pertanyaan
             ];
         }
+
 
         return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay','kuisioner_tourcode'));
     }

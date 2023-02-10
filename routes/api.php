@@ -72,6 +72,9 @@ Route::group(['as' => 'api.'], function () {
     // ANALYTIC
     Route::post('/grade/pembimbing', 'DashboardController@dataGradeByPembimbing');
 
+    // merge data kuisioner
+    Route::post('mergedatakuisioner', 'TestController@mergeDataKuisioner');
+
 });
 
 Route::post('/v1/login','Api\UserController@login')->name('login');

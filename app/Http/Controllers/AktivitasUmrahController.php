@@ -649,6 +649,7 @@ class AktivitasUmrahController extends Controller
             $kuisioner = $kuisionerModel->getKuisionerByUmrahIdPanelPembimbing($value->id);
             $result[] = [
                 'id' => $value->id,
+                'aktivitas_umrah_id' => $value->aktivitas_umrah_id,
                 'tourcode' => $value->tourcode,
                 'kuisioner' => $kuisioner
 				// 'url' => $value->url,
@@ -657,7 +658,6 @@ class AktivitasUmrahController extends Controller
             ];
         }
 
-        // dd($result);
         // return $result;
 
         return view('users.tugas.index', compact('jadwal','aktitivitasModel','result'));
@@ -672,7 +672,6 @@ class AktivitasUmrahController extends Controller
         $aktitivitasModel = new AktivitasUmrahModel();
         $jadwal      = $aktitivitasModel->getNameTourcodeByPembimbingByAkunPembimbing($user_id, $aktitivitas_umrah_id);
 		$catatan     = $aktitivitasModel->select('catatan')->where('id', $aktitivitas_umrah_id)->first();
-
 
         return view('users.tugas.listjudul', compact('jadwal','aktitivitasModel','aktitivitas_umrah_id','catatan'));
     }
@@ -1759,8 +1758,6 @@ class AktivitasUmrahController extends Controller
                 'nomor' => $value->nomor,
                 'isi' => $value->isi,
                 'jawaban' => $jawaban,
-                // 'rata' => $rata,
-                // 'index' => $index,
                 'nilai' => $gf->generateNilaiKuisionerV2($jml_jawaban, $rata)
             ];
         }
@@ -1784,7 +1781,6 @@ class AktivitasUmrahController extends Controller
         #get pembimbing by umrah
         $aktivitasModel = new AktivitasUmrahModel();
         $aktivitas      = $aktivitasModel->getPembimbingByUmrahId($umrah_id);
-
 
         return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay','aktivitas'));
 
