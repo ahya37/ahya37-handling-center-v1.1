@@ -39,7 +39,7 @@
                               <div style="width: 219px; height: 325px; background-color: #f08619; margin-bottom:2px;">
                                   <div style="
                                   width: 200px;
-                                  height: 310px;
+                                  height: 318px;
                                   background-color: #fefefe;
                                   padding-left: 2px;
                                   position: absolute;
