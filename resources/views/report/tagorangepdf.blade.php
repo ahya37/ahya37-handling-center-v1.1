@@ -9,19 +9,17 @@
         grid-template-columns: auto auto auto auto;
         margin-top: -1px;
     }
-
     .grid-container > div {
         background-color: rgba(255, 255, 255, 0.8);
         border: 1px solid rgba(0, 0, 0, 0.8);
         text-align: center;
     }
-
     .polygon {
         width: 100px !important;
         margin-left: -121px !important;
-        margin-top: -2px;
+        margin-top: -2px !important;
+		
     }
-
 </style>
 </head>
 
@@ -49,7 +47,7 @@
                                   margin-top: 2px;
                                   margin-bottom: -5px;
                                 ">
-                                         <img src="" class="polygon" />
+                                          <img src="{{asset('/assets/images/tag/polygontop.png')}}" class="polygon" />
                                       <div>
                                         <p style="
                                       font-family: Impact, sans-serif;
@@ -108,7 +106,7 @@
                                             box-sizing: border-box;
                                             border-radius: 15px;
                                           ">
-                                          <img src="" style="width: 100px; height:130px; border-radius: 15px; margin-top:-99px" />
+                                          <img src="{{asset('/storage/'.$row->foto_jamaah)}}" style="width: 100px; height:130px; border-radius: 15px; margin-top:-99px" />
                                       </div>
                                       <p style="text-align: center; font-family: Sans-serif; font-weight: bold; margin-top: 6px;">
                                         {{$row->nama_jamaah}}
