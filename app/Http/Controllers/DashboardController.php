@@ -272,6 +272,7 @@ class DashboardController extends Controller
                     ->join('umrah as b','b.id','=','a.umrah_id')
                     ->select('b.tourcode','b.id')
                     ->groupBy('b.tourcode','b.id')
+                    ->orderBy('a.created_at','asc')
                     ->get();
         
 
