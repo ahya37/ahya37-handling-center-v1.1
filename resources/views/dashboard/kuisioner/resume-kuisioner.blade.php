@@ -75,6 +75,7 @@
 													<input type="hidden" name="tourcode" value="{{$tr['tourcode']}}">
 													<button class="btn btn-sm btn-primary">Resume</button>
 												</form> --}}
+												
 											</td>
 										</tr>
 										@endforeach
