@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 // END UMHAJ ONLY EXTEND DB
 
+Route::post('/listdata', 'UmrahController@listData');
+
 
 Route::get('/getdataumrah', 'UmrahController@getDataUmrah');
 Route::post('/getcekasisten', 'UmrahController@getDataAsistenSopByIdUmrah');

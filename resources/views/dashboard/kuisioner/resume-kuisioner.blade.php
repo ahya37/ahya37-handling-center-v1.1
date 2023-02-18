@@ -36,7 +36,6 @@
                                         <th>No</th>
                                         <th>Tourcode</th>
                                         <th>Pembimbing</th>
-                                        <th>Kuisioner</th>
                                         <th>Resume</th>
 									</tr>
 								</thead>
@@ -61,21 +60,12 @@
 												</ol>
 											</td>
 											<td>
-												<ol>
-													@foreach ($tr['kuisioner'] as $kuisioner)
-														<li>
-															<a href="{{ route('kuisioner.umrah.view', $kuisioner->url) }}" target="_blank" class="btn btn-sm btn-primary mb-2">Link Kuisioner {{ $kuisioner->nama }}</a>
-														</li>
-													@endforeach
-												</ol>
-											</td>
-											<td>
 												<a class="btn btn-sm btn-primary" href="/dashboard/resumekuisioner/detail/?tourcode={{$tr['tourcode']}}" >Resume</a>
 												{{-- <form action="{{route('dashbaord.resume.kuisioner.detail')}}" method="GET">
 													<input type="hidden" name="tourcode" value="{{$tr['tourcode']}}">
 													<button class="btn btn-sm btn-primary">Resume</button>
 												</form> --}}
-												
+
 											</td>
 										</tr>
 										@endforeach

@@ -39,6 +39,7 @@
 									<tr>
                                         <th>Tourcode</th>
                                         <th>Tanggal</th>
+                                        <th>Kuisioner</th>
                                         <th style="text-align: right">Jumlah Jamaah</th>
                                         <th>Opsi</th>
 									</tr>

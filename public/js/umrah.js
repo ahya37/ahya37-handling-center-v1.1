@@ -89,8 +89,8 @@ function initialSelectTorucode(urlTourcode) {
     width: $(this).data("width")
       ? $(this).data("width")
       : $(this).hasClass("w-100")
-      ? "100%"
-      : "style",
+        ? "100%"
+        : "style",
     placeholder: "Pilih Tourcode",
     allowClear: Boolean($(this).data("allow-clear")),
     ajax: {
@@ -147,11 +147,19 @@ const table = $("#tablePlace").DataTable({
     {
       targets: 2,
       render: function (data, type, row, meta) {
-        return `<p align="right">${row.count_jamaah}</p>`;
+        return row.kuisioner.map((m) => (
+          `<a class='btn btn-sm btn-primary' href='/kuisioner/view/${m.url}' target='_blank'>${m.nama}</a>`
+        ))
       },
     },
     {
       targets: 3,
+      render: function (data, type, row, meta) {
+        return `<p align="right">${row.count_jamaah}</p>`;
+      },
+    },
+    {
+      targets: 4,
       render: function (data, type, row, meta) {
         return `
                 <a href="/umrah/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>

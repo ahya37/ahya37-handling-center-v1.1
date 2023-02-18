@@ -222,11 +222,31 @@ class UmrahController extends Controller
 
         $recordsTotal = $data->count();
 
+        $results = [];
+        foreach ($data as $value) {
+
+            $kuisioner = DB::table('kuisioner_umrah as a')
+                        ->join('kuisioner as b','b.id','=','a.kuisioner_id')
+                        ->select('a.url','b.nama')
+                        ->where('a.umrah_id', $value->id)
+                        ->get();
+            
+            $results[] = [
+                'id' => $value->id,
+                'tourcode' => $value->tourcode,
+                'dates' => $value->dates,
+                'created_at' => $value->created_at,
+                'count_jamaah' => $value->count_jamaah,
+                'kuisioner' => $kuisioner
+            ];
+        }  
+        
+
         return response()->json([
                 'draw'=>$request->input('draw'),
                 'recordsTotal'=>$recordsTotal,
                 'recordsFiltered'=>$recordsFiltered,
-                'data'=> $data
+                'data'=> $results
             ]);
 
     }
