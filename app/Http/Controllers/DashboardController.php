@@ -271,8 +271,8 @@ class DashboardController extends Controller
         $tourcode = DB::table('aktivitas_umrah as a')
                     ->join('umrah as b','b.id','=','a.umrah_id')
                     ->select('b.tourcode','b.id')
-                    ->groupBy('b.tourcode','b.id')
                     ->orderBy('a.created_at','asc')
+                    ->groupBy('b.tourcode','b.id')
                     ->get();
         
 
