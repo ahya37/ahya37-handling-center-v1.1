@@ -36,6 +36,7 @@
                                         <th>No</th>
                                         <th>Tourcode</th>
                                         <th>Pembimbing</th>
+                                        <th>Kuisioner</th>
                                         <th>Resume</th>
 									</tr>
 								</thead>
@@ -55,6 +56,15 @@
 													@foreach ($tr['pembimbing'] as $pembimbing)
 														<li>
 															{{$no_pembimbing++}}. {{$pembimbing->nama}} ({{$pembimbing->status_tugas}})
+														</li>
+													@endforeach
+												</ol>
+											</td>
+											<td>
+												<ol>
+													@foreach ($tr['kuisioner'] as $kuisioner)
+														<li>
+															<a href="{{ route('kuisioner.umrah.view', $kuisioner->url) }}" target="_blank" class="btn btn-sm btn-primary mb-2">Link Kuisioner {{ $kuisioner->nama }}</a>
 														</li>
 													@endforeach
 												</ol>

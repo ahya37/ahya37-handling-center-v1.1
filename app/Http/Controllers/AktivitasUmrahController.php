@@ -1794,14 +1794,14 @@ class AktivitasUmrahController extends Controller
 
             $html = "<div class='col-md-12 mt-3 mb-4 fieldGroupEssay'>
                         <div class='row'>
-                            <div class='col-md-1 mt-1'>
-                            <button type='button' class='remove-essay'><i class='fas fa-trash text-danger'></i></button>
-                            </div>
                             <div class='col-md-6'>
                                 <select name='pembimbing_id[]'  class='form-control single-select pembimbing' required></select>
                             </div>
                             <div class='col-md-5'>
                                 <select name='sop_id[]'  class='form-control single-select sop' required></select>
+                            </div>
+                            <div class='col-md-1 mt-1'>
+                            <button type='button' class='remove-essay'><i class='fas fa-trash text-danger'></i></button>
                             </div>
                         </div>
                     </div>";
@@ -1819,14 +1819,14 @@ class AktivitasUmrahController extends Controller
 
             $html = "<div class='col-md-12 mt-3 mb-4 fieldGroupEssay'>
                         <div class='row'>
-                            <div class='col-md-1 mt-1'>
-                            <button type='button' class='remove-essay'><i class='fas fa-trash text-danger'></i></button>
-                            </div>
                             <div class='col-md-6'>
                                 <select name='asisten_pembimbing_id[]'  class='form-control single-select asistenpembimbing' required></select>
                             </div>
                             <div class='col-md-5'>
                                 <select name='asisten_sop_id[]'  class='form-control single-select asistensop' required></select>
+                            </div>
+                            <div class='col-md-1 mt-1'>
+                            <button type='button' class='remove-essay'><i class='fas fa-trash text-danger'></i></button>
                             </div>
                         </div>
                     </div>";

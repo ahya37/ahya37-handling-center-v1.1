@@ -287,10 +287,17 @@ class DashboardController extends Controller
                           ->groupBy('b.nama','a.status_tugas')
                           ->get();
 
+            $kuisioner = DB::table('kuisioner_umrah as a')
+                        ->join('kuisioner as b','b.id','=','a.kuisioner_id')
+                        ->select('a.url', 'b.nama')
+                        ->where('a.umrah_id', $item->id)
+                        ->get();
+
             #get kategori pertanyaan
             $results[] = [
                 'tourcode' => $item->tourcode,
                 'pembimbing' => $pembimbing,
+                'kuisioner' => $kuisioner
             ];
         }
 

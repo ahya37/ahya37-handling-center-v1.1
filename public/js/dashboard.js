@@ -119,7 +119,6 @@ function initializeGrafik(urlGrafik, month, year, tourcode) {
 function callAjaxChartByTourcode(id, tourcodes, pembimbing) {
   $.ajax({
     url: "/api/chart/grafik/tugas",
-    method: "GET",
     dataType: "json",
     cache: false,
     method: "POST",
