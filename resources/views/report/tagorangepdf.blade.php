@@ -112,7 +112,7 @@
                                         {{$row->nama_jamaah}}
                                       </p>
                                       <p style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -9px;">
-                                          Contact Person TL : {{$tl->telp_jamaah}}
+                                          Contact Person TL : {{$tl->telp_jamaah ?? '' }}
                                       </p>
                                   </div>
                               </div>
