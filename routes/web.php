@@ -286,9 +286,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/store', 'ItemController@store')->name('item.store');
         Route::post('/listdata', 'ItemController@listData');
 
-        #stok
-        Route::get('/stokmasuk', 'InventoriController@stokMasuk')->name('stokmasuk');
-        Route::post('/stokmasuk/store', 'InventoriController@storeStokMasuk')->name('stokmasuk-store');
+        #stok in
+        Route::get('/stockin', 'InventoriController@stockIn')->name('stockin');
+        Route::post('/stockin/store', 'InventoriController@storeStockIn')->name('stockin-store');
+
+        #stok out
+        Route::get('/stockout', 'InventoriController@stockout')->name('stockout');
+        Route::post('/stockout/store', 'InventoriController@storeStockout')->name('stockout-store');
+
     });
 });
 

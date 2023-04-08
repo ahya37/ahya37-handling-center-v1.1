@@ -47,7 +47,7 @@
                                 <h5 class="mb-1">Item Terpilih</h5>
                             </div>
                         </div>
-                        <form action="{{ route('stokmasuk-store') }}" method="POST">
+                        <form action="{{ route('stockin-store') }}" method="POST">
                             @csrf
                             <div class="p-3 mb-3">
                                 <div class="row border alert alert-secondary mx-0 mb-3 py-2 radius-10" >
