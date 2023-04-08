@@ -278,6 +278,18 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/petugas/createTugaswithfileUpload', 'AktivitasUmrahPetugascontroller@uploadPelaksanaanPetugas')->name('user.petugas.create.aktivitas');
 
     });
+
+    #INVENTORI
+    Route::group(['prefix' =>  'item'], function(){
+        Route::get('/', 'ItemController@index')->name('item.index');
+        Route::get('/create', 'ItemController@create')->name('item.create');
+        Route::post('/store', 'ItemController@store')->name('item.store');
+        Route::post('/listdata', 'ItemController@listData');
+
+        #stok
+        Route::get('/stokmasuk', 'InventoriController@stokMasuk')->name('stokmasuk');
+        Route::post('/stokmasuk/store', 'InventoriController@storeStokMasuk')->name('stokmasuk-store');
+    });
 });
 
 // SAMPLE MAP DISPLAY

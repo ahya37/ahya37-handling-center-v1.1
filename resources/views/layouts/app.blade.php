@@ -10,7 +10,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	
 	<!--favicon-->
-  @notifyCss
 
 	<link rel="icon" href="/assets/images/iclogo.png" type="image/png" />
   @stack('prepend-styles')
@@ -66,8 +65,6 @@
 	<script src="{{ asset('assets/js/app.js') }}"></script>
 	
   @stack('scripts')
-
-  @notifyJs
 
 </body>
 </html>
