@@ -18,6 +18,7 @@ class InventoriController extends Controller
         $items = DB::table('rb_item as a')
                 ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
                 ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
+                ->where('a.is_delete',0)
                 ->get();
 
         return view('inventori.stockin.create',compact('items'));
@@ -62,6 +63,7 @@ class InventoriController extends Controller
         $items = DB::table('rb_item as a')
                 ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
                 ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
+                ->where('a.is_delete',0)
                 ->get();
 
         return view('inventori.stockout.create',compact('items'));
@@ -106,6 +108,7 @@ class InventoriController extends Controller
 
     public function updateStock($request,$old_stok, $status){
 
+        #jika status out maka kuangi, jika in maka tamnbah
         $in_count_last = $status == 'out' ? $old_stok->ic_count - $request->stok : $old_stok->ic_count + $request->stok;
 
 
@@ -135,6 +138,69 @@ class InventoriController extends Controller
                     'ic_update' => date('Y-m-d H:i:s'),
                     'ic_useridx' => Auth::user()->id
         ]);
+
+    }
+
+    public function opname(){
+
+        return view('inventori.opname.create');
+
+    }
+
+    public function storeOpname(Request $request){
+
+        DB::beginTransaction();
+        try {
+
+            $iditem       = $request->iditem;
+            $stok['stok'] = $request->stok;
+    
+            #cek jika input sto kosong
+            $request_stok = array_filter($request->stok);
+            if(empty($request_stok)) return 'kosong';
+    
+            $stok['stok'] = $request_stok;
+    
+    
+            foreach ($iditem as $key => $value) {
+
+                #update yg ada stok nya saja
+                if (isset($stok['stok'][$key])) {
+                    #get stok sebelumnya by iditem di tb rb_item_count
+                    $old_stok =  ItemCountModel::select('ic_count')->where('ic_itidx', $value)->first();
+        
+                    #save ke rb_item_inventori
+                    $ItemInventori = ItemInventoriModel::create([
+                            'in_id' => Str::random(30),
+                            'in_itidx' => $value,
+                            'in_count' => $stok['stok'][$key],
+                            'in_count_first' => $old_stok->ic_count,
+                            'in_count_last' => $stok['stok'][$key],
+                            'in_status'     => 'opname',
+                            'in_create' => date('Y-m-d H:i:s'),
+                            'in_useridx' => Auth::user()->id,
+                        ]);
+            
+                    # update stok di rb_item_count by iditem
+                        # ic_count = in_count_last
+                    DB::table('rb_item_count')->where('ic_itidx', $value)->update([
+                            'ic_count' => $ItemInventori->in_count_last,
+                            'ic_update' => date('Y-m-d H:i:s'),
+                            'ic_useridx' => Auth::user()->id
+                        ]);
+                }
+    
+                
+            }
+
+
+            DB::commit();
+            return redirect()->route('opname')->with(['success' => 'Stok opname telah disimpan!']);
+        }catch (\Exception $e) {
+            DB::rollback();
+            return $e->getMessage();
+            return redirect()->route('stockout')->with(['error' => 'Gagal disimpan!']);
+        }
 
     }
 }

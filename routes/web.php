@@ -294,6 +294,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/stockout', 'InventoriController@stockout')->name('stockout');
         Route::post('/stockout/store', 'InventoriController@storeStockout')->name('stockout-store');
 
+        #opname
+        Route::get('/opname', 'InventoriController@opname')->name('opname');
+        Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
+
     });
 });
 

@@ -11,29 +11,35 @@
         <div class="page-content">
                 {{-- <x:notify-messages /> --}}
 				@include('layouts.message')
-				<h6 class="mb-0 ">Data Item</h6>
+				<h6 class="mb-0 ">Stok Opname</h6>
 				<hr/>
 				<div class="card">
 					<div class="card-body">
-						<div class="row">
-							<div class="col-md-2 mt-1">
-								<a href="{{ route('item.create') }}" class="btn btn-sm btn-primary float-right mb-4 " title="Tambah Baru"><i class="lni lni-circle-plus"></i> Tambah</a>
-							</div>
-						</div>
-						<div class="table">
-							<table id="tablePlace" class="table table-hover" style="width:100%">
-								<thead>
-									<tr>
-                                        <th class="col-1">NO</th>
-                                        <th class="col-1">Gambar</th>
-                                        <th>Item</th>
-                                        <th>Stok</th>
-                                        <th>Opsi</th>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</table>
-						</div>
+                        <form action="{{ route('opname-store') }}" method="POST">
+                            @csrf
+                            <div class="table">
+                                <table id="tablePlace" class="table table-hover" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-1">NO</th>
+                                            <th class="col-1">Gambar</th>
+                                            <th>Item</th>
+                                            <th>Stok</th>
+                                            <th class="col-2">Stok</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-sm btn-primary float-right">Update Stok</button>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </form>
 					</div>
 				</div>
     </div>
@@ -55,5 +61,7 @@
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('/js/item.js') }}"></script>
+<script src="{{ asset('js/number-only.js') }}"></script>   
+<script src="{{ asset('/js/opname.js') }}"></script>
+
 @endpush

@@ -99,7 +99,8 @@ class ItemController extends Controller
 
         $data =  DB::table('rb_item as a')
                 ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
-                ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx');
+                ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
+                ->where('a.is_delete',0);
 
         $recordsFiltered = $data->get()->count();
         if($request->input('length')!=-1) $data = $data->skip($request->input('start'))->take($request->input('length'));
