@@ -102,6 +102,12 @@ class ItemController extends Controller
                 ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
                 ->where('a.is_delete',0);
 
+        if($request->input('search.value')!=null){
+                    $data = $data->where(function($q)use($request){
+                        $q->whereRaw('LOWER(a.it_name) like ? ',['%'.strtolower($request->input('search.value')).'%']);
+                    });
+        }
+
         $recordsFiltered = $data->get()->count();
         if($request->input('length')!=-1) $data = $data->skip($request->input('start'))->take($request->input('length'));
         $data = $data->orderBy($orderBy,$request->input('order.0.dir'))->get();

@@ -25,9 +25,10 @@
 								<thead>
 									<tr>
                                         <th class="col-1">NO</th>
-                                        <th class="col-1">Gambar</th>
-                                        <th>Item</th>
-                                        <th>Stok</th>
+                                        <th class="col-1">Nama</th>
+                                        <th>Qty</th>
+                                        <th>Keterangan</th>
+                                        <th>Created At</th>
                                         <th>Opsi</th>
 									</tr>
 								</thead>
@@ -55,5 +56,5 @@
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('/js/history-inventori.js') }}"></script>
+<script src="{{ asset('/js/bundle.js') }}"></script>
 @endpush

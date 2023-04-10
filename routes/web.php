@@ -299,9 +299,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
 
         #bundle
-        Route::get('/bundle', 'InventoriController@bundle')->name('bundle');
-        Route::get('/bundle/create', 'InventoriController@createBundle')->name('bundle-create');
-        Route::post('/bundle/store', 'InventoriController@storeBundle')->name('bundle-store');
+        Route::get('/bundle', 'BundleController@bundle')->name('bundle');
+        Route::get('/bundle/create', 'BundleController@createBundle')->name('bundle-create');
+        Route::post('/bundle/store', 'BundleController@storeBundle')->name('bundle-store');
+        Route::post('/bundle/listdata', 'BundleController@getListDataBundle');
         // Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
 
         #histori 
