@@ -33,8 +33,6 @@ class BundleController extends Controller
 
     public function storeBundle(Request $request){
 
-        // return $request->all();
-
         DB::beginTransaction();
         try {
 
@@ -45,14 +43,15 @@ class BundleController extends Controller
 
             
             $count['qty'] = $request->qty; 
-            $iditem       = $request->iditem; 
+            $iditem       = $request->iditem;
             
             #cek jika tidak ada item dipilih
             if(!$iditem) return redirect()->route('bundle-create')->with(['error' => 'Pilih setidaknya 1 Item!']);
 
             #cek jika input stok kosong
-            $request_qty = array_filter($request->qty);
-            if(empty($request_qty)) return redirect()->route('bundle-create')->with(['error' => 'Qty tidak boleh kosong!']);            
+            $request_qty =  array_values(array_filter($request->qty));
+            if(empty($request_qty)) return redirect()->route('bundle-create')->with(['error' => 'Qty tidak boleh kosong!']);
+            $count['qty'] =  $request_qty;         
 
             #save ke tb rb_item_bundle
             $bundle = ItemBundleModel::create([

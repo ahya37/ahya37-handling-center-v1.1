@@ -303,6 +303,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/bundle/create', 'BundleController@createBundle')->name('bundle-create');
         Route::post('/bundle/store', 'BundleController@storeBundle')->name('bundle-store');
         Route::post('/bundle/listdata', 'BundleController@getListDataBundle');
+        Route::get('/bundle/stockout', 'InventoriController@stockOutBundle')->name('bundle-stockout');
+        Route::post('/bundle/stockout/store', 'InventoriController@storeStockoutBundle')->name('bundle-stockout-store');
         // Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
 
         #histori 

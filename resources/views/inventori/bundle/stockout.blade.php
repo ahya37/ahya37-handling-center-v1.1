@@ -13,26 +13,26 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <h5 class="mb-1">Item</h5>
+                                    <h5 class="mb-1">Bundel</h5>
                                 </div>
 
                             </div>
                         </div>
                         <div class="product-list p-3 mb-3">
-                            @foreach ($items as $item)
-                                <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" id="{{ $item->it_idx }}" onclick="onSelect(this)" data-image="{{ $item->it_image }}" data-stok="{{ $item->ic_count }}" data-name="{{ $item->it_name }}">
+                            @foreach ($bundles as $item)
+                                <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" id="{{ $item->ib_idx }}" onclick="onSelect(this)" data-count="{{ $item->count_item }}"  data-name="{{ $item->ib_name }}">
                                     <div class="col-sm-6">
                                         <div class="d-flex align-items-center">
                                             <div class="product-img">
-                                                <img src="{{ asset('/storage/' . $item->it_image) }}" alt="" />
+                                                <img src="{{ asset('assets/images/icons/layer.png') }}" alt="" />
                                             </div>
                                             <div class="ms-2">
-                                                <h6 class="mb-1">{{ $item->it_name }}</h6>
+                                                <h6 class="mb-1">{{ $item->ib_name }}</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm">
-                                        <p class="mb-0">{{ $item->ic_count }} Stok</p>
+                                    <div class="col-sm mt-3">
+                                        <p class="mb-0">{{ $item->count_item }} Item</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -44,10 +44,10 @@
                     <div class="card radius-10 w-100">
                         <div class="d-flex p-3 align-items-center">
                             <div>
-                                <h5 class="mb-1">Item Terpilih</h5>
+                                <h5 class="mb-1">Bundel Terpilih</h5>
                             </div>
                         </div>
-                        <form action="{{ route('stockout-store') }}" method="POST">
+                        <form action="{{ route('bundle-stockout-store') }}" method="POST">
                             @csrf
                             <div class="p-3 mb-3">
                                 <div class="row border alert alert-secondary mx-0 mb-3 py-2 radius-10" >
@@ -62,14 +62,14 @@
                                         </div>
                                     </div>
                                     <div class="col-sm mt-3">
-                                        <p class="mb-0" id="it_stok"></p>
+                                        <p class="mb-0" id="it_count"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>Qty</label>
-                                        <input type="hidden" id="item" name="iditem">
-                                        <input type="text" class="form-control number" id="stok" name="stok" autocomplete="off" >
+                                        <input type="hidden" id="item" name="idbundle">
+                                        <input type="text" placeholder="Qty, default 1" class="form-control number"  name="qty" autocomplete="off" >
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -96,7 +96,7 @@
     <script src="{{ asset('assets/plugins/apexcharts-bundle/js/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('/js/stokmasuk.js') }}"></script>
+    <script src="{{ asset('/js/stockout-bundle.js') }}"></script>
 <script src="{{ asset('js/number-only.js') }}"></script>   
 
 @endpush

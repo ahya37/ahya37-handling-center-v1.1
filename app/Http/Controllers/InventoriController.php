@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\ItemModel;
 use App\ItemInventoriModel;
 use App\ItemCountModel;
+use App\ItemBundleModel;
+use App\ItemBundleDetailModel;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 use Str;
@@ -156,7 +158,7 @@ class InventoriController extends Controller
             $stok['stok'] = $request->stok;
     
             #cek jika input sto kosong
-            $request_stok = array_filter($request->stok);
+            $request_stok = array_values(array_filter($request->qty));
             if(empty($request_stok)) return redirect()->route('stockout')->with(['error' => 'Input stok tidak boleh kosong!']);
     
             $stok['stok'] = $request_stok;
@@ -198,7 +200,7 @@ class InventoriController extends Controller
             return redirect()->route('opname')->with(['success' => 'Stok opname telah disimpan!']);
         }catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('stockout')->with(['error' => 'Gagal disimpan!']);
+            return redirect()->route('opname')->with(['error' => 'Gagal disimpan!']);
         }
 
     }
@@ -207,6 +209,64 @@ class InventoriController extends Controller
 
         return view('inventori.history.index');
 
+    }
+
+    public function stockOutBundle(){
+
+        $bundles = DB::table('rb_item_bundle as a')
+                    ->join('rb_item_bundle_detail as b','a.ib_idx','=','b.ibd_ibidx')
+                    ->select('a.ib_name','a.ib_note','a.ib_create','a.ib_idx', DB::raw('count(b.ibd_idx) as count_item'))
+                    ->groupBy('a.ib_name','a.ib_note','a.ib_create','a.ib_idx')
+                    ->where('a.is_delete',0)->get();
+
+        return view('inventori.bundle.stockout',compact('bundles'));
+    }
+
+    public function storeStockoutBundle(Request $request){
+
+        DB::beginTransaction();
+        try {
+
+            $idBundle   = $request->idbundle;
+            $qty        = $request->qty ?? 1; // jika kosong default nya 1
+
+            #get iditem yang ada di detail item bundle
+            $itemBundleDetail = ItemBundleDetailModel::select('ibd_itidx','ibd_count')->where('ibd_ibidx', $idBundle)->get();
+            
+            #looping, dan simpan ke tb_inventory dengan status out
+            foreach ($itemBundleDetail as $value) {
+                #get count terkakhir by item 
+                $old_stok =  ItemCountModel::select('ic_count')->where('ic_itidx', $value->ibd_itidx)->first();
+                #save ke tb_item_inventory
+                $total_qty = $qty * $value->ibd_count;
+                $ItemInventori = ItemInventoriModel::create([
+                    'in_id' => Str::random(30),
+                    'in_itidx' => $value->ibd_itidx,
+                    'in_count' => $total_qty,
+                    'in_count_first' => $old_stok->ic_count,
+                    'in_count_last' => $old_stok->ic_count - $total_qty,
+                    'in_status'     => 'out',
+                    'in_bundle'     => 'Y',
+                    'in_create' => date('Y-m-d H:i:s'),
+                    'in_useridx' => Auth::user()->id,
+                ]);
+
+                #update count / stok
+                DB::table('rb_item_count')->where('ic_itidx', $value->ibd_itidx)->update([
+                    'ic_count' => $ItemInventori->in_count_last,
+                    'ic_update' => date('Y-m-d H:i:s'),
+                    'ic_useridx' => Auth::user()->id
+                ]);
+
+            }
+
+            DB::commit();
+            return redirect()->route('bundle-stockout')->with(['success' => 'Stok out bundel telah disimpan!']);
+        }catch (\Exception $e) {
+            DB::rollback();
+            return $e->getMessage();
+            return redirect()->route('bundle-stockout')->with(['error' => 'Gagal disimpan!']);
+        }
     }
 
 }

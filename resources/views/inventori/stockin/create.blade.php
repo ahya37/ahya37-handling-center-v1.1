@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label>Stok</label>
+                                        <label>Qty</label>
                                         <input type="hidden" id="item" name="iditem">
                                         <input type="text" class="form-control number" id="stok" name="stok" autocomplete="off" >
                                     </div>
