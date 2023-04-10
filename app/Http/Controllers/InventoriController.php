@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\ItemModel;
 use App\ItemInventoriModel;
 use App\ItemCountModel;
+use App\ItemBundleModel;
+use App\ItemBundleDetailModel;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 use Str;
@@ -157,7 +159,7 @@ class InventoriController extends Controller
     
             #cek jika input sto kosong
             $request_stok = array_filter($request->stok);
-            if(empty($request_stok)) return 'kosong';
+            if(empty($request_stok)) return redirect()->route('stockout')->with(['error' => 'Input stok tidak boleh kosong!']);
     
             $stok['stok'] = $request_stok;
     
@@ -198,9 +200,90 @@ class InventoriController extends Controller
             return redirect()->route('opname')->with(['success' => 'Stok opname telah disimpan!']);
         }catch (\Exception $e) {
             DB::rollback();
-            return $e->getMessage();
             return redirect()->route('stockout')->with(['error' => 'Gagal disimpan!']);
         }
+
+    }
+
+    public function bundle(){
+
+        return view('inventori.bundle.index');
+
+    }
+
+    public function createBundle(){
+
+        $items = DB::table('rb_item as a')
+                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
+                ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
+                ->where('a.is_delete',0)
+                ->get();
+
+        return view('inventori.bundle.create', compact('items'));
+
+    }
+
+    public function storeBundle(Request $request){
+
+        // return $request->all();
+
+        DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(),[
+                'iditem' => 'required',
+                'name' => 'required',
+            ]);
+
+            
+            $count['qty'] = $request->qty; 
+            $iditem       = $request->iditem; 
+            
+            #cek jika tidak ada item dipilih
+            if(!$iditem) return redirect()->route('bundle-create')->with(['error' => 'Pilih setidaknya 1 Item!']);
+
+            #cek jika input stok kosong
+            $request_qty = array_filter($request->qty);
+            if(empty($request_qty)) return redirect()->route('bundle-create')->with(['error' => 'Qty tidak boleh kosong!']);            
+
+            #save ke tb rb_item_bundle
+            $bundle = ItemBundleModel::create([
+                'ib_idx' => Str::random(30),
+                'ib_name' => $request->name,
+                'ib_note' => $request->note,
+                'ib_create' => date('Y-m-d H:i:s'),
+                'ib_useridx' => Auth::user()->id
+            ]);
+
+
+            #save detail bundle berisi item
+            foreach ($iditem as $key => $value) {
+                
+                #buat bundle jika  qty terisi
+                if (isset( $count['qty'][$key])) {
+                    $itemBundleDetail = new ItemBundleDetailModel();
+                    $itemBundleDetail->ibd_ibidx = $bundle->ib_idx;
+                    $itemBundleDetail->ibd_itidx = $value;
+                    $itemBundleDetail->ibd_count = $count['qty'][$key];
+                    $itemBundleDetail->ibd_create = date('Y-m-d H:i:s');
+                    $itemBundleDetail->save();
+                }
+            }
+            
+            DB::commit();
+            return redirect()->route('bundle')->with(['success' => 'Bundel telah disimpan!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $e->getMessage();
+            return redirect()->route('bundle')->with(['error' => 'Gagal disimpan!']);
+        }
+
+    }
+
+    public function history(){
+
+        return view('inventori.history.index');
 
     }
 }
