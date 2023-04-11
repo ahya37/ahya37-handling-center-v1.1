@@ -21,13 +21,7 @@ class BundleController extends Controller
 
     public function createBundle(){
 
-        $items = DB::table('rb_item as a')
-                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
-                ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
-                ->where('a.is_delete',0)
-                ->get();
-
-        return view('inventori.bundle.create', compact('items'));
+        return view('inventori.bundle.create');
 
     }
 
@@ -82,7 +76,7 @@ class BundleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            return $e->getMessage();
+            // return $e->getMessage();
             return redirect()->route('bundle')->with(['error' => 'Gagal disimpan!']);
         }
 
@@ -137,5 +131,19 @@ class BundleController extends Controller
             ]);
 
     
+    }
+
+    public function editBundle($idx){
+
+        $itemBundle = ItemBundleModel::select('ib_idx','ib_name','ib_note')->where('ib_idx', $idx)->first();
+
+        $items = DB::table('rb_item as a')
+                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
+                ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
+                ->where('a.is_delete',0)
+                ->get();
+
+        return view('inventori.bundle.edit', compact('items','itemBundle'));
+
     }
 }
