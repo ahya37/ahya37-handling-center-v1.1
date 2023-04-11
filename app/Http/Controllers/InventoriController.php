@@ -207,7 +207,68 @@ class InventoriController extends Controller
 
     public function history(){
 
-        return view('inventori.history.index');
+        $items = ItemModel::select('it_name','it_idx')->orderBy('it_name','asc')->get();
+
+        return view('inventori.history.index', compact('items'));
+
+    }
+
+    public function getDataHistory(Request $request){
+        
+        $orderBy = 'b.it_name';
+        switch ($request->input('order.0.column')) {
+            case '1':
+                $orderBy = 'b.it_name';
+                break;
+        }
+
+        $data =  DB::table('rb_item_inventory as a')
+                 ->select('a.in_idx','b.it_name','b.it_image','a.in_count','a.in_count_first','a.in_count_last','a.in_status','a.in_create')
+                 ->join('rb_item as b','a.in_itidx','=','b.it_idx')
+                 ->where('b.is_delete',0);
+
+        if($request->input('search.value')!=null){
+                    $data = $data->where(function($q)use($request){
+                        $q->whereRaw('LOWER(b.it_name) like ? ',['%'.strtolower($request->input('search.value')).'%']);
+                    });
+        }
+
+        if($request->input('item') != ''){
+            $data->where('a.in_itidx', $request->item);
+        }
+
+        if($request->input('status') != ''){
+            $data->where('a.in_status', $request->status);
+        }
+
+        $recordsFiltered = $data->get()->count();
+        if($request->input('length')!=-1) $data = $data->skip($request->input('start'))->take($request->input('length'));
+        $data = $data->orderBy($orderBy,$request->input('order.0.dir'))->get();
+
+        $recordsTotal = $data->count();
+
+        $results = [];
+        $no      = 1;
+        foreach ($data as $value) {
+
+            $results[] = [
+                'no' => $no++,
+                'id' => $value->in_idx,
+                'name' => $value->it_name,
+                'qty' => $value->in_count,
+                'first' => $value->in_count_first,
+                'last' => $value->in_count_last,
+                'status' => $value->in_status,
+                'created_at' => date('d-m-Y', strtotime($value->in_create)),
+            ];
+        }  
+        
+        return response()->json([
+                'draw'=>$request->input('draw'),
+                'recordsTotal'=>$recordsTotal,
+                'recordsFiltered'=>$recordsFiltered,
+                'data'=> $results
+            ]);
 
     }
 

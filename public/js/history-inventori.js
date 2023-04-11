@@ -1,3 +1,5 @@
+let item = '';
+let statuses = '';
 const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 const table = $("#tablePlace").DataTable({
   pageLength: 100,
@@ -9,10 +11,10 @@ const table = $("#tablePlace").DataTable({
   order: [[0, "desc"]],
   autoWidth: false,
   ajax: {
-    url: "/item/listdata",
+    url: "/item/listdatahistory",
     type: "POST",
     data: function (q) {
-      (q._token = CSRF_TOKEN)
+      (q._token = CSRF_TOKEN, q.item = item, q.status = statuses)
       return q;
     },
   },
@@ -26,31 +28,76 @@ const table = $("#tablePlace").DataTable({
     {
       targets: 1,
       render: function (data, type, row, meta) {
-        return `<img src="/storage/${row.image}" width="50px">`;
+        return `<p>${row.name}</p>`;
       },
     },
     {
       targets: 2,
       render: function (data, type, row, meta) {
-        return `<p>${row.name}</p>`;
+        return `<p>${row.qty}</p>`;
       },
     },
     {
       targets: 3,
       render: function (data, type, row, meta) {
-        return `<p>${row.stok}</p>`;
+        return `<p>${row.first}</p>`;
       },
     },
     {
       targets: 4,
       render: function (data, type, row, meta) {
-        return `
-                <a href="/umrah/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
-                <button onclick="onDelete(this)" id="${row.id}" value="${row.id}" title="Hapus" class="fa fa-trash btn text-danger"></button>
-              `;
+        return `<p>${row.last}</p>`;
       },
     },
-  ],
+    {
+      targets: 5,
+      render: function (data, type, row, meta) {
+        return `<p>${row.status}</p>`;
+      },
+    },
+    {
+      targets: 6,
+      render: function (data, type, row, meta) {
+        return `<p>${row.created_at}</p>`;
+      },
+    },
+  ]
 });
 
 
+$(".item").on("change", function () {
+  item = $("select[name=item] option").filter(":selected").val();
+  table.ajax.reload(null, false);
+});
+
+$(".status").on("change", function () {
+  statuses = $("select[name=status] option").filter(":selected").val();
+  table.ajax.reload(null, false);
+});
+
+$("#status").select2({
+  theme: "bootstrap4",
+  width: $(this).data("width")
+    ? $(this).data("width")
+    : $(this).hasClass("w-50")
+      ? "50%"
+      : "style",
+  allowClear: Boolean($(this).data("allow-clear")),
+});
+
+$(".item").select2({
+  theme: "bootstrap4",
+  width: $(this).data("width")
+    ? $(this).data("width")
+    : $(this).hasClass("w-50")
+      ? "50%"
+      : "style",
+  allowClear: Boolean($(this).data("allow-clear")),
+});
+
+function allData() {
+  item = "";
+  statuses = "";
+  table.ajax.reload(null, false);
+
+}

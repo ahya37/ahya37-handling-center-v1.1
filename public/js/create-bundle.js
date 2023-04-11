@@ -1,6 +1,6 @@
 const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 const table = $("#tablePlace").DataTable({
-  pageLength: 10,
+  pageLength: 100,
   bLengthChange: true,
   bFilter: true,
   bInfo: true,

@@ -308,7 +308,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
 
         #histori 
-        // Route::get('/history', 'InventoriController@history')->name('history');
+        Route::get('/history', 'InventoriController@history')->name('history');
+        Route::post('/listdatahistory', 'InventoriController@getDataHistory');
 
     });
 });
