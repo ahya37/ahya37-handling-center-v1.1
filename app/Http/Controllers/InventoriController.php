@@ -276,7 +276,7 @@ class InventoriController extends Controller
 
         $bundles = DB::table('rb_item_bundle as a')
                     ->join('rb_item_bundle_detail as b','a.ib_idx','=','b.ibd_ibidx')
-                    ->select('a.ib_name','a.ib_note','a.ib_create','a.ib_idx', DB::raw('count(b.ibd_idx) as count_item'))
+                    ->select('a.ib_name','a.ib_note','a.ib_create','a.ib_idx', DB::raw('count(if(b.is_delete = 0, 1, NULL)) as count_item'))
                     ->groupBy('a.ib_name','a.ib_note','a.ib_create','a.ib_idx')
                     ->where('a.is_delete',0)->get();
 
@@ -292,7 +292,7 @@ class InventoriController extends Controller
             $qty        = $request->qty ?? 1; // jika kosong default nya 1
 
             #get iditem yang ada di detail item bundle
-            $itemBundleDetail = ItemBundleDetailModel::select('ibd_itidx','ibd_count')->where('ibd_ibidx', $idBundle)->get();
+            $itemBundleDetail = ItemBundleDetailModel::select('ibd_itidx','ibd_count')->where('ibd_ibidx', $idBundle)->where('is_delete',0)->get();
             
             #looping, dan simpan ke tb_inventory dengan status out
             foreach ($itemBundleDetail as $value) {

@@ -7,6 +7,7 @@ use App\ItemModel;
 use App\ItemInventoriModel;
 use App\ItemCountModel;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ResponseFormatter;
 use Auth;
 use Str;
 use DB;
@@ -191,5 +192,30 @@ class ItemController extends Controller
         }
 
 
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = $request->id;
+
+            DB::table('rb_item')->where('it_idx', $id)->update(['is_delete' => 1]);
+            
+            DB::commit();
+            return ResponseFormatter::success([
+                   null,
+                   'message' => 'Berhasil hapus item'
+            ],200); 
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
     }
 }

@@ -287,6 +287,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/store', 'ItemController@store')->name('item.store');
         Route::post('/update/{it_idx}', 'ItemController@update')->name('item.update');
         Route::post('/listdata', 'ItemController@listData');
+        Route::post('/destroy', 'ItemController@destroy');
 
         #stok in
         Route::get('/stockin', 'InventoriController@stockIn')->name('stockin');

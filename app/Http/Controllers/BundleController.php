@@ -99,7 +99,7 @@ class BundleController extends Controller
 
         $data =  DB::table('rb_item_bundle as a')
                 ->join('rb_item_bundle_detail as b','a.ib_idx','=','b.ibd_ibidx')
-                ->select('a.ib_name','a.ib_note','a.ib_create','a.ib_idx', DB::raw('count(b.ibd_idx) as count_item'))
+                ->select('a.ib_name','a.ib_note','a.ib_create','a.ib_idx', DB::raw('count(if(b.is_delete = 0, 1, NULL)) as count_item'))
                 ->groupBy('a.ib_name','a.ib_note','a.ib_create','a.ib_idx')
                 ->where('a.is_delete',0);
 
