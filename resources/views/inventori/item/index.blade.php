@@ -28,6 +28,7 @@
                                         <th class="col-1">Gambar</th>
                                         <th>Item</th>
                                         <th>Stok</th>
+                                        <th>Harga</th>
                                         <th>Opsi</th>
 									</tr>
 								</thead>

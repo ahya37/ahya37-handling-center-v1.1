@@ -283,7 +283,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' =>  'item'], function(){
         Route::get('/', 'ItemController@index')->name('item.index');
         Route::get('/create', 'ItemController@create')->name('item.create');
+        Route::get('/edit/{it_idx}', 'ItemController@edit')->name('item.edit');
         Route::post('/store', 'ItemController@store')->name('item.store');
+        Route::post('/update/{it_idx}', 'ItemController@update')->name('item.update');
         Route::post('/listdata', 'ItemController@listData');
 
         #stok in

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Auth;
 use Str;
 use DB;
+use File;
 
 class ItemController extends Controller
 {
@@ -82,7 +83,6 @@ class ItemController extends Controller
             return redirect()->route('item.index')->with(['success' => 'Item telah disimpan!']);
         } catch (\Exception $e) {
             DB::rollback();
-            return $e->getMessage();
             return redirect()->route('item.index')->with(['error' => 'Gagal disimpan!']);
         }
 
@@ -98,7 +98,7 @@ class ItemController extends Controller
         }
 
         $data =  DB::table('rb_item as a')
-                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
+                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count','a.it_price')
                 ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
                 ->where('a.is_delete',0);
 
@@ -123,6 +123,7 @@ class ItemController extends Controller
                 'id' => $value->it_idx,
                 'name' => $value->it_name,
                 'image' => $value->it_image,
+                'price' => number_format($value->it_price),
                 'stok' => $value->ic_count,
                 'created_at' => $value->it_update,
             ];
@@ -134,6 +135,61 @@ class ItemController extends Controller
                 'recordsFiltered'=>$recordsFiltered,
                 'data'=> $results
             ]);
+
+    }
+
+    public function edit($it_idx){
+
+        $item = ItemModel::select('it_name','it_price','it_image','it_desc','it_idx')->where('it_idx', $it_idx)->first();
+
+        return view('inventori.item.edit',['item' => $item]);
+
+    }
+
+    public function update(Request $request, $it_idx){
+
+        DB::beginTransaction();
+        try {
+
+            $validator = Validator::make($request->all(),[
+                'name' => 'required|string',
+                'price' => 'required',
+                'image' => 'image'
+            ]);
+    
+            $item = DB::table('rb_item')->select('it_image')->where('it_idx', $it_idx)->first();
+    
+            if ($validator->fails()) {
+    
+                return redirect()->route('item.create')->with(['warning' => 'Uplad gambar dengan format image saja!']);
+            }
+    
+            if ($request->hasFile('image')) {
+                #hapus foto lama
+                File::delete(storage_path('app/public/'.$item->it_image));
+                $fileImage = $request->image->store('images/inventori', 'public');
+    
+            }else{
+    
+                $fileImage = $item->it_image;
+            }
+    
+            $item = DB::table('rb_item')->where('it_idx', $it_idx)->update([
+                'it_name' => $request->name,
+                'it_price' => $request->price,
+                'it_image' => $fileImage,
+                'it_desc' => $request->note,
+            ]);
+
+            DB::commit();
+            return redirect()->route('item.index')->with(['success' => 'Item telah diubah!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $e->getMessage();
+            return redirect()->route('item.index')->with(['error' => 'Gagal diubah!']);
+        }
+
 
     }
 }

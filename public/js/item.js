@@ -44,8 +44,14 @@ const table = $("#tablePlace").DataTable({
     {
       targets: 4,
       render: function (data, type, row, meta) {
+        return `<p>Rp.${row.price}</p>`;
+      },
+    },
+    {
+      targets: 5,
+      render: function (data, type, row, meta) {
         return `
-                <a href="/umrah/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
+                <a href="/item/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
                 <button onclick="onDelete(this)" id="${row.id}" value="${row.id}" title="Hapus" class="fa fa-trash btn text-danger"></button>
               `;
       },
