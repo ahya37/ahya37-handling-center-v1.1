@@ -33,7 +33,11 @@
                                         <tr>
                                             <td colspan="4"></td>
                                             <td>
-                                                <button type="submit" class="btn btn-sm btn-primary float-right">Update Stok</button>
+                                                <button type="submit" class="btn btn-sm btn-primary float-right" id="btnsave">Update Stok</button>
+                                                <button class="btn btn-primary" type="button" id="btnloading" disabled style="display: none">
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    Proses...
+                                                </button>
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -63,5 +67,6 @@
 <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('js/number-only.js') }}"></script>   
 <script src="{{ asset('/js/opname.js') }}"></script>
+<script src="{{ asset('/js/loadbutton.js') }}"></script>
 
 @endpush

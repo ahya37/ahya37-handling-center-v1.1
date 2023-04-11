@@ -51,7 +51,11 @@
                                             <textarea  name="note" class="form-control"></textarea>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-sm btn-primary px-5">Simpan</button>
+                                            <button type="submit" class="btn btn-sm btn-primary px-5" id="btnsave">Simpan</button>
+                                            <button class="btn btn-primary" type="button" id="btnloading" disabled style="display: none">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Proses...
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -70,6 +74,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script> 
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('/js/create-bundle.js') }}"></script>
+<script src="{{ asset('/js/loadbutton.js') }}"></script>
 <script src="{{ asset('js/number-only.js') }}"></script>   
 
 @endpush

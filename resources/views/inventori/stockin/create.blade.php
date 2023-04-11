@@ -80,7 +80,11 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn btn-sm btn-primary float-right">Simpan</button>
+                                        <button type="submit" class="btn btn-sm btn-primary float-right" id="btnsave">Simpan</button>
+                                        <button class="btn btn-primary" type="button" id="btnloading" disabled style="display: none">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Proses...
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -97,6 +101,7 @@
     <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/js/stokmasuk.js') }}"></script>
+    <script src="{{ asset('/js/loadbutton.js') }}"></script>
 <script src="{{ asset('js/number-only.js') }}"></script>   
 
 @endpush
