@@ -158,11 +158,10 @@ class InventoriController extends Controller
             $stok['stok'] = $request->stok;
     
             #cek jika input sto kosong
-            $request_stok = array_values(array_filter($request->qty));
-            if(empty($request_stok)) return redirect()->route('stockout')->with(['error' => 'Input stok tidak boleh kosong!']);
-    
-            $stok['stok'] = $request_stok;
-    
+            $request_stok = array_filter($request->stok);
+            if(empty($request_stok)) return redirect()->route('opname')->with(['error' => 'Input stok tidak boleh kosong!']);
+            // $stok['stok'] = $request_stok;
+
     
             foreach ($iditem as $key => $value) {
 
@@ -184,7 +183,7 @@ class InventoriController extends Controller
                         ]);
             
                     # update stok di rb_item_count by iditem
-                        # ic_count = in_count_last
+                    # ic_count = in_count_last
                     DB::table('rb_item_count')->where('ic_itidx', $value)->update([
                             'ic_count' => $ItemInventori->in_count_last,
                             'ic_update' => date('Y-m-d H:i:s'),
@@ -200,6 +199,7 @@ class InventoriController extends Controller
             return redirect()->route('opname')->with(['success' => 'Stok opname telah disimpan!']);
         }catch (\Exception $e) {
             DB::rollback();
+            return $e->getMessage();
             return redirect()->route('opname')->with(['error' => 'Gagal disimpan!']);
         }
 
