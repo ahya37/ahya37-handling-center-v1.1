@@ -135,15 +135,92 @@ class BundleController extends Controller
 
     public function editBundle($idx){
 
-        $itemBundle = ItemBundleModel::select('ib_idx','ib_name','ib_note')->where('ib_idx', $idx)->first();
 
         $items = DB::table('rb_item as a')
-                ->select('a.it_idx','a.it_name','a.it_desc','a.it_image','a.it_update','b.ic_count')
+                ->select('a.it_idx','a.it_name','a.it_image','a.it_update','b.ic_count')
                 ->join('rb_item_count as b','a.it_idx','=','b.ic_itidx')
                 ->where('a.is_delete',0)
                 ->get();
 
-        return view('inventori.bundle.edit', compact('items','itemBundle'));
+        $results = [];
+        foreach ($items as $value) {
+            $bundle    = DB::table('rb_item_bundle_detail')
+                        ->select('ibd_itidx','ibd_count')
+                        ->where('ibd_itidx', $value->it_idx)
+                        ->where('ibd_ibidx', $idx)
+                        ->where('is_delete',0)
+                        ->first();
 
+            $results[] = [
+                'id' => $value->it_idx,
+                'name' => $value->it_name,
+                'image' => $value->it_image,
+                'stok' => $value->ic_count,
+                'qty' => $bundle->ibd_count ?? '',
+                'ibd_itidx' => $bundle->ibd_itidx ?? ''
+            ];
+        }
+
+
+        $itemBundle = ItemBundleModel::select('ib_idx','ib_name','ib_note')->where('ib_idx', $idx)->first();
+
+
+        return view('inventori.bundle.edit', compact('results','itemBundle'));
+
+    }
+
+    public function updateBundle(Request $request, $idx){
+
+        try {
+
+            $validator = Validator::make($request->all(),[
+                'iditem' => 'required',
+                'name' => 'required',
+            ]);
+
+            
+            $count['qty'] = $request->qty; 
+            $iditem       = $request->iditem;
+            
+            #cek jika tidak ada item dipilih
+            if(!$iditem) return redirect()->route('bundle-create')->with(['error' => 'Pilih setidaknya 1 Item!']);
+
+            #cek jika input stok kosong
+            $request_qty =  array_values(array_filter($request->qty));
+            if(empty($request_qty)) return redirect()->route('bundle-create')->with(['error' => 'Qty tidak boleh kosong!']);
+            $count['qty'] =  $request_qty;
+
+            #update bundle
+            $bundle = DB::table('rb_item_bundle')->where('ib_idx', $idx)->update([
+                'ib_name' => $request->name,
+                'ib_note' => $request->note,
+                'ib_update' => date('Y-m-d H:i:s'),
+                'ib_useridx' => Auth::user()->id
+            ]);
+
+            #hapus detail bundle sebelumnya
+            DB::table('rb_item_bundle_detail')->where('ibd_ibidx', $idx)->delete();
+
+            #replace detail_bundle
+            foreach ($iditem as $key => $value) {
+                #buat bundle jika  qty terisi
+                if (isset( $count['qty'][$key])) {
+                    $itemBundleDetail = new ItemBundleDetailModel();
+                    $itemBundleDetail->ibd_ibidx = $idx;
+                    $itemBundleDetail->ibd_itidx = $value;
+                    $itemBundleDetail->ibd_count = $count['qty'][$key];
+                    $itemBundleDetail->ibd_create = date('Y-m-d H:i:s');
+                    $itemBundleDetail->save();
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('bundle')->with(['success' => 'Bundel telah disimpan!']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            // return $e->getMessage();
+            return redirect()->route('bundle')->with(['error' => 'Gagal disimpan!']);
+        }
     }
 }

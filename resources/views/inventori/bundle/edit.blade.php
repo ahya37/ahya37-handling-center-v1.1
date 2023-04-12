@@ -18,7 +18,7 @@
                                         <h5 class="mb-0 text-primary"> Tambah Bundel</h5>
                                     </div>
                                     <hr>
-                                    <form class="row g-3" action="{{ route('bundle-store') }}" method="post" enctype="multipart/form-data">
+                                    <form class="row g-3" action="{{ route('bundle-stockout-update',$itemBundle->ib_idx ) }}" method="post" enctype="multipart/form-data">
                                         @csrf
                                         <div class="col-md-12">
                                             <label class="form-label">Nama</label>
@@ -42,7 +42,21 @@
                                                             <th class="col-2">Qty</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody></tbody>
+                                                    <tbody>
+                                                        @foreach ($results as $item)
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" name="iditem[]" value="{{ $item['id'] }}" {{ $item['id'] == $item['ibd_itidx'] ? 'checked' : '' }} />
+                                                                </td>
+                                                                <td><img src="{{ asset('/storage/'.$item['image']) }}" width="50px" class="rounded" /></td>
+                                                                <td>{{ $item['name'] }}</td>
+                                                                <td>{{ $item['stok'] }}</td>
+                                                                <td>
+                                                                    <input type="text" name="qty[]" value="{{ $item['qty'] }}" class="form-control" />
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
@@ -73,7 +87,12 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script> 
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
-<script src="{{ asset('/js/create-bundle.js') }}"></script>
+{{-- <script src="{{ asset('/js/create-bundle.js') }}"></script> --}}
+<script type="text/javascript">
+    $('#tablePlace').DataTable({
+        pageLength: 100,
+    })
+</script>
 <script src="{{ asset('/js/loadbutton.js') }}"></script>
 <script src="{{ asset('js/number-only.js') }}"></script>   
 

@@ -309,6 +309,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/bundle/listdata', 'BundleController@getListDataBundle');
         Route::get('/bundle/stockout', 'InventoriController@stockOutBundle')->name('bundle-stockout');
         Route::post('/bundle/stockout/store', 'InventoriController@storeStockoutBundle')->name('bundle-stockout-store');
+        Route::post('/bundle/update/{idx}', 'BundleController@updateBundle')->name('bundle-stockout-update');
         // Route::post('/opname/store', 'InventoriController@storeOpname')->name('opname-store');
 
         #histori 

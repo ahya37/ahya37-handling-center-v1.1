@@ -202,6 +202,7 @@ class ItemController extends Controller
             $id = $request->id;
 
             DB::table('rb_item')->where('it_idx', $id)->update(['is_delete' => 1]);
+            DB::table('rb_item_bundle_detail')->where('ibd_itidx', $id)->delete();
             
             DB::commit();
             return ResponseFormatter::success([
