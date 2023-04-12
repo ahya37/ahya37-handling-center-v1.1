@@ -52,7 +52,7 @@ const table = $("#tablePlace").DataTable({
       render: function (data, type, row, meta) {
         return `
                 <a href="/item/bundle/edit/${row.id}" class="btn btn-sm fa fa-edit text-primary" title="Edit"></a>
-                <button onclick="onDelete(this)" id="${row.id}" value="${row.id}" title="Hapus" class="fa fa-trash btn text-danger"></button>
+                <button onclick="onDelete(this)" id="${row.id}" value="${row.id}" data-name="${row.name}" title="Hapus" class="fa fa-trash btn text-danger"></button>
               `;
       },
     },
@@ -62,11 +62,10 @@ const table = $("#tablePlace").DataTable({
 // delete
 function onDelete(data) {
   const id = data.id;
-  const tourcode = data.value;
+  const name = data.getAttribute('data-name');
   
   Swal.fire({
-    title: `Yakin hapus tourcode : ${tourcode}?`,
-    text: "Data yang dihapus tidak dapat dikembalikan",
+    title: `Yakin hapus bundel : ${name}?`,
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
@@ -76,7 +75,7 @@ function onDelete(data) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: `/umrah/destroy`,
+        url: `/item/bundle/destroy`,
         method: "POST",
         cache: false,
         data: {
@@ -97,7 +96,7 @@ function onDelete(data) {
           Swal.fire({
             position: "center",
             icon: "warning",
-            title: `Gagal, ada pembimbing yang masih aktif mengerjakan`,
+            title: `Gagal!`,
             showConfirmButton: false,
             width: 500,
             timer: 1500,

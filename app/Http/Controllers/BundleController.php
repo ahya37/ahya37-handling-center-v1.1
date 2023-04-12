@@ -7,6 +7,7 @@ use App\ItemModel;
 use App\ItemBundleModel;
 use App\ItemBundleDetailModel;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ResponseFormatter;
 use Auth;
 use Str;
 use DB;
@@ -221,6 +222,32 @@ class BundleController extends Controller
             DB::rollback();
             // return $e->getMessage();
             return redirect()->route('bundle')->with(['error' => 'Gagal disimpan!']);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = $request->id;
+
+            DB::table('rb_item_bundle')->where('ib_idx', $id)->update(['is_delete' => 1]);
+            DB::table('rb_item_bundle_detail')->where('ibd_ibidx', $id)->update(['is_delete' => 1]);
+            
+            DB::commit();
+            return ResponseFormatter::success([
+                   null,
+                   'message' => 'Berhasil hapus bundel'
+            ],200); 
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
         }
     }
 }
