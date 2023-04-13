@@ -316,6 +316,10 @@ Route::group(['middleware' => ['auth']], function () {
         #histori 
         Route::get('/history', 'InventoriController@history')->name('history');
         Route::post('/listdatahistory', 'InventoriController@getDataHistory');
+        
+        #report
+        Route::get('/report', 'InventoriController@report')->name('inv-report');
+        Route::get('/report/store', 'InventoriController@storeReport')->name('inv-report-store');
 
     });
 });

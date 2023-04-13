@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Auth;
 use Str;
 use DB;
+use PDF;
 
 class InventoriController extends Controller
 {
@@ -180,7 +181,7 @@ class InventoriController extends Controller
                             'in_status'     => 'opname',
                             'in_create' => date('Y-m-d H:i:s'),
                             'in_useridx' => Auth::user()->id,
-                        ]);
+                    ]);
             
                     # update stok di rb_item_count by iditem
                     # ic_count = in_count_last
@@ -194,6 +195,11 @@ class InventoriController extends Controller
                 
             }
 
+            #save ke tb rb_item_opname sebagai berita acara
+            DB::table('rb_item_opname')->insert([
+                'title' => 'Berita acara',
+                'created_by' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return redirect()->route('opname')->with(['success' => 'Stok opname telah disimpan!']);
@@ -327,6 +333,54 @@ class InventoriController extends Controller
             DB::rollback();
             return $e->getMessage();
             return redirect()->route('bundle-stockout')->with(['error' => 'Gagal disimpan!']);
+        }
+    }
+
+    public function report(){
+
+        return view('inventori.report.index');
+    }
+
+    public function storeReport(Request $request){
+
+        // $pdf = PDF::LoadView('inventori.report.opname');
+        // return $pdf->stream('Berita Acara Stok Opname Persediaan Perlengkapan.pdf');
+
+        if($request->type == 'opname'){
+
+            $date = date('Y-m-d', strtotime(request('date')));
+
+            $items = DB::table('rb_item_inventory as a')
+                    ->select('b.it_name','c.ic_count')
+                    ->join('rb_item as b','a.in_itidx','=','b.it_idx')
+                    ->join('rb_item_count as c','c.ic_itidx','b.it_idx')
+                    ->where('a.in_status', 'opname')
+                    ->whereDate('a.in_create', $date)
+                    ->groupBy('b.it_name','c.ic_count')
+                    ->get();
+
+
+            if (count($items) > 0) {
+    
+                $total = collect($items)->sum(function($q){
+                    return $q->ic_count;
+                });
+                
+                $no = 1;
+                #PDF
+                $pdf = PDF::LoadView('inventori.report.opname', compact('items','no','total'));
+                return $pdf->stream('Berita Acara Stok Opname Persediaan Perlengkapan.pdf');
+            }else{
+
+                return redirect()->back()->with(['error' => 'Tidak ada opname ditanggal tersebut!']);
+
+            }
+
+            
+
+        }else{
+
+            return redirect()->back()->with(['error' => 'Tidak ada laporan!']);
         }
     }
 

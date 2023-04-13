@@ -58,7 +58,10 @@ class Globalprovider extends ServiceProvider
 
     public function userSubMenus($id)
     {
-        $sql = DB::table('aps_menus')->select('menu_name','menu_route','menu_icon','menu_type')->where('menu_parent_id', $id)->get();
+        $sql = DB::table('aps_menus')->select('menu_name','menu_route','menu_icon','menu_type')
+                    ->where('menu_parent_id', $id)
+                    ->orderBy('menu_order','asc')
+                    ->get();
         return $sql;
             
     }

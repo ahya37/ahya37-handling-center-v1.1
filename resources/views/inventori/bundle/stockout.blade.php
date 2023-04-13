@@ -20,7 +20,7 @@
                         </div>
                         <div class="product-list p-3 mb-3">
                             @foreach ($bundles as $item)
-                                <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" id="{{ $item->ib_idx }}" onclick="onSelect(this)" data-count="{{ $item->count_item }}"  data-name="{{ $item->ib_name }}">
+                                <div class="row border mx-0 mb-3 py-2 radius-10 cursor-pointer" id="{{ $item->ib_idx }}" onclick="onSelect(this)" data-count="{{ $item->count_item }}"  data-name="{{ $item->ib_name }}" >
                                     <div class="col-sm-6">
                                         <div class="d-flex align-items-center">
                                             <div class="product-img">
