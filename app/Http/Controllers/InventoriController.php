@@ -13,6 +13,7 @@ use Auth;
 use Str;
 use DB;
 use PDF;
+use App\Providers\Globalprovider;
 
 class InventoriController extends Controller
 {
@@ -348,14 +349,20 @@ class InventoriController extends Controller
 
         if($request->type == 'opname'){
 
-            $date = date('Y-m-d', strtotime(request('date')));
+            $req_date = date('Y-m-d', strtotime(request('date')));
+			
+			$d = date('d');
+			$m = Globalprovider::mountFormat(date('m', strtotime(request('date'))));
+			$y = date('Y');
+			
+			$date = $d.' '.$m.' '.$y;
 
             $items = DB::table('rb_item_inventory as a')
                     ->select('b.it_name','c.ic_count')
                     ->join('rb_item as b','a.in_itidx','=','b.it_idx')
                     ->join('rb_item_count as c','c.ic_itidx','b.it_idx')
                     ->where('a.in_status', 'opname')
-                    ->whereDate('a.in_create', $date)
+                    ->whereDate('a.in_create', $req_date)
                     ->groupBy('b.it_name','c.ic_count')
                     ->get();
 
@@ -368,8 +375,8 @@ class InventoriController extends Controller
                 
                 $no = 1;
                 #PDF
-                $pdf = PDF::LoadView('inventori.report.opname', compact('items','no','total'));
-                return $pdf->stream('Berita Acara Stok Opname Persediaan Perlengkapan.pdf');
+                $pdf = PDF::LoadView('inventori.report.opname', compact('items','no','total','date'));
+                return $pdf->download('Berita Acara Stok Opname Persediaan Perlengkapan.pdf');
             }else{
 
                 return redirect()->back()->with(['error' => 'Tidak ada opname ditanggal tersebut!']);
