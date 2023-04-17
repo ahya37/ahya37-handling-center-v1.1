@@ -36,6 +36,46 @@
 
             </div>
             <!--end row-->
+
+            <h6 class="mb-0 ">Histori Berita Acara</h6>
+            <hr />
+            <div class="row row-cols-8 row-cols-xl-8">
+
+                <div class="col-6">
+                    <div class="card radius-10 w-100">
+                        <div class="card-body">
+                            <div class="table">
+                                <table id="tablePlace" class="table table-hover" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>NO</th>
+                                            <th>Tanggal</th>
+                                            <th>Opsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($beritaAcara as $item)
+                                            <tr>
+                                                <td>{{ $no++ }}</td>
+                                                <td>{{ date('d-m-Y', strtotime($item->created_at)) }}</td>
+                                                <td>
+                                                    <form action="{{ route('inv-report-store') }}" method="GET">
+                                                        @csrf
+                                                        <input type="hidden" value="{{ $item->created_at }}" name="date"/>
+                                                        <button class="btn btn-sm btn-primary">Download Berita Acara</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </div>
 @endsection
@@ -46,4 +86,7 @@
     <script src="{{ asset('/js/stokmasuk.js') }}"></script>
     <script src="{{ asset('/js/loadbutton.js') }}"></script>
     <script src="{{ asset('js/number-only.js') }}"></script>
+    <script>
+        $('#tablePlace').DataTable()
+    </script>
 @endpush

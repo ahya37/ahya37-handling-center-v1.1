@@ -339,7 +339,10 @@ class InventoriController extends Controller
 
     public function report(){
 
-        return view('inventori.report.index');
+        $beritaAcara = DB::table('rb_item_opname')->get();
+        $no          = 1;
+
+        return view('inventori.report.index',['beritaAcara' => $beritaAcara,'no' => $no]);
     }
 
     public function storeReport(Request $request){
