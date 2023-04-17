@@ -339,7 +339,7 @@ class InventoriController extends Controller
 
     public function report(){
 
-        $beritaAcara = DB::table('rb_item_opname')->get();
+        $beritaAcara = DB::table('rb_item_opname')->orderBy('created_at','desc')->get();
         $no          = 1;
 
         return view('inventori.report.index',['beritaAcara' => $beritaAcara,'no' => $no]);
