@@ -5,7 +5,7 @@
     <div class="page-wrapper">
         <div class="page-content">
             @include('layouts.message')
-            <h6 class="mb-0 ">Laporan</h6>
+            {{-- <h6 class="mb-0 ">Laporan</h6>
             <hr />
             <div class="row row-cols-8 row-cols-xl-8">
 
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> --}}
             <!--end row-->
 
             <h6 class="mb-0 ">Histori Berita Acara</h6>
