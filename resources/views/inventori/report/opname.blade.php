@@ -163,7 +163,7 @@
                 <tr style="font-size: 14.5px;">
                     <td>{{ $no++ }}</td>
                     <td>{{ ucwords($item->it_name)}}</td>
-                    <td>{{ $item->ic_count }}</td>
+                    <td>{{ $item->in_count_last }}</td>
                 </tr>
                 @endforeach
                 <tr style="font-weight: bold;font-size: 14.5px;">

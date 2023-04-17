@@ -354,26 +354,27 @@ class InventoriController extends Controller
 
             $req_date = date('Y-m-d', strtotime(request('date')));
 			
-			$d = date('d');
+			$d = date('d', strtotime(request('date')));
 			$m = Globalprovider::mountFormat(date('m', strtotime(request('date'))));
-			$y = date('Y');
+			$y = date('Y', strtotime(request('date')));
 			
 			$date = $d.' '.$m.' '.$y;
+			
 
             $items = DB::table('rb_item_inventory as a')
-                    ->select('b.it_name','c.ic_count')
+                    ->select('b.it_name','a.in_count_last')
                     ->join('rb_item as b','a.in_itidx','=','b.it_idx')
                     ->join('rb_item_count as c','c.ic_itidx','b.it_idx')
                     ->where('a.in_status', 'opname')
                     ->whereDate('a.in_create', $req_date)
-                    ->groupBy('b.it_name','c.ic_count')
+                    ->groupBy('b.it_name','a.in_count_last')
                     ->get();
 
 
             if (count($items) > 0) {
     
                 $total = collect($items)->sum(function($q){
-                    return $q->ic_count;
+                    return $q->in_count_last;
                 });
                 
                 $no = 1;
