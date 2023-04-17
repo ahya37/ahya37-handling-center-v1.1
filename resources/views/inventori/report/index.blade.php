@@ -62,6 +62,7 @@
                                                     <form action="{{ route('inv-report-store') }}" method="GET">
                                                         @csrf
                                                         <input type="hidden" value="{{ $item->created_at }}" name="date"/>
+                                                        <input type="hidden" name="type" value="opname" class="form-control ml-2" />
                                                         <button class="btn btn-sm btn-primary">Download Berita Acara</button>
                                                     </form>
                                                 </td>
