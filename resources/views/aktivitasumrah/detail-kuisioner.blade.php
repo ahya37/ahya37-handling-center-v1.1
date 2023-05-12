@@ -81,12 +81,13 @@
 					@foreach ($result_kuisioner as $item)
 					<div class="col-md-8">
 						<div class="card">
-							<div class="card-header"><b>{{$item['nomor']}}. {{$item['isi']}}</b></div>
+							<div class="card-header">
+								<b>{{$item['nomor']}}. {{$item['isi']}}</b>
+							</div>
 							<div class="card-body">
 								@php
 									$no_jawaban = 1;
 									$no_jawaban_rumus = 1;
-
 								@endphp
 								{{-- <div class="row">
 									<div class="col-md-2">{{$no_jawaban++}}. {{$val->jawaban}}</div>
@@ -138,7 +139,9 @@
 								$no_essay = 1;
 								$no_essay_jawaban = 1;
 							@endphp
-								<div class="card-header"><b>{{$no_essay++}}. {{$item['isi']}}</b></div>
+								<div class="card-header"><b>{{$no_essay++}}. {{$item['isi']}}</b>
+									<a href="{{ route('aktivitas.kuisioner.detail.kritiksaranpdf', ['umrahid' => $umrah_id,'kuisionerumrahid' => $kuisioner_umrah_id,'prtanyaanid' => $item['id']]) }}" class="btn btn-sm btn-primary float-right">Download PDF</a>
+								</div>
 								<div  class="card-body">
 										<table class="table">
 											<tr>

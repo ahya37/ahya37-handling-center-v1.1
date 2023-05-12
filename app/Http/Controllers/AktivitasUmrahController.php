@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\TugasModel;
 use PDF;
-use App\AktivitasUmrahModel;
-use App\JadwalUmrahPembimbing;
+use Str;
+use File;
+use Image;
+use App\SopModel;
+use Carbon\Carbon;
+use App\TugasModel;
+use App\UmrahModel;
+use App\JudulSopModel;
 use App\KuisionerModel;
+use App\PembimbingModel;
+use App\AktivitasUmrahModel;
+use App\KuisionerUmrahModel;
 use Illuminate\Http\Request;
+use App\TugasForPetugasModel;
+use App\JadwalUmrahPembimbing;
+use App\PertanyaanKuisionerModel;
+use  App\Providers\Globalprovider;
 use App\DetailAktivitasUmrahModel;
 use App\Helpers\ResponseFormatter;
-use App\UmrahModel;
-use App\SopModel;
-use App\PembimbingModel;
-use App\JudulSopModel;
-use App\KuisionerUmrahModel;
+use Illuminate\Support\Facades\DB;
 use App\AktivitasUmrahPetugasModel;
 use App\DetailJadwalUmrahPembimbing;
-use App\TugasForPetugasModel;
-use App\DetailAktivitasUmrahPetugasModel;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
-use File;
+use App\DetailAktivitasUmrahPetugasModel;
 use Illuminate\Support\Facades\Validator;
-use  App\Providers\Globalprovider;
-use Carbon\Carbon;
-use Image;
-use Str;
 
 class AktivitasUmrahController extends Controller
 {
@@ -1782,8 +1783,37 @@ class AktivitasUmrahController extends Controller
         $aktivitasModel = new AktivitasUmrahModel();
         $aktivitas      = $aktivitasModel->getPembimbingByUmrahId($umrah_id);
 
-        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay','aktivitas'));
+        return view('aktivitasumrah.detail-kuisioner', compact('kuisioner','result_kuisioner','gf','result_kuisioner_essay','aktivitas','umrah_id','kuisioner_umrah_id'));
 
+
+    }
+
+    public function kuisionerByTourcodePembimbingKritikSaranPdf($umrah_id,$kuisioner_umrah_id, $pertanyaanid)
+    {
+        $kuisionerModel = new KuisionerModel();
+        $aktivitasModel = new AktivitasUmrahModel();
+        
+        // $kuisionerUmrah = KuisionerUmrahModel::select('label')->where('id', $kuisioner_umrah_id)->first(); 
+        $umrah          = UmrahModel::select('tourcode')->where('id', $umrah_id)->first();
+        $pembimbing     = $aktivitasModel->getPembimbingByUmrahId($umrah_id);
+        $kuisionerUmrah = $kuisionerModel->getKuisionerByUmrahId($umrah_id, $kuisioner_umrah_id);
+        $pertanyaan     = PertanyaanKuisionerModel::select('isi','type')->where('id', $pertanyaanid)->first();
+        $jawaban_essay  = $kuisionerModel->getJumlahJawabanEssayPdf($umrah_id, $pertanyaanid);
+        
+        $data = [
+            'tourcode' => $umrah->tourcode,
+            'kuisionerUmrah' => $kuisionerUmrah->kuisioner,
+            'pembimbing' => $pembimbing,
+            'pertanyaan' => $pertanyaan->isi,
+            'typepertanyaan' => $pertanyaan->type,
+            'jawaban_essay' => $jawaban_essay,
+            'no' => 1
+        ];
+
+
+        $pdf = PDF::LoadView('report.kritiksaran', compact('data'));
+        return $pdf->stream('KRITIK SARAN '.$kuisionerUmrah->kuisioner.'-'.$umrah->tourcode.'.pdf');
+        
     }
 
     public function addElementFormPembimbing()

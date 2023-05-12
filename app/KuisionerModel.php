@@ -170,4 +170,19 @@ class KuisionerModel extends Model
 
         return $sql;
     }
+
+    public function getJumlahJawabanEssayPdf($umrah_id, $pertanyaan_id){
+
+        $sql = DB::table('essay_jawaban_kuisioner_umrah as a')
+                ->join('kuisioner_umrah as b', 'b.id', '=', 'a.kuisioner_umrah_id')
+                ->join('responden_kuisioner_umrah as c','c.id','=','a.responden_kuisioner_umrah_id')
+                ->select('a.kuisioner_umrah_id' , 'a.umrah_id' , 'a.pertanyaan_id','a.essay','c.nama as responden')
+                ->where('a.pertanyaan_id', $pertanyaan_id)
+                ->where('a.umrah_id', $umrah_id)
+                ->whereNotNull('a.essay')
+                ->distinct()
+                ->get();
+
+        return $sql;
+    }
 }
