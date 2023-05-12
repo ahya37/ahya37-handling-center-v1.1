@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>KRITIK SARAN {{ strtoupper($data['kuisionerUmrah'])}} - {{ $data['tourcode'] }}</title>
+        <title>CATATAN {{ strtoupper($data['kuisionerUmrah'])}} - {{ $data['tourcode'] }}</title>
     </head>
     <style>
             /** Define the margins of your page **/
@@ -78,7 +78,7 @@
 <body>
     <header>
         <h4>
-            KRITIK SARAN {{ strtoupper($data['kuisionerUmrah']) }} - {{$data['tourcode'] }}
+            CATATAN {{ strtoupper($data['kuisionerUmrah']) }} - {{$data['tourcode'] }}
         </h4> 
     </header>
         <section align="justify">
