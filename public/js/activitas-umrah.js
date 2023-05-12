@@ -284,16 +284,15 @@ const table = $("#data").DataTable({
             let nilai_akhir = calculateGrade(row.nilai_akhir);
             if (nilai_akhir === "A") {
               return `<span class='text-success'>${nilai_akhir}</span>`;
-            }
-            if (nilai_akhir === "B") {
+            }else if (nilai_akhir === "B") {
               return `<span class='text-primary'>${nilai_akhir}</span>`;
-            }
-            if (nilai_akhir === "C") {
+            }else if (nilai_akhir === "C") {
               return `<span class='text-warning'>${nilai_akhir}</span>`;
-            }
-            if (nilai_akhir === "D") {
+            }else if (nilai_akhir === "D") {
               return `<span class='text-danger'>${nilai_akhir}</span>`;
-            }
+            }else{
+				return '-'
+			}
           }else{
             return `<span>Dalam proses mengerjakan</span>`;
           }
@@ -323,18 +322,34 @@ const table = $("#data").DataTable({
 // <a href='/aktivitas/report/tugas/${row.id}' class="btn btn-sm btn-primary">Cetak </a>
 
 function calculateGrade(data) {
-  let grade = "Dalam prosess";
+  let grade = "";
+  if (data >= 909) {
+    grade = "A";
+  }else if (data >= 814 && data <= 908) {
+    grade = "B";
+  }else if (data >= 622 && data <= 813) {
+    grade = "C";
+  }else if (data <= 621) {
+    grade = "D";
+  }else {
+	  grade = "Dalam prosess";
+  }
+
+  return grade;
+}
+
+function calculateGradeCopy(data) {
+  let grade = "";
   if (data >= 909 && data >= 957) {
     grade = "A";
-  }
-  if (data >= 814 && data <= 908) {
+  }else if (data >= 814 && data <= 908) {
     grade = "B";
-  }
-  if (data >= 622 && data <= 813) {
+  }else if (data >= 622 && data <= 813) {
     grade = "C";
-  }
-  if (data <= 621) {
+  }else if (data <= 621) {
     grade = "D";
+  }else {
+	  grade = "Dalam prosess";
   }
 
   return grade;

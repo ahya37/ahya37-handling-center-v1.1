@@ -242,6 +242,24 @@ function getDataPembimbing(pembimbingId) {
 
 function calculateGrade(data) {
 	let grade = "Dalam proses";
+	if (data >= 909) {
+		grade = "A";
+	}
+	if (data >= 814 && data <= 908) {
+		grade = "B";
+	}
+	if (data >= 622 && data <= 813) {
+		grade = "C";
+	}
+	if (data <= 621) {
+		grade = "D";
+	}
+
+	return grade;
+}
+
+function calculateGradeCopy(data) {
+	let grade = "Dalam proses";
 	if (data >= 909 && data >= 957) {
 		grade = "A";
 	}
