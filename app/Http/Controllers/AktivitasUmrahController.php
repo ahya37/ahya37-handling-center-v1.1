@@ -1812,7 +1812,7 @@ class AktivitasUmrahController extends Controller
 
 
         $pdf = PDF::LoadView('report.kritiksaran', compact('data'));
-        return $pdf->stream('KRITIK SARAN '.$kuisionerUmrah->kuisioner.'-'.$umrah->tourcode.'.pdf');
+        return $pdf->download('KRITIK SARAN '.$kuisionerUmrah->kuisioner.'-'.$umrah->tourcode.'.pdf');
         
     }
 
