@@ -38,7 +38,6 @@ function onFinish(data) {
             width: 500,
             timer: 900,
           });
-          const table = $("#data").DataTable();
           table.ajax.reload();
         },
       });

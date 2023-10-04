@@ -541,22 +541,10 @@ class AktivitasUmrahController extends Controller
                 }
             }
 
-            $updateStatus =  $aktitivitas->update(['status' => 'finish']);          
+            # update status aktivitas umrah = finish / selesai
+            $aktitivitas->update(['status' => 'finish']);          
 
-            if($updateStatus){
-
-                DB::commit();
-                return ResponseFormatter::success([
-                    null,
-                   'message' => 'Tugas telah selesai'
-            ],200);
-            }else{
-                 return ResponseFormatter::error([
-                   null,
-                   null
-                ]); 
-            }
-
+            DB::commit();
             return ResponseFormatter::success([
                    null,
                    'message' => 'Tugas telah selesai'
