@@ -47,60 +47,60 @@ function onFinish(data) {
   });
 }
 
-$(".datepicker").datepicker(
-  {
-    format: "MM",
-    viewMode: "months",
-    minViewMode: "months",
-    autoclose: true,
-  },
-  ($.fn.datepicker.dates["en"] = {
-    days: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
-    daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-    months: [
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Augustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ],
-    monthsShort: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des",
-    ],
-    today: "Today",
-    clear: "Clear",
-    format: "MM",
-    titleFormat: "MM" /* Leverages same syntax as 'format' */,
-    weekStart: 0,
-  })
-);
+// $(".datepicker").datepicker(
+//   {
+//     format: "MM",
+//     viewMode: "months",
+//     minViewMode: "months",
+//     autoclose: true,
+//   },
+//   ($.fn.datepicker.dates["en"] = {
+//     days: [
+//       "Sunday",
+//       "Monday",
+//       "Tuesday",
+//       "Wednesday",
+//       "Thursday",
+//       "Friday",
+//       "Saturday",
+//     ],
+//     daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+//     daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+//     months: [
+//       "Januari",
+//       "Februari",
+//       "Maret",
+//       "April",
+//       "Mei",
+//       "Juni",
+//       "Juli",
+//       "Augustus",
+//       "September",
+//       "Oktober",
+//       "November",
+//       "Desember",
+//     ],
+//     monthsShort: [
+//       "Jan",
+//       "Feb",
+//       "Mar",
+//       "Apr",
+//       "Mei",
+//       "Jun",
+//       "Jul",
+//       "Agu",
+//       "Sep",
+//       "Okt",
+//       "Nov",
+//       "Des",
+//     ],
+//     today: "Today",
+//     clear: "Clear",
+//     format: "MM",
+//     titleFormat: "MM" /* Leverages same syntax as 'format' */,
+//     weekStart: 0,
+//   })
+// );
 
 let tourcode = "";
 let pembimbingId = "";

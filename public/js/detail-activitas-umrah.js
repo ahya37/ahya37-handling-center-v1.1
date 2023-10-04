@@ -80,11 +80,52 @@ function cekAndPerbaruiTugas() {
   });
 }
 
+function getdata(){
+  let idTugas = [];
+  $('input[name="validate[]"]:checked').each(function () {
+    idTugas.push(this.value);
+  });
+
+  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+  Swal.fire({
+    title: 'Validasi Tugas ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya',
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/aktivitas/jadwal/umrah/active/updatevalidate`,
+        method: "POST",
+        data: { id: idTugas, _token: CSRF_TOKEN },
+        success: function (data) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: `${data.data.message}`,
+            showConfirmButton: false,
+            width: 500,
+            timer: 900,
+          });
+          //console.log(data.data.message);
+          window.location.reload();
+        },
+      });
+  }
+  })
+
+  
+}
+
 function validate() {
   let idTugas = [];
   $('input[name="validate[]"]:checked').each(function () {
     idTugas.push(this.value);
   });
+
   // AJAX UNTUK VALIDASI
   const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
   Swal.fire({

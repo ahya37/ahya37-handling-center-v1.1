@@ -419,4 +419,110 @@ class DashboardController extends Controller
         return view('dashboard.kuisioner.detail-resume-kuisioner', compact('result_kategori','responden','pembimbing','essay','kuisioner_tourcode'));
     }
 
+
+    public function getdataKuisioner(){
+
+        
+        $tourcode = request('tourcode');
+
+
+        #hitung jumlah responden by tourcode
+        $responden  = DB::table('kuisioner_umrah as a')
+                        ->join('umrah as b','a.umrah_id','=','b.id')
+                        ->where('b.tourcode', $tourcode)
+                        ->orderBy('a.jumlah_responden','desc')
+                        ->select('a.jumlah_responden','b.count_jamaah','b.tourcode')
+                        ->first();
+
+        // $kategori_kompetensi = DB::table('pertanyaan_kuisioner as a')
+        // ->join('kategori_kompetensi_kuisioner as b', 'a.kategori_kompetensi_id', '=', 'b.id')
+        // ->select('a.isi', 'b.name')
+        // ->get();
+
+         $kategori_kompetensi = DB::table('kategori_kompetensi_kuisioner')
+        ->select('id','name')
+        ->get();
+
+
+        $result_data = [];
+        foreach ($kategori_kompetensi as $value) {
+            # get data pertanyaan besarkan kategori 
+             $pertanyaan = DB::table('pertanyaan_kuisioner')
+            ->select('id','isi')
+            ->where('kategori_kompetensi_id', $value->id)
+            ->get();
+            foreach($pertanyaan as $data){
+                $jawaban = DB::table('jawaban_kuisioner_umrah')->select('jawaban')->where('pertanyaan_id', $data->id)->get();
+                dd($jawaban);
+            }
+
+            $result_data[] = [
+                'kategori' => $value->name,
+                'pertanyaan' =>  $pertanyaan
+            ];
+        }
+
+        // get data tabel jawaban_kuisioner_umrah
+        $jawabanKuisioner = DB::table('jawaban_kuisioner_umrah')->where('responden_kuisioner_umrah_id', 10)->get();
+
+        $result = [];
+        foreach($jawabanKuisioner as $data){
+            //ambil pertanyaan berdasarkan kolom pertanyaan_id
+            $pertanyaanKuisioner = DB::table('pertanyaan_kuisioner')->select('id', 'isi')->where('id', $data->pertanyaan_id)->get();
+            //ambil jawaban berdasarkan kolom jawaban
+            $pilihanJawaban = DB::table('kategori_pilihan_jawaban')->select('id', 'nama')->where('id', $data->jawaban)->get();
+
+            $result[] = [
+                'pertanyaan' => $pertanyaanKuisioner,
+                'jawaban' => $pilihanJawaban
+            ];
+            
+        }
+
+
+
+
+
+        //ambil id berdasarkan tourcode
+        //$umrahIds = DB::table('umrah')->select('id')->where('tourcode', $tourcode)->pluck('id');
+
+        //menampilkan data jawaban_kuisioner_umrah berdasarkan umrah_id
+        //$jawaban_kuisioner = DB::table('jawaban_kuisioner_umrah')->whereIn('umrah_id', $umrahIds)->get();
+
+
+
+
+        $kategori_pertanyaan = DB::table('kategori_pertanyaan_kuisioner')
+                            ->select('id','number','nama')
+                            ->orderBy('number','asc')
+                            ->whereNull('parent_id')->get();
+        
+
+        $result_kategori       = [];
+        foreach($kategori_pertanyaan as $item){
+
+            #get sub kategori
+            $sub_kategori = DB::table('kategori_pertanyaan_kuisioner')
+                            ->where('parent_id', $item->id)
+                            ->select('id','nama')
+                            ->get();
+
+            #get pembimbing by umrah
+            $pembimbing = DB::table('aktivitas_umrah as a')
+                          ->join('pembimbing as b','b.id','=','a.pembimbing_id')
+                          ->join('umrah as c','a.umrah_id','c.id')
+                          ->select('b.nama','a.status_tugas')
+                          ->where('c.tourcode', $tourcode)
+                          ->groupBy('b.nama','a.status_tugas')
+                          ->get();
+
+            #get essay 
+            $essay = DB::select("SELECT a.essay  from essay_jawaban_kuisioner_umrah  as a 
+                                join umrah as b on a.umrah_id = b.id 
+                                where b.tourcode = '$tourcode' and a.essay is not null group by a.essay");
+        }
+
+
+        return view('dashboard.kuisioner.detail-kategori-kuisioner', compact('responden','pembimbing','result_data'));
+    }
 }

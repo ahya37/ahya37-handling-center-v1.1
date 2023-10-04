@@ -3,7 +3,7 @@
     <div>
             <img
               src="/assets/images/logo-PERCIK-PNG-1.png"
-              class=""
+              class="img-fluid"
               alt="logo icon"
               width="150"
             />
@@ -13,6 +13,7 @@
   </div>
   <!--navigation-->
   <ul class="metismenu" id="menu">
+    {{-- @dd($userMenus) --}}
     @foreach ($userMenus as $menu)
         @if($menu['count_submenus'] == 0)
           <li>
@@ -25,6 +26,7 @@
         @php
             $route = $menu['menu_route'] == 'javascript:;' ? 'javascript:;' : route($menu['menu_route']);
         @endphp
+       
         <li>
           <a href="{{$route}}" class="has-arrow">
             <div class="parent-icon"><i class="{{$menu['menu_icon']}}"></i></div>
@@ -33,9 +35,8 @@
           <ul>
             @foreach ($menu['subMenus'] as $submenu)
             <li>
-              <a href="{{route($submenu->menu_route)}}"
-                ><i class="bx bx-right-arrow-alt"></i>{{$submenu->menu_name}}</a
-              >
+              <a href="{{route($submenu->menu_route)}}">
+              <i class="bx bx-right-arrow-alt"></i>{{$submenu->menu_name}}</a>
             </li>
             @endforeach
           </ul>

@@ -141,6 +141,8 @@
                     </div>
                 @endforelse
             </div>
+            <input type="hidden" value="{{ Auth::user()->id }}" name="idUser">
+            <button class="btn btn-primary" name="validasi" onclick="getdata()">Validasi</button>
         </div>
     </div>
 @endsection
@@ -152,4 +154,5 @@
     <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
 
     <script src="{{ asset('/js/detail-activitas-umrah.js') }}"></script>
+
 @endpush

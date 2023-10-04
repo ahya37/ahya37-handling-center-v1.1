@@ -32,7 +32,7 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/analytics/sop_n/detail/{id}','AktivitasUmrahController@detailSopNByAktivitasUmrah');
     Route::get('/resumekuisioner','DashboardController@resumeKuisioner')->name('dashbaord.resume.kuisioner');
     Route::get('/resumekuisioner/detail/','DashboardController@getDetailResumeByTourcode')->name('dashbaord.resume.kuisioner.detail');
-
+    Route::get('/resumekuisionerkategori/detail', 'DashboardController@getdataKuisioner');
 });
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
@@ -217,6 +217,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/jadwal/umrah/detail/validasi/save/{id}', 'AktivitasUmrahController@storeValidasi');
         Route::get('/jadwal/umrah/active/detail/{id}', 'AktivitasUmrahController@jadwalUmrahActiveDetail')->name('tugas.jadwalumrah.detail');
 
+        Route::post('/jadwal/umrah/active/updatevalidate', 'AktivitasUmrahController@updateValidate');
+
+
         // DETAIL VIA GRAFIK
         Route::get('/detail/y/{aktivitas}/{id}', 'AktivitasUmrahController@detailGrafifkProgresY')->name('tugas.detail-y');
         Route::get('/detailactivitas/statusY/{aktivitasId}/{id}', 'AktivitasUmrahController@getDetailDataStatusY'); // datatable
@@ -323,7 +326,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/report/store', 'InventoriController@storeReport')->name('inv-report-store');
 
     });
+
 });
+
 
 // SAMPLE MAP DISPLAY
 //Route::get('/sample', 'PlaceController@sampleMap')->name('sample');

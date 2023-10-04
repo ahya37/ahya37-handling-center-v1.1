@@ -1865,4 +1865,43 @@ class AktivitasUmrahController extends Controller
 
         }
     }
+
+    public function updateValidate(Request $request){
+
+        // get data id dari client
+        // tampung dalam sebuah array
+        $id['id'] = $request->id;
+
+        $idUser = Auth::user()->id;
+
+        // looping array nya
+        foreach ($id['id'] as $validateValue){
+                    $detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')
+                        ->select('id', 'validate')
+                        ->where('id', $validateValue)
+                        ->first();
+
+        if ($detail_aktivitas_umrah->validate == 'N'){
+            DB::table('detail_aktivitas_umrah')
+                    ->where('id', $detail_aktivitas_umrah->id)
+                    ->update([
+                        'nilai_akhir' => DB::raw('nilai_akhir + 1'),
+                        'nilai_validate' => 1,
+                        'validate' => 'Y',
+                        'validate_by' => $idUser,
+                        'updated_at' => now()
+                    ]);
+                    
+            }
+                    
+        }
+
+        //  dalam looping get data berdasarkan key valuen y
+
+        
+
+        return ResponseFormatter::success([
+            'message' => 'Berhasil Validasi'
+        ], 200);
+    }
 }

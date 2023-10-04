@@ -61,6 +61,7 @@
 											</td>
 											<td>
 												<a class="btn btn-sm btn-primary" href="/dashboard/resumekuisioner/detail/?tourcode={{$tr['tourcode']}}" >Resume</a>
+												<a class="btn btn-sm btn-primary" href="/dashboard/resumekuisionerkategori/detail/?tourcode={{$tr['tourcode']}}">Resume Kuisioner</a>
 												{{-- <form action="{{route('dashbaord.resume.kuisioner.detail')}}" method="GET">
 													<input type="hidden" name="tourcode" value="{{$tr['tourcode']}}">
 													<button class="btn btn-sm btn-primary">Resume</button>
