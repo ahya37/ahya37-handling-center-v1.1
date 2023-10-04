@@ -516,47 +516,38 @@ class AktivitasUmrahController extends Controller
 
             $id = $request->id;
 
-            // HITUNG TAHAPAN TUGAS
-            // $tugasModel = new DetailAktivitasUmrahModel();
-            // $count_tugas = $tugasModel->where('aktivitas_umrah_id', $id)
-            //                 ->where('status','=','')->count();
-            // JIKA SAMA DENGAN 0, MAKA UPDATE STATUS DI AKTIVITAS_UMRAH MENJADI = FINISH
-            // $updateStatus = false;
-
-            // $count_validate = $tugasModel->where('aktivitas_umrah_id', $id)
-            //                 ->where('validate','=','N')->count();
-
-            // if ($count_tugas  > 0) {
-            //     return ResponseFormatter::success([
-            //         'data' => 'status',
-            //         'message' => 'Gagal, Pembimbing belum meyelesaikan tahapan tugas'
-            //     ],200);
-
-            // }
-            // // elseif($count_validate > 0){
-            // //     return ResponseFormatter::success([
-            // //         'data' => 'validate',
-            // //         'message' => 'Gagal, Beberapa tugas belum divalidasi'
-            // //     ],200);
-            // // }
-            // else{
-
-            //     $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
-            //     $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
-            // }
+            $aktitivitasModel         = new AktivitasUmrahModel();
+            $pertanyaanKuisionerModel = new PertanyaanKuisionerModel();
             
-            // if ($count_tugas == 0) {
-            // }
+            $aktitivitas              = $aktitivitasModel->where('id', $id)->first();
 
-            $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
-            $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
+            # lakukan profiling pertanyaan kuisioner
+            $aktitivitasKuisioner = $aktitivitasModel->getKuisionerByAktivitasUmrahId($id);
 
+            # get akti$aktitivitasKuisioner pertanyaan_kuisioner berdasarkan kuisioner_id yang ada di tabel kuisioner_umrah
+            $results = [];
+            foreach ($aktitivitasKuisioner as $value) {
+                $data_pertanyaan = $pertanyaanKuisionerModel->getPertanyaanByKuisionerId($value->kuisioner_id);
+                $results[] = ['pertanyaan' => $data_pertanyaan];
+
+                #update kuisioner umrah = nonactive
+                $aktitivitasModel->updateStatusKuisionerUmrah($value->id);
+            }
+
+            # simpan hasil get data pertanyaan_kuisioner kedalam table pertanyaan_kuisioner_pembimbing, untuk proses profiling
+            foreach ($results as  $pertanyaan) {
+                foreach ($pertanyaan['pertanyaan'] as  $value) {
+                    $pertanyaanKuisionerModel->insertPertanyaanKuisionerPembimbing($value);
+                }
+            }
+
+            $updateStatus =  $aktitivitas->update(['status' => 'finish']);          
 
             if($updateStatus){
 
                 DB::commit();
                 return ResponseFormatter::success([
-                   null,
+                    null,
                    'message' => 'Tugas telah selesai'
             ],200);
             }else{
@@ -565,6 +556,11 @@ class AktivitasUmrahController extends Controller
                    null
                 ]); 
             }
+
+            return ResponseFormatter::success([
+                   null,
+                   'message' => 'Tugas telah selesai'
+            ],200);
             
         } catch (\Exception $e) {
             DB::rollback();

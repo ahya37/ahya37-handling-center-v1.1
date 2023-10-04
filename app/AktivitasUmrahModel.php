@@ -366,4 +366,24 @@ class AktivitasUmrahModel extends Model
         return $sql;
     }
 
+    public function getKuisionerByAktivitasUmrahId($id){
+        
+        $sql = DB::table('aktivitas_umrah as a')
+                ->select('b.kuisioner_id','b.id')
+                ->join('kuisioner_umrah as b','a.umrah_id','=','b.umrah_id')
+                ->where('a.id', $id)
+                ->get();
+
+        return $sql;
+    }
+
+    public function updateStatusKuisionerUmrah($id){
+
+        $sql = DB::table('kuisioner_umrah')->where('id', $id)->update([
+                    'status' => 0
+                ]);
+
+        return $sql;
+    }
+
 }
