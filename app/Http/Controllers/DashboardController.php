@@ -451,47 +451,33 @@ class DashboardController extends Controller
             ->select('id','isi')
             ->where('kategori_kompetensi_id', $value->id)
             ->get();
-            foreach($pertanyaan as $data){
-                $jawaban = DB::table('jawaban_kuisioner_umrah')->select('jawaban')->where('pertanyaan_id', $data->id)->get();
-                dd($jawaban);
-            }
 
             $result_data[] = [
                 'kategori' => $value->name,
                 'pertanyaan' =>  $pertanyaan
             ];
         }
-
-        // get data tabel jawaban_kuisioner_umrah
-        $jawabanKuisioner = DB::table('jawaban_kuisioner_umrah')->where('responden_kuisioner_umrah_id', 10)->get();
-
+        //ambil id berdasarkan tourcode
+        $umrahIds = DB::table('umrah')->select('id')->where('tourcode', $tourcode)->pluck('id');
+   
+        //menampilkan data jawaban_kuisioner_umrah berdasarkan umrah_id
+        $jawabanKuisioner = DB::table('jawaban_kuisioner_umrah')->whereIn('umrah_id', $umrahIds)->get();
+        
         $result = [];
         foreach($jawabanKuisioner as $data){
             //ambil pertanyaan berdasarkan kolom pertanyaan_id
             $pertanyaanKuisioner = DB::table('pertanyaan_kuisioner')->select('id', 'isi')->where('id', $data->pertanyaan_id)->get();
             //ambil jawaban berdasarkan kolom jawaban
             $pilihanJawaban = DB::table('kategori_pilihan_jawaban')->select('id', 'nama')->where('id', $data->jawaban)->get();
-
+            
             $result[] = [
                 'pertanyaan' => $pertanyaanKuisioner,
                 'jawaban' => $pilihanJawaban
             ];
             
         }
-
-
-
-
-
-        //ambil id berdasarkan tourcode
-        //$umrahIds = DB::table('umrah')->select('id')->where('tourcode', $tourcode)->pluck('id');
-
-        //menampilkan data jawaban_kuisioner_umrah berdasarkan umrah_id
-        //$jawaban_kuisioner = DB::table('jawaban_kuisioner_umrah')->whereIn('umrah_id', $umrahIds)->get();
-
-
-
-
+        
+        
         $kategori_pertanyaan = DB::table('kategori_pertanyaan_kuisioner')
                             ->select('id','number','nama')
                             ->orderBy('number','asc')
@@ -523,6 +509,6 @@ class DashboardController extends Controller
         }
 
 
-        return view('dashboard.kuisioner.detail-kategori-kuisioner', compact('responden','pembimbing','result_data'));
+        return view('dashboard.kuisioner.detail-kategori-kuisioner', compact('responden','pembimbing','result_data', 'result'));
     }
 }

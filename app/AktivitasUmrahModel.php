@@ -366,4 +366,22 @@ class AktivitasUmrahModel extends Model
         return $sql;
     }
 
+    public function getDataAktivitas($id){
+        $sql = DB::table('aktivitas_umrah as a')
+            ->join('kuisioner_umrah as b', 'a.umrah_id', '=', 'b.umrah_id')
+            ->select('b.kuisioner_id')
+            ->where('a.id', $id)
+            ->get();
+
+            return $sql;
+    }
+
+    public function getKuisionerId($kuisionerId){
+        $sql = DB::table('pertanyaan_kuisioner')
+                ->whereIn('kuisioner_id', $kuisionerId)
+                ->get();
+
+        return $sql;
+    }
+
 }

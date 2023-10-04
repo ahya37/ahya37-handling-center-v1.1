@@ -516,38 +516,38 @@ class AktivitasUmrahController extends Controller
 
             $id = $request->id;
 
-            // HITUNG TAHAPAN TUGAS
-            // $tugasModel = new DetailAktivitasUmrahModel();
-            // $count_tugas = $tugasModel->where('aktivitas_umrah_id', $id)
-            //                 ->where('status','=','')->count();
-            // JIKA SAMA DENGAN 0, MAKA UPDATE STATUS DI AKTIVITAS_UMRAH MENJADI = FINISH
-            // $updateStatus = false;
+            $model = new AktivitasUmrahModel();
+            $kuisionerIds = $model->getDataAktivitas($id);
 
-            // $count_validate = $tugasModel->where('aktivitas_umrah_id', $id)
-            //                 ->where('validate','=','N')->count();
+            // $kuisionerIds = DB::table('aktivitas_umrah as a')
+            // ->join('kuisioner_umrah as b', 'a.umrah_id', '=', 'b.umrah_id')
+            // ->select('b.kuisioner_id')
+            // ->where('a.id', $id)
+            // ->get();
 
-            // if ($count_tugas  > 0) {
-            //     return ResponseFormatter::success([
-            //         'data' => 'status',
-            //         'message' => 'Gagal, Pembimbing belum meyelesaikan tahapan tugas'
-            //     ],200);
+            $kuisionerId = $kuisionerIds->pluck('kuisioner_id')->all();
 
-            // }
-            // // elseif($count_validate > 0){
-            // //     return ResponseFormatter::success([
-            // //         'data' => 'validate',
-            // //         'message' => 'Gagal, Beberapa tugas belum divalidasi'
-            // //     ],200);
-            // // }
-            // else{
+            $pertanyaanKuisioner = $model->getKuisionerId($kuisionerId);
+        
+            // $pertanyaanKuisioner = DB::table('pertanyaan_kuisioner')
+            //     ->whereIn('kuisioner_id', $kuisionerId)
+            //     ->get();
 
-            //     $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
-            //     $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
-            // }
-            
-            // if ($count_tugas == 0) {
-            // }
-
+                foreach ($pertanyaanKuisioner as $data) {
+                    DB::table('pertanyaan_kuisioner_pembimbing')->insert([
+                        'id' => $data->id,
+                        'kategori_id' => $data->kategori_id,
+                        'kuisioner_id' => $data->kuisioner_id,
+                        'kategori_kompetensi_id' => $data->kategori_kompetensi_id,
+                        'nomor' => $data->nomor,
+                        'isi' => $data->isi,
+                        'required' => $data->required,
+                        'type' => $data->type,
+                        'created_at' => $data->created_at,
+                        'updated_at' => $data->updated_at
+                    ]);
+                }
+                
             $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
             $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
 
