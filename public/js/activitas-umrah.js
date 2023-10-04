@@ -1,7 +1,6 @@
 let urlTourcode = "/api/getdataumrah";
 let urlPembimbing = "/api/getdatapembimbing";
 
-// finish
 function onFinish(data) {
   const id = data.id;
   const pembimbing = data.value;
@@ -39,68 +38,12 @@ function onFinish(data) {
             width: 500,
             timer: 900,
           });
-          const table = $("#data").DataTable();
           table.ajax.reload();
         },
       });
     }
   });
 }
-
-// $(".datepicker").datepicker(
-//   {
-//     format: "MM",
-//     viewMode: "months",
-//     minViewMode: "months",
-//     autoclose: true,
-//   },
-//   ($.fn.datepicker.dates["en"] = {
-//     days: [
-//       "Sunday",
-//       "Monday",
-//       "Tuesday",
-//       "Wednesday",
-//       "Thursday",
-//       "Friday",
-//       "Saturday",
-//     ],
-//     daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-//     daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-//     months: [
-//       "Januari",
-//       "Februari",
-//       "Maret",
-//       "April",
-//       "Mei",
-//       "Juni",
-//       "Juli",
-//       "Augustus",
-//       "September",
-//       "Oktober",
-//       "November",
-//       "Desember",
-//     ],
-//     monthsShort: [
-//       "Jan",
-//       "Feb",
-//       "Mar",
-//       "Apr",
-//       "Mei",
-//       "Jun",
-//       "Jul",
-//       "Agu",
-//       "Sep",
-//       "Okt",
-//       "Nov",
-//       "Des",
-//     ],
-//     today: "Today",
-//     clear: "Clear",
-//     format: "MM",
-//     titleFormat: "MM" /* Leverages same syntax as 'format' */,
-//     weekStart: 0,
-//   })
-// );
 
 let tourcode = "";
 let pembimbingId = "";
@@ -115,8 +58,6 @@ async function allMonth() {
   pembimbingId = "";
   urlTourcode = "/api/getdataumrah";
   urlPembimbing = "/api/getdatapembimbing";
-  // $('#pembimbing').empty();
-  // $('#tourcode').empty();
 
   table.ajax.reload(null, false);
   initialSelectTorucode(urlTourcode);
@@ -126,7 +67,6 @@ async function allMonth() {
 initialSelectTorucode(urlTourcode);
 initialSelectPembimbing(urlPembimbing);
 
-// FUNGSI SELECT2
 function initialSelectTorucode(urlTourcode) {
   $(".tourcode").select2({
     theme: "bootstrap4",
@@ -231,7 +171,6 @@ $(".pembimbing").on("change", function () {
   tourcode = "";
   $("#tourcode").empty();
   pembimbingId = $("select[name=pembimbing] option").filter(":selected").val();
-  // GET DATA TOURCODE BERDASARKAN PEMBIMBING
   urlTourcode = `/api/getdataumrah/${pembimbingId}`;
   initialSelectTorucode(urlTourcode);
   table.ajax.reload(null, false);
@@ -308,7 +247,6 @@ const table = $("#data").DataTable({
             : "";
         const btnDetailTugas = row.nonaktif === 1 ? "" : `<a href='/aktivitas/detail/${row.id}' class="btn btn-sm btn-primary">Detail Tugas</a>`;
         const btnHapus = row.nonaktif === 1 ? "" : `<button onclick="onDelete(this)" id="${row.id}" value="${row.pembimbing}" class="btn btn-sm btn-danger">Hapus</button>`;
-        // const btnKuisioner =  `<a href='/aktivitas/tourcode/kuisioner/umrah/${row.umrah_id}/aktivitasumrahid/${row.id}' class="btn btn-sm btn-info text-white">${row.kuisioner}</a>`;
         return `
                 ${btnDetailTugas}
                 ${btnSelesai}
@@ -319,7 +257,6 @@ const table = $("#data").DataTable({
   ],
 });
 
-// <a href='/aktivitas/report/tugas/${row.id}' class="btn btn-sm btn-primary">Cetak </a>
 
 function calculateGrade(data) {
   let grade = "";
@@ -355,7 +292,6 @@ function calculateGradeCopy(data) {
   return grade;
 }
 
-// finish
 function onDelete(data) {
   const id = data.id;
   const pembimbing = data.value;
@@ -389,7 +325,6 @@ function onDelete(data) {
           });
         },
       });
-      // const table = $("#data").DataTable();
       table.ajax.reload();
     }
   });
