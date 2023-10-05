@@ -8,6 +8,7 @@ use App\PilihanModel;
 use App\KuisionerUmrahModel;
 use Illuminate\Http\Request;
 use App\PertanyaanKuisionerModel;
+use App\PertanyaanKuisionerPembimbingModel;
 use App\RespondenKuisionerUmrahModel;
 use Illuminate\Support\Facades\DB;
 
@@ -95,7 +96,7 @@ class KuisionerUmrahController extends Controller
         try {
             // GET DATA KUISIONER UMRAH BERDASARKAN KODE URL
             $kuisioner = KuisionerUmrahModel::select('id','label','kuisioner_id','umrah_id')->where('url', $url)->first();
-            $pertanyaanModel = new PertanyaanKuisionerModel(); 
+            $pertanyaanModel = new PertanyaanKuisionerPembimbingModel(); 
             $pertanyaan = $pertanyaanModel->select('id','kuisioner_id','isi','required','nomor')
                                             ->where('nomor','!=',null)
                                             ->where('kuisioner_id', $kuisioner->kuisioner_id)->get();

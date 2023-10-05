@@ -17,7 +17,7 @@ class PilihanModel extends Model
                 left join jawaban_kuisioner_umrah as c on c.pilihan_id = b.id where c.umrah_id = $id
                 group by a.id, a.nama";
                 
-        return DB::select($sql);
+        return DB::select($sql); 
 
     }
 
@@ -35,5 +35,10 @@ class PilihanModel extends Model
 
     }
 
-    
+    public function getPilihanByPertanyaanId($id){
+
+        $sql = DB::table('pilihan')->where('pertanyaan_id', $id)->get();
+        return $sql;
+    }
+
 }

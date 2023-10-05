@@ -16,9 +16,10 @@ class PertanyaanKuisionerModel extends Model
         return $sql;
     }
 
-    public function insertPertanyaanKuisionerPembimbing($value){
+    public function insertPertanyaanKuisionerPembimbing($value, $umrahId){
 
-        $sql = DB::table('pertanyaan_kuisioner_pembimbing')->insert([
+        $sql = DB::table('pertanyaan_kuisioner_pembimbing')->insertGetId([
+                'umrah_id'    => $umrahId,
                 'kategori_id' => $value->kategori_id,
                 'kuisioner_id' => $value->kuisioner_id,
                 'kategori_kompetensi_id' => $value->kategori_kompetensi_id,

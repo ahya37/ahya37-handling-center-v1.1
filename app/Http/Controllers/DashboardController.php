@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\KategoriPilihanJawaban;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\KuisionerModel;
 
 class DashboardController extends Controller
@@ -71,49 +71,6 @@ class DashboardController extends Controller
                 return ($a['total'] > $b['total']) ? -1 : 1;
             });
 
-            // $data = DB::table('pilihan as a')
-            //         ->select('a.isi', DB::raw('COUNT(DISTINCT(b.id)) as total'))
-            //         ->leftJoin('jawaban_kuisioner_umrah as b','a.id','=','b.pilihan_id');
-                   
-
-            // $data = DB::table('kategori_pilihan_jawaban as a')
-            //             ->select('a.id','a.nama', DB::raw('COUNT(DISTINCT(b.id)) as total'))
-            //             ->join('pilihan as b','a.id','=','b.kategori_pilihan_jawaban_id')
-            //             ->join('jawaban_kuisioner_umrah as c','b.id','=','c.pilihan_id')
-            //             ->join('umrah as d','c.umrah_id','=','d.id')
-            //             ->join('aktivitas_umrah as e','e.umrah_id','=','d.id');
-                        
-
-            // if(request()->daterange != ''){
-            //     $daterange = request()->daterange;
-            //     $date      = explode('/', $daterange);
-            //     $start     = $date[0];
-            //     $end     = $date[1];
-
-            //     $data->whereBetween('b.created_at', [$start, $end]);
-            // }
-
-            // if($tourcode != ''){
-            //     $data->join('umrah as c','b.umrah_id','=','c.id')
-            //         ->where('c.tourcode', $tourcode);
-            // }
-
-            // if($pembimbing_id != ''){
-            //     $data->join('umrah as c','b.umrah_id','=','c.id')
-            //          ->join('aktivitas_umrah as d','d.umrah_id','c.id')
-            //          ->where('d.pembimbing_id', $pembimbing_id);
-            // }
-
-            // $data =  $data->whereNotNull('a.isi')
-            //         ->groupBy('a.isi')
-            //         ->orderBy(\DB::raw('COUNT(b.id)'),'DESC')->get();
-
-            // $result = [];
-
-            // foreach ($data as $key => $value) {
-            //     $result[] = [$value->isi, $value->total];
-            // }
-
             $nilai      = [];
             $dataResult = [];
             
@@ -161,14 +118,6 @@ class DashboardController extends Controller
                     break;
             }
 
-            // $data = DB::table('jawaban_kuisioner_umrah as a')
-            //         ->select('c.isi as pertanyaan','d.tourcode','b.isi as kategori', DB::raw('count(a.pilihan_id) as jml_jawaban'))
-            //         ->join('pilihan as b','a.pilihan_id','=','b.id')
-            //         ->join('pertanyaan_kuisioner as c','b.pertanyaan_id','=','c.id')
-            //         ->join('umrah as d','a.umrah_id','=','d.id')
-            //         ->join('responden_kuisioner_umrah as e','a.responden_kuisioner_umrah_id','=','e.id')
-            //         ->where('b.kategori_pilihan_jawaban_id', $id);
-
             $data = DB::table('pilihan as a')
                 ->select('e.isi as pertanyaan','c.tourcode','a.isi as kategori',
                 DB::raw('count(distinct(b.id)) as jml_jawaban'))
@@ -194,10 +143,6 @@ class DashboardController extends Controller
                     'recordsFiltered'=>$recordsFiltered,
                     'data'=> $data
                 ]);
-
-            // $data = $data->distinct()->groupBy('c.isi','d.tourcode')->get();
-            
-            // return $data;
 
         } catch (\Exception $e) {
             return ResponseFormatter::error([
@@ -426,41 +371,51 @@ class DashboardController extends Controller
         $tourcode = request('tourcode');
 
 
-        #hitung jumlah responden by tourcode
         $responden  = DB::table('kuisioner_umrah as a')
                         ->join('umrah as b','a.umrah_id','=','b.id')
                         ->where('b.tourcode', $tourcode)
                         ->orderBy('a.jumlah_responden','desc')
-                        ->select('a.jumlah_responden','b.count_jamaah','b.tourcode')
+                        ->select('a.jumlah_responden','b.count_jamaah','b.tourcode','a.umrah_id')
                         ->first();
 
-        // $kategori_kompetensi = DB::table('pertanyaan_kuisioner as a')
-        // ->join('kategori_kompetensi_kuisioner as b', 'a.kategori_kompetensi_id', '=', 'b.id')
-        // ->select('a.isi', 'b.name')
-        // ->get();
-
          $kategori_kompetensi = DB::table('kategori_kompetensi_kuisioner')
-        ->select('id','name')
-        ->get();
+                                ->select('id','name')
+                                ->get();
 
 
         $result_data = [];
         foreach ($kategori_kompetensi as $value) {
             # get data pertanyaan besarkan kategori 
              $pertanyaan = DB::table('pertanyaan_kuisioner')
-            ->select('id','isi')
-            ->where('kategori_kompetensi_id', $value->id)
-            ->get();
-            foreach($pertanyaan as $data){
-                $jawaban = DB::table('jawaban_kuisioner_umrah')->select('jawaban')->where('pertanyaan_id', $data->id)->get();
-                dd($jawaban);
+                            ->select('id','isi')
+                            ->where('kategori_kompetensi_id', $value->id)
+                            ->get();
+
+            $result_jawaban = [];
+            foreach($pertanyaan as $item){
+
+                $jawaban = DB::table('jawaban_kuisioner_umrah as a')
+                        ->select('b.isi', DB::raw('count(a.jawaban) as jml_jawaban'))
+                        ->join('pilihan as b','a.pilihan_id','=','b.id')
+                        ->where('a.pertanyaan_id', $item->id)
+                        ->where('a.umrah_id', $responden->umrah_id)
+                        ->groupBy('b.isi')
+                        ->get();
+
+                $result_jawaban[] = [
+                    'pertanyaan_id' => $item->id,
+                    'pertanyaan' => $item->isi,
+                    'jawaban' => $jawaban
+                ];
             }
 
             $result_data[] = [
                 'kategori' => $value->name,
-                'pertanyaan' =>  $pertanyaan
+                'result_jawaban' =>  $result_jawaban
             ];
         }
+
+        dd($result_data);
 
         // get data tabel jawaban_kuisioner_umrah
         $jawabanKuisioner = DB::table('jawaban_kuisioner_umrah')->where('responden_kuisioner_umrah_id', 10)->get();
@@ -478,19 +433,6 @@ class DashboardController extends Controller
             ];
             
         }
-
-
-
-
-
-        //ambil id berdasarkan tourcode
-        //$umrahIds = DB::table('umrah')->select('id')->where('tourcode', $tourcode)->pluck('id');
-
-        //menampilkan data jawaban_kuisioner_umrah berdasarkan umrah_id
-        //$jawaban_kuisioner = DB::table('jawaban_kuisioner_umrah')->whereIn('umrah_id', $umrahIds)->get();
-
-
-
 
         $kategori_pertanyaan = DB::table('kategori_pertanyaan_kuisioner')
                             ->select('id','number','nama')

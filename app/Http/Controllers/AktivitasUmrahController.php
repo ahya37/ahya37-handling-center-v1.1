@@ -28,6 +28,9 @@ use App\DetailJadwalUmrahPembimbing;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\DetailAktivitasUmrahPetugasModel;
+use App\PertanyaanKuisionerPembimbingModel;
+use App\PilihanModel;
+use App\PilihanPembimbingModel;
 use Illuminate\Support\Facades\Validator;
 
 class AktivitasUmrahController extends Controller
@@ -143,8 +146,10 @@ class AktivitasUmrahController extends Controller
             $sop['sop_id']               = $request->sop_id;
             $assisten_pembimbing         = $request->asisten_pembimbing_id;
             $asisten_sop['asisten_sop']  = $request->asisten_sop_id;
-            $kuisioner_id                = $request->kuisioner_id;
+            $kuisioner_id                = $request->kuisioner_id;            
 
+            // $pertanyaanKuisionerModel = new PertanyaanKuisionerModel();
+            
             #save ke tb jadwal_umrah_pembimbing status pembimbing
             foreach($pembimbing as $key => $value){
 
@@ -195,6 +200,18 @@ class AktivitasUmrahController extends Controller
                 $kuisionerUmrahModel->url = Str::random(10);
                 $kuisionerUmrahModel->kuisioner_id = $kuisioner->id;
                 $kuisionerUmrahModel->save();
+
+                # lakukan profiling pertanyaan kuisioner
+                # simpan hasil get data pertanyaan_kuisioner kedalam table pertanyaan_kuisioner_pembimbing, untuk proses profiling
+                // $pertanyaan = DB::table('pertanyaan_kuisioner')->where('kuisioner_id', $value)->get();
+                // foreach ($pertanyaan as  $item) {
+                //     $pertanyaanKuisionerModel->insertPertanyaanKuisionerPembimbing($item, $request->umrah);
+                    
+                //     #lakukan profiling juga pada pilihan jawaban kuisioner pembimbing
+                //     #get pilihan jawaban berdasarkan pertanyaan 
+                //     $pilihan = 
+                // }
+
             }
 
 
@@ -518,6 +535,7 @@ class AktivitasUmrahController extends Controller
 
             $aktitivitasModel         = new AktivitasUmrahModel();
             $pertanyaanKuisionerModel = new PertanyaanKuisionerModel();
+            $pilihanModel             = new PilihanModel();
             
             $aktitivitas              = $aktitivitasModel->where('id', $id)->first();
 
@@ -537,12 +555,38 @@ class AktivitasUmrahController extends Controller
             # simpan hasil get data pertanyaan_kuisioner kedalam table pertanyaan_kuisioner_pembimbing, untuk proses profiling
             foreach ($results as  $pertanyaan) {
                 foreach ($pertanyaan['pertanyaan'] as  $value) {
-                    $pertanyaanKuisionerModel->insertPertanyaanKuisionerPembimbing($value);
+                    // $new_pertanyaan = $pertanyaanKuisionerModel->insertPertanyaanKuisionerPembimbing($value, $aktitivitas->umra_id);
+                    $new_pertanyaan    = PertanyaanKuisionerPembimbingModel::create([
+                        'umrah_id'      => $aktitivitas->umrah_id,
+                        'kategori_id'   => $value->kategori_id,
+                        'kuisioner_id'  => $value->kuisioner_id,
+                        'kategori_kompetensi_id' => $value->kategori_kompetensi_id,
+                        'nomor' => $value->nomor,
+                        'isi' => $value->isi,
+                        'required' => $value->required,
+                        'type' => $value->type,
+                        'created_by' => Auth::user()->id,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+
+                    #profiling juga pilihan jawaban berdasarkan pertanyaan ke tabel pilihan_pembimbing
+                    $dataPilihan = $pilihanModel->getPilihanByPertanyaanId($value->id);
+                    #simpan ke tabel pilihan_pembimbing untuk di profiling
+                    foreach ($dataPilihan as $pil) {
+                        $pilihanPembimbing = new PilihanPembimbingModel();
+                        $pilihanPembimbing->pertanyaan_pembimbing_id = $new_pertanyaan->id;
+                        $pilihanPembimbing->kategori_pilihan_jawaban_id = $pil->kategori_pilihan_jawaban_id;
+                        $pilihanPembimbing->nomor = $pil->nomor;
+                        $pilihanPembimbing->isi   = $pil->isi;
+                        $pilihanPembimbing->save();
+
+                    }
                 }
             }
 
             # update status aktivitas umrah = finish / selesai
-            $aktitivitas->update(['status' => 'finish']);          
+            $aktitivitas->update(['status' => 'finish']);        
 
             DB::commit();
             return ResponseFormatter::success([
