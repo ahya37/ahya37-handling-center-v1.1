@@ -517,36 +517,16 @@ class AktivitasUmrahController extends Controller
             $id = $request->id;
 
             $model = new AktivitasUmrahModel();
+
+            //get kuisioner_id di tabel Aktivitas Umrah
             $kuisionerIds = $model->getDataAktivitas($id);
-
-            // $kuisionerIds = DB::table('aktivitas_umrah as a')
-            // ->join('kuisioner_umrah as b', 'a.umrah_id', '=', 'b.umrah_id')
-            // ->select('b.kuisioner_id')
-            // ->where('a.id', $id)
-            // ->get();
-
             $kuisionerId = $kuisionerIds->pluck('kuisioner_id')->all();
 
+            //get pertanyaan berdasarkan kuisioner_id
             $pertanyaanKuisioner = $model->getKuisionerId($kuisionerId);
-        
-            // $pertanyaanKuisioner = DB::table('pertanyaan_kuisioner')
-            //     ->whereIn('kuisioner_id', $kuisionerId)
-            //     ->get();
 
-                foreach ($pertanyaanKuisioner as $data) {
-                    DB::table('pertanyaan_kuisioner_pembimbing')->insert([
-                        'id' => $data->id,
-                        'kategori_id' => $data->kategori_id,
-                        'kuisioner_id' => $data->kuisioner_id,
-                        'kategori_kompetensi_id' => $data->kategori_kompetensi_id,
-                        'nomor' => $data->nomor,
-                        'isi' => $data->isi,
-                        'required' => $data->required,
-                        'type' => $data->type,
-                        'created_at' => $data->created_at,
-                        'updated_at' => $data->updated_at
-                    ]);
-                }
+            //insert pertanyaan ke tabel Pertanyaan Kuisioner Pembimbing
+            $insertPertanyaanPembimbing = $model->insertPertanyaanKuisionerPembimbing($pertanyaanKuisioner); 
                 
             $aktitivitas = AktivitasUmrahModel::where('id', $id)->first();
             $updateStatus =  $aktitivitas->update(['status' => 'finish']); 
