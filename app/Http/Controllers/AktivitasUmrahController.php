@@ -185,6 +185,7 @@ class AktivitasUmrahController extends Controller
             }
 
            $umrah = UmrahModel::select('id','start_date','end_date')->where('id', $request->umrah)->first();
+        //    dd($umrah);
            $start_date = date('d-m-Y', strtotime($umrah->start_date));
            $end_date   = date('d-m-Y', strtotime($umrah->end_date));
 

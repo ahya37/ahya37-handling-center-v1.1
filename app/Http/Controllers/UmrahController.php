@@ -72,13 +72,14 @@ class UmrahController extends Controller
                    ]);
             
            $dates_request = explode('-', $request->dates);
+        //    dd($dates_request);
 
            $umrah = UmrahModel::create([
                'tourcode' => $request->tourcode,
                'count_jamaah' => $request->count,
                'dates' => $request->dates,
-               'start_date' => date('Y-m-d', strtotime($dates_request[1])),
-               'end_date' => date('Y-m-d', strtotime($dates_request[0])),
+               'start_date' => date('Y-m-d', strtotime($dates_request[0])),
+               'end_date' => date('Y-m-d', strtotime($dates_request[1])),
                'create_by' => Auth::user()->id
            ]);
            
