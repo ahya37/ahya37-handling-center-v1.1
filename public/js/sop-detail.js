@@ -224,6 +224,16 @@ async function modaAddTugas(judul, id, sopId) {
         });
         window.location.reload();
       },
+      error: function(error){
+        Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: `${error.responseJSON.data.message}`,
+          showConfirmButton: false,
+          width: 500,
+          timer: 900,
+        });
+      }
     });
   }
 }

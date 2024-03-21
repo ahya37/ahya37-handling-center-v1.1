@@ -18,6 +18,7 @@ use App\TugasForPetugasModel;
 use PDF;
 use Maatwebsite\Excel\Excel;
 use App\Exports\SopExportExcel;
+use Validator;
 
 class TugasController extends Controller
 {
@@ -409,10 +410,22 @@ class TugasController extends Controller
         }
     }
 
-    public function saveTugasByJudul()
+    public function saveTugasByJudul(Request $request)
     {
         DB::beginTransaction();
         try {
+
+            $validator = Validator::make($request->all(), [
+                'nomor' => 'required',
+                'name' => 'required',
+                'nilai' => 'required',
+             ]);
+
+             if ($validator->fails()) {
+                return ResponseFormatter::error([
+                    'message' => 'Lengkapi nama tugas dan nilai'
+                ]); 
+            } 
 
             $id = request()->id;
             $nomor = request()->nomor;
