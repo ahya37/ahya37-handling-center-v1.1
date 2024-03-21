@@ -191,11 +191,15 @@ async function modaAddTugas(judul, id, sopId) {
     confirmButtonText: "Simpan",
     timerProgressBar: true,
     preConfirm: () => {
-      return [
-        document.getElementById("swal-input1").value,
-        document.getElementById("swal-input2").value,
-        document.getElementById("swal-input3").value,
-      ];
+      if(document.getElementById("swal-input2").value && document.getElementById("swal-input3").value){
+        return [
+          document.getElementById("swal-input1").value,
+          document.getElementById("swal-input2").value,
+          document.getElementById("swal-input3").value,
+        ];
+      }else{
+        Swal.showValidationMessage('Lengkapi data');
+      }
     },
   });
 
