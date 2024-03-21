@@ -135,6 +135,7 @@ class AktivitasUmrahController extends Controller
 
     public function store(Request $request)
     {
+       
         DB::beginTransaction();
         try {
 
@@ -196,11 +197,18 @@ class AktivitasUmrahController extends Controller
                 $label     = "PERCIK Tours. Kuisioner  $kuisioner->lokasi $start_date -  $end_date (hanya berlaku untuk satu kali pengisian)";
 
                 $kuisionerUmrahModel = new KuisionerUmrahModel();
-                $kuisionerUmrahModel->umrah_id = $request->umrah;
-                $kuisionerUmrahModel->label = $label;
-                $kuisionerUmrahModel->url = Str::random(10);
-                $kuisionerUmrahModel->kuisioner_id = $kuisioner->id;
-                $kuisionerUmrahModel->save();
+
+                // cek kuisioner where kuisioner_id and umrah_id 
+                // jika kuisioner yg dipilih sudah ada pada jadwal nya / umrah_id , maka jangan di buat ulang
+                $totalKuisionerUmrah = $kuisionerUmrahModel->where('umrah_id', $request->umrah)->where('kuisioner_id', $kuisioner->id)->count();
+
+                if($totalKuisionerUmrah == 0){
+                    $kuisionerUmrahModel->umrah_id = $request->umrah;
+                    $kuisionerUmrahModel->label = $label;
+                    $kuisionerUmrahModel->url = Str::random(10);
+                    $kuisionerUmrahModel->kuisioner_id = $kuisioner->id;
+                    $kuisionerUmrahModel->save();
+                }
 
                 # lakukan profiling pertanyaan kuisioner
                 # simpan hasil get data pertanyaan_kuisioner kedalam table pertanyaan_kuisioner_pembimbing, untuk proses profiling
