@@ -43,6 +43,7 @@ Route::post('/add/form/muthowwif', 'MuthowwifController@addFormMuthowiif');
 
 Route::get('/getdatamuthowwif', 'MuthowwifController@getDataMuthowwif');
 Route::get('/getdatamuthowwif/umrah/{month}/{year}', 'MuthowwifController@getMuthowwifUmrahByMonth');
+Route::post('/migrationaktivitasmurahmuthowwif', 'Api\JadwalUmrahController@migrationAktivitasUmrahToMthowwif');
 
 Route::group(['as' => 'api.'], function () {
     Route::post('/grafik/tugas', 'AktivitasUmrahController@grafikCardTugas');

@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Image;
 use Auth;
 use File;
+use Str;
 
 class JadwalUmrahController extends Controller
 {
@@ -466,4 +467,123 @@ class JadwalUmrahController extends Controller
         }
 
     }
+	
+	
+	public function migrationAktivitasUmrahToMthowwif(Request $request)
+	{
+		DB::beginTransaction(); 
+		 try {
+
+           //get data muthowwif dari table pembimbing
+		   $data = DB::table('pembimbing')->where('id','>=',27)->get();
+		   
+		   // get aktivitas umrah by pembimbin_id
+		   $results = [];
+		   foreach($data as $item){
+			   $aktivitas = DB::table('aktivitas_umrah')->where('pembimbing_id', $item->id)->get();
+			   if(count($aktivitas) != 0){
+				   
+				   // $results[] = [
+					// 'pembimbing_id' => $item->id,
+					// 'pembimbing_name' => $item->nama,
+					// 'aktivitas'  => $aktivitas
+			   // ];
+			   
+			   // get detail_aktivitas_umrah
+			   $result_details = [];
+			   foreach($aktivitas as $val){
+				   $detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')->where('aktivitas_umrah_id', $val->id)->get();
+				  
+				   
+				   // save to tabel aktivitas_umrah_muthoowwif
+				  $saves = DB::table('aktivitas_umrah_muthowwif')->insertGetId([
+						'id' => Str::random(30),
+						'idx' => $val->id, // from id aktivitas umrah lama
+						'muthowwif_id' => $val->pembimbing_id, // from id pembimbin_id 
+						'umrah_id' => $val->umrah_id,
+						'master_sop_id' => $val->master_sop_id,
+						'status' => $val->status,
+						'status_tugas' => $val->status_tugas,
+						'jumlah_potensial_jamaah_before' => $val->jumlah_potensial_jamaah_before,
+						'jumlah_potensial_jamaah_after' => $val->jumlah_potensial_jamaah_after,
+						'catatan' => $val->catatan,
+						'create_by' => $val->create_by,
+						'isdelete' => $val->isdelete,
+						'nonaktif' => $val->nonaktif,
+						'updated_by' => $val->updated_by,
+						'created_at' => $val->created_at,
+						'updated_at' => $val->updated_at
+				   ]);
+				    
+				   // save to table detail_aktivitas_umrah_muthowwif
+				   foreach($detail_aktivitas_umrah as $detail){
+					   DB::table('detail_aktivitas_umrah_muthowwif')->insert([
+							'id' => Str::random(30),
+							'idx' => $detail->id, // id detail lama,
+							'aktivitas_umrah_id' => $detail->aktivitas_umrah_id,
+							'master_sop_id' => $detail->master_sop_id,
+							'master_judul_tugas_id' => $detail->master_judul_tugas_id,
+							'master_tugas_id' => $detail->master_tugas_id,
+							'nomor_tugas' => $detail->nomor_tugas,
+							'nama_tugas' => $detail->nama_tugas,
+							'nilai_point' => $detail->nilai_point,
+							'require_image' => $detail->require_image,
+							'status' => $detail->status,
+							'alasan' => $detail->alasan,
+							'file' => $detail->file,
+							'file_doc' => $detail->file_doc,
+							'file_doc_name' => $detail->file_doc_name,
+							'nilai_akhir' => $detail->nilai_akhir,
+							'nilai_validate' => $detail->nilai_validate,
+							'note' => $detail->note,
+							'validate' => $detail->validate,
+							'validate_by' => $detail->validate_by,
+							'create_by' => $detail->create_by,
+							'created_at' => $detail->created_at,
+							'updated_at' => $detail->updated_at
+					   ]);
+				   }
+				   
+				}
+				
+			   
+			   }
+		   }
+			
+			DB::commit();
+            return ResponseFormatter::success([
+                'message' => 'migrasi ok!',
+				// 'data' => $results
+            ],200);
+
+        }catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'error' => $e->getMessage()
+            ],500);
+        }
+
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
