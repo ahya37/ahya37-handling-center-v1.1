@@ -19,13 +19,13 @@
                     <div class="d-flex align-items-center">
                         <img src="/assets/images/profile-user.png" class="user-img" width="60" alt="user avatar">
                         <div class="flex-grow-1 ms-2">
-                            <h5 class="mt-0">{{ $title }} : {{ $aktitivitas->pembimbing }}</h5>
+                            <h5 class="mt-0">{{ $title }} : {{ $aktitivitas->muthowwif }}</h5>
                             <p class="mb-0">Tourcode : {{ $aktitivitas->tourcode }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card radius-10 col-md-9 col-sm-12">
+            {{-- <div class="card radius-10 col-md-9 col-sm-12">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <hr />
             <div class="row">
                 @forelse  ($judul_sop as $item)
@@ -142,7 +142,7 @@
                 @endforelse
             </div>
             <input type="hidden" value="{{ Auth::user()->id }}" name="idUser">
-            <button class="btn btn-primary" name="validasi" onclick="getdata()">Validasi</button>
+            <button class="btn btn-primary" name="validasi" onclick="validation()">Validasi</button>
         </div>
     </div>
 @endsection
@@ -153,6 +153,6 @@
     <script src="{{ asset('/vendor/datatables/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
 
-    <script src="{{ asset('/js/detail-activitas-umrah.js') }}"></script>
+    <script src="{{ asset('/js/detail-activitas-umrah-muthowwif.js') }}"></script>
 
 @endpush

@@ -39,7 +39,10 @@ Route::get('/getdatapetugas/umrah/{month}/{year}', 'PetugasController@getDataPet
 
 Route::post('/add/form/pembimbing', 'AktivitasUmrahController@addElementFormPembimbing');
 Route::post('/add/form/asistenpembimbing', 'AktivitasUmrahController@addFormAsistenPembimbing');
+Route::post('/add/form/muthowwif', 'MuthowwifController@addFormMuthowiif');
 
+Route::get('/getdatamuthowwif', 'MuthowwifController@getDataMuthowwif');
+Route::get('/getdatamuthowwif/umrah/{month}/{year}', 'MuthowwifController@getMuthowwifUmrahByMonth');
 
 Route::group(['as' => 'api.'], function () {
     Route::post('/grafik/tugas', 'AktivitasUmrahController@grafikCardTugas');
@@ -61,8 +64,12 @@ Route::group(['as' => 'api.'], function () {
     #get pembimbing from element
     Route::post('/getpembimbing', 'AktivitasUmrahController@getDataOptionPembimbingForElement');
 
+    #get muthowwif from element
+    Route::post('/getmuthowwif', 'MuthowwifController@getDataOptionMuthowwifForElement');
+
     #get sop from element
     Route::post('/getsop', 'AktivitasUmrahController@getDataOptionSopForElement');
+    Route::post('/getsopmuthowwif', 'MuthowwifController@getDataOptionSopForElement');
 
     Route::post('/kuisioner/dashboard/detail/listdata/{id}','DashboardController@listDetailKuisionerByDashboard');
 	
@@ -70,6 +77,9 @@ Route::group(['as' => 'api.'], function () {
 
     // PETUGAS
     Route::post('/petugas/dt/aktivitas', 'AktivitasUmrahPetugascontroller@dataTableListData');
+
+    // Muthoowwif
+    Route::post('/dt/muthowwif/list', 'MuthowwifController@dataTableListData');
 
     // ANALYTIC
     Route::post('/grade/pembimbing', 'DashboardController@dataGradeByPembimbing');

@@ -13,6 +13,7 @@ $(function () {
     columns: [
       { data: "id", name: "id" },
       { data: "name", name: "name" },
+      { data: "kategorisop.name", name: "kategorisop.name" },
       {
         data: "action",
         name: "action",

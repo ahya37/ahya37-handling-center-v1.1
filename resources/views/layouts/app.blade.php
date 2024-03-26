@@ -11,7 +11,7 @@
 	
 	<!--favicon-->
 
-	<link rel="icon" href="/assets/images/iclogo.png" type="image/png" />
+	<link rel="icon" href="/public/assets/images/iclogo.png" type="image/png" />
   @stack('prepend-styles')
 	<!--plugins-->
 	<link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />

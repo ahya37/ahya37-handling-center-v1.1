@@ -61,6 +61,7 @@ class PembimbingController extends Controller
               PembimbingModel::create([
                  'user_id' => $user->id,
                  'nama' => $request->name,
+                 'status' => 'PEMBIMBING',
                  'expired_passport' => date('Y-m-d', strtotime($request->expired_passport)),
                  'create_by' => Auth::user()->id
              ]);
@@ -148,7 +149,7 @@ class PembimbingController extends Controller
            echo 'Message: ' .$e->getMessage();
         }
 
-        return redirect()->route('pembimbing.index')->with(['success' => 'Pembimbing berhasil diubahds']);
+        return redirect()->route('pembimbing.index')->with(['success' => 'Pembimbing berhasil diubah']);
 
     }
 
@@ -201,6 +202,7 @@ class PembimbingController extends Controller
     public function listData()
     {
         $pembimbing = PembimbingModel::select('id','nama')->where('isdelete',0)->orderBy('nama','asc')->get();
+
         if (request()->ajax()) 
         {
             return DataTables::of($pembimbing)

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\SopModel;
+use App\KategoriMasterSop;
 use App\JudulSopModel;
 use App\SopPetugasModel;
 use App\JudulSopPetugasModel;
@@ -56,7 +57,7 @@ class TugasController extends Controller
 
     public function listDataSop()
     {
-        $sop = SopModel::select('name','id')->orderBy('name','asc')->get();
+        $sop = SopModel::with(['kategorisop'])->orderBy('name','asc')->get();
         if (request()->ajax()) 
         {
             return DataTables::of($sop)
@@ -138,7 +139,9 @@ class TugasController extends Controller
 
     public function create()
     {
-        return view('tugas.create');
+        $kategori_master_sop = KategoriMasterSop::select('id','name')->get();
+
+        return view('tugas.create', compact('kategori_master_sop'));
     }
 
     public function store(Request $request)
@@ -146,11 +149,14 @@ class TugasController extends Controller
         DB::beginTransaction();
 
         try {
+
             $request->validate([
-            'name' => 'required',
+                'name' => 'required',
+                'kategorimastersop' => 'required',
             ]);
 
             $tugas = SopModel::create([
+                'kategori_master_sop_id' => $request->kategorimastersop,
                 'name' => ucfirst($request->name),
                 'created_by' => Auth::user()->id
             ]);

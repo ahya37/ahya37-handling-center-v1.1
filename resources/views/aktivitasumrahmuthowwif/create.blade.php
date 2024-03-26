@@ -20,7 +20,7 @@
                                     <hr>
                                     <form class="row g-3" action="{{ route('aktivitas.store') }}" method="post" enctype="multipart/form-data">
                                         @csrf
-                                        <div class="col-md-4">
+                                        <div class="col-md-12">
                                            <label class="form-label">Tourcode</label>
                                            <select class="single-select tourcode @error ('umrah') is-invalid @enderror" name="umrah"></select>
                                            @error('umrah')
@@ -29,31 +29,12 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                        <div class="col-md-8">
-                                            <label class="form-label">Kuisioner</label>
-                                            <select name='kuisioner_id[]' class='multiple-select kuisioner' required multiple="multiple"></select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Pembimbing</label>
-                                            <button type="button" class="addMoreEssay btn" id="addMoreEssay" value="Add"><i class="fa fa-plus-circle text-primary"></i></button>                                  
+                                        <div class="col-md-12">
+                                            <label class="form-label">Muthowwif</label>
+                                            <button type="button" class="addMoreEssay btn" id="addMoreEssay" value="Add"><i class="lni lni-circle-plus text-primary"></i></button>                                  
                                         </div>
                                         <div class="col-md-12">
                                             <div id="elements-pembimbing"></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Asisten Pembimbing</label>
-                                            <button type="button" class="addMoreAsisten btn" id="addMoreAsisten" value="Add"><i class="fa fa-plus-circle text-primary"></i></button>                                  
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div id="elements-asistenpembimbing"></div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label">Muthowwif</label>
-                                            <button type="button" class="addMuthowwif btn" id="addMuthowwif" value="Add"><i class="fa fa-plus-circle text-primary"></i></button>                                  
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div id="elements-muthowwif"></div>
                                         </div>
                                         <div class="col-12">
                                             <button type="button" onclick="check()" id="btnSave" class="btn btn-sm btn-primary px-5">Simpan</button>
@@ -69,5 +50,5 @@
 @push('scripts')
 <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('sweetalert2/dist/new/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('/js/create-activitas-umrah.js') }}"></script>
+<script src="{{ asset('/js/create-activitas-umrah-muthowwif.js') }}"></script>
 @endpush

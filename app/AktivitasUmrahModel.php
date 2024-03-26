@@ -113,7 +113,7 @@ class AktivitasUmrahModel extends Model
     {
         $sql = DB::table('aktivitas_umrah as a')
                 ->join('detail_aktivitas_umrah as b','b.aktivitas_umrah_id','=','a.id')
-                ->join('pembimbing as d','d.id','a.pembimbing_id')
+                ->join('pembimbing as d','d.id','=','a.pembimbing_id')
                 ->select('b.id','b.nomor_tugas as nomor','b.nama_tugas as nama','b.status','b.created_at','b.validate','b.require_image')
                 ->where('b.master_judul_tugas_id', $id)
                 ->where('a.id','=', $aktitivitas_umrah_id)

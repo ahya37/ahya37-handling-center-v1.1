@@ -30,12 +30,13 @@ class HomeController extends Controller
         }elseif(Auth::user()->aps_level_id == 4){
 
             return redirect()->route('user.aktivitas.petugas.index');
+            
+        }elseif(Auth::user()->aps_level_id == 8) { // muthowwif
+            
+            return redirect()->route('user.aktivitas.muthowwif.index');
+
          }else{
-            //  $user_id = Auth::user()->id;
-            //  $aktitivitasModel = new AktivitasUmrahModel();
-            //  $jadwal      = $aktitivitasModel->getNameTourcodeByPembimbing($user_id);
-            // return view('users.tugas.index', compact('jadwal','aktitivitasModel'));
-            return redirect()->route('user.aktivitas.index');
+            return redirect()->route('user.aktivitas.index'); // pembimbing
         }
     }
 }

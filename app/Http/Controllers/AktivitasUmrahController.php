@@ -21,9 +21,11 @@ use App\JadwalUmrahPembimbing;
 use App\PertanyaanKuisionerModel;
 use  App\Providers\Globalprovider;
 use App\DetailAktivitasUmrahModel;
+use App\DetailAktivitasUmrahMuthowwifModel;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\AktivitasUmrahPetugasModel;
+use App\AktivitasUmrahMuthowwifModel;
 use App\DetailJadwalUmrahPembimbing;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -135,7 +137,6 @@ class AktivitasUmrahController extends Controller
 
     public function store(Request $request)
     {
-       
         DB::beginTransaction();
         try {
 
@@ -147,7 +148,9 @@ class AktivitasUmrahController extends Controller
             $sop['sop_id']               = $request->sop_id;
             $assisten_pembimbing         = $request->asisten_pembimbing_id;
             $asisten_sop['asisten_sop']  = $request->asisten_sop_id;
-            $kuisioner_id                = $request->kuisioner_id;            
+            $kuisioner_id                = $request->kuisioner_id;
+            $muthowwif                   = $request->muthowwif_id;
+            $muthowwif_sop['muthowwif_sop'] = $request->muthowwif_sop_id;            
 
             // $pertanyaanKuisionerModel = new PertanyaanKuisionerModel();
             
@@ -185,8 +188,25 @@ class AktivitasUmrahController extends Controller
                 }
             }
 
+            #save ke tb aktivitas_umrah_muthowwif, jika ada
+            if($muthowwif != null){
+                foreach($muthowwif as $key => $value){
+
+                    $status_tugas = 'Muthowwif';
+                    #call fungsi save jadwal tugas pembimbing
+                    $aktitivitasModel = $this->setStoreJadwalUmrahMuthowwif($request, $muthowwif_sop['muthowwif_sop'][$key], $status_tugas, $value);
+
+                    #save detail aktivitas umrah or detail jadwal umrah pembimbing
+                    #get master judul tugas where master_sop_id[]
+                    $judulTugasSop = $this->getMasterTugasSop($muthowwif_sop['muthowwif_sop'][$key]);
+
+                    #call fungsi save detail jadwal tugas pembimbing
+                    $this->setStoreDetailJadwalUmrahMuthowwif($judulTugasSop, $aktitivitasModel);
+
+                }
+            }
+
            $umrah = UmrahModel::select('id','start_date','end_date')->where('id', $request->umrah)->first();
-        //    dd($umrah);
            $start_date = date('d-m-Y', strtotime($umrah->start_date));
            $end_date   = date('d-m-Y', strtotime($umrah->end_date));
 
@@ -265,6 +285,28 @@ class AktivitasUmrahController extends Controller
         }
     }
 
+    public function setStoreDetailJadwalUmrahMuthowwif($judulTugasSop,$aktitivitasModel){
+
+        foreach($judulTugasSop as $tugas){
+            $detailJadwalUmrahPembimbing = new DetailAktivitasUmrahMuthowwifModel();
+            $detailJadwalUmrahPembimbing->id = Str::random(30); 
+            $detailJadwalUmrahPembimbing->aktivitas_umrah_id = $aktitivitasModel->id; 
+            $detailJadwalUmrahPembimbing->master_sop_id = $tugas->master_sop_id; 
+            $detailJadwalUmrahPembimbing->master_judul_tugas_id = $tugas->master_judul_tugas_id; 
+            $detailJadwalUmrahPembimbing->master_tugas_id = $tugas->id; 
+            $detailJadwalUmrahPembimbing->nomor_tugas = $tugas->nomor; 
+            $detailJadwalUmrahPembimbing->nama_tugas = $tugas->nama; 
+            $detailJadwalUmrahPembimbing->nilai_point = $tugas->nilai_point; 
+            $detailJadwalUmrahPembimbing->require_image = $tugas->require_image; 
+            $detailJadwalUmrahPembimbing->status = '';
+            $detailJadwalUmrahPembimbing->alasan = '';
+            $detailJadwalUmrahPembimbing->created_at = date('Y-m-d H:i:s');
+            $detailJadwalUmrahPembimbing->updated_at = date('Y-m-d H:i:s');
+            $detailJadwalUmrahPembimbing->save();
+
+        }
+    }
+
     public function setStoreJadwalUmrahPembimbing($request, $sop_id, $status_tugas, $value){
         
         $aktitivitasModel = new AktivitasUmrahModel();
@@ -272,6 +314,21 @@ class AktivitasUmrahController extends Controller
         $aktitivitasModel->umrah_id = $request->umrah;
         $aktitivitasModel->asisten_master_sop_id = $status_tugas == 'Asisten Pembimbing' ? $sop_id : null; #jika status tugas Asisten , maka isi
         $aktitivitasModel->master_sop_id = $status_tugas == 'Pembimbing' ? $sop_id : null; # jika status Pembimbing, maka isi
+        $aktitivitasModel->status_tugas  = $status_tugas;
+        $aktitivitasModel->create_by = Auth::user()->id;
+        $aktitivitasModel->save();
+
+        return $aktitivitasModel;
+
+    }
+
+    public function setStoreJadwalUmrahMuthowwif($request, $sop_id, $status_tugas, $value){
+        
+        $aktitivitasModel = new AktivitasUmrahMuthowwifModel();
+        $aktitivitasModel->id = Str::random(30);
+        $aktitivitasModel->muthowwif_id = $value;
+        $aktitivitasModel->umrah_id = $request->umrah;
+        $aktitivitasModel->master_sop_id = $status_tugas == 'Muthowwif' ? $sop_id : null; # jika status Pembimbing, maka isi
         $aktitivitasModel->status_tugas  = $status_tugas;
         $aktitivitasModel->create_by = Auth::user()->id;
         $aktitivitasModel->save();

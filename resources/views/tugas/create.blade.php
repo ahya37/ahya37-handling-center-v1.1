@@ -1,4 +1,9 @@
 @extends('layouts.app')
+@push('styles')
+	<link href="{{ asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/select2/css/select2-bootstrap4.css') }}" rel="stylesheet" />
+
+@endpush
 @section('content')
     <div class="page-wrapper">
         <div class="page-content">
@@ -15,7 +20,15 @@
                             <form class="row g-3" action="{{ route('tugas.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="form-label">Kategori SOP</label>
+                                   <select class="single-select @error ('kuisioner') is-invalid @enderror" name="kategorimastersop" required>
+                                        @foreach ($kategori_master_sop as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                   </select>
+                                </div>
+                                <div class="col-md-6">
                                     <label class="form-label">SOP</label>
                                     <input type="text" name="name" class="form-control">
                                 </div>
@@ -31,3 +44,7 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+<script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('js/create-sop.js') }}"></script>   
+@endpush

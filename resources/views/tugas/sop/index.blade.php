@@ -44,7 +44,8 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th class="col-6">SOP</th>
+                                                <th class="col-3">SOP</th>
+                                                <th class="col-2">Kategori</th>
                                                 <th>Opsi</th>
                                             </tr>
                                         </thead>
@@ -63,7 +64,7 @@
                                                 <th></th>
                                                 <th class="col-6">SOP</th>
                                                 <th>Opsi</th>
-                                            </tr>
+                                            </tr> 
                                         </thead>
                                         <tbody></tbody>
                                     </table>

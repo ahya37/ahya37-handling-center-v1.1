@@ -52,64 +52,6 @@ $(".pembimbing").select2({
   },
 });
 
-// GET DATA ASISTEN
-// $(".multiple-select").select2({
-//   theme: "bootstrap4",
-//   width: $(this).data("width")
-//     ? $(this).data("width")
-//     : $(this).hasClass("w-100")
-//     ? "100%"
-//     : "style",
-//   placeholder: $(this).data("placeholder"),
-//   allowClear: Boolean($(this).data("allow-clear")),
-//   ajax: {
-//     dataType: "json",
-//     url: "/api/getasisten",
-//     delay: 250,
-//     processResults: function (data) {
-//       return {
-//         results: $.map(data, function (item) {
-//           return {
-//             text: item.nama,
-//             id: item.id,
-//           };
-//         }),
-//       };
-//     },
-//   },
-// });
-
-// GET DATA KUISIONER
-$(".kuisioner").select2(
-  {
-    theme: "bootstrap4",
-    width: $(this).data("width")
-      ? $(this).data("width")
-      : $(this).hasClass("w-100")
-        ? "100%"
-        : "style",
-    placeholder: "Pilih kuisioner",
-    allowClear: Boolean($(this).data("allow-clear")),
-    ajax: {
-      dataType: "json",
-      url: "/api/getkuisioner",
-      type: "POST",
-      delay: 250,
-      processResults: function (data) {
-        return {
-          results: $.map(data, function (item) {
-            return {
-              text: item.nama,
-              id: item.id,
-            };
-          }),
-        };
-      },
-    },
-  }
-);
-
-
 function initialSelectSop(classFormSop) {
   // GET DATA SOP
   $(classFormSop).select2(
@@ -153,11 +95,11 @@ function initialSelectPembimbing(classForm) {
         : $(this).hasClass("w-100")
           ? "100%"
           : "style",
-      placeholder: "Pilih Pembimbing",
+      placeholder: "Pilih Muthowwif",
       allowClear: Boolean($(this).data("allow-clear")),
       ajax: {
         dataType: "json",
-        url: "/api/getpembimbing",
+        url: "/api/getmuthowwif",
         type: "POST",
         delay: 250,
         processResults: function (data) {
@@ -222,101 +164,6 @@ $(document).ready(function () {
         const classFormPembimbing = ".asistenpembimbing";
         const classFormSop = ".asistensop";
         initialSelectPembimbing(classFormPembimbing);
-        initialSelectSop(classFormSop);
-
-      },
-      complete: function () {
-        $('#load-form').empty()
-      }
-    });
-  });
-
-
-  $("body").on("click", ".remove-essay", function () {
-    $(this).parents(".fieldGroupEssay").remove();
-  });
-});
-
-function initialSelectMuthowwif(classForm) {
-  // GET DATA PEMBIMBING
-  $(classForm).select2(
-    {
-      theme: "bootstrap4",
-      width: $(this).data("width")
-        ? $(this).data("width")
-        : $(this).hasClass("w-100")
-          ? "100%"
-          : "style",
-      placeholder: "Pilih Muthowwif",
-      allowClear: Boolean($(this).data("allow-clear")),
-      ajax: {
-        dataType: "json",
-        url: "/api/getmuthowwif",
-        type: "POST",
-        delay: 250,
-        processResults: function (data) {
-          return {
-            results: $.map(data, function (item) {
-              return {
-                text: item.nama,
-                id: item.id,
-              };
-            }),
-          };
-        },
-      },
-    }
-  );
-}
-
-// function initialSelectSopMuthowwif(classFormSop) {
-//   // GET DATA SOP
-//   $(classFormSop).select2(
-//     {
-//       theme: "bootstrap4",
-//       width: $(this).data("width")
-//         ? $(this).data("width")
-//         : $(this).hasClass("w-100")
-//           ? "100%"
-//           : "style",
-//       placeholder: "Pilih SOP",
-//       allowClear: Boolean($(this).data("allow-clear")),
-//       ajax: {
-//         dataType: "json",
-//         url: "/api/getsopmuthowwif",
-//         type: "POST",
-//         delay: 250,
-//         processResults: function (data) {
-//           return {
-//             results: $.map(data, function (item) {
-//               return {
-//                 text: item.name,
-//                 id: item.id,
-//               };
-//             }),
-//           };
-//         },
-//       },
-//     }
-//   );
-// }
-
-// ADD MORE MUTHOWWIF DAN SOP MUTHOWWIF
-$(document).ready(function () {
-  //melakukan proses multiple input
-  $("#addMuthowwif").click(function () {
-    $.ajax({
-      url: "/api/add/form/muthowwif",
-      type: "post",
-      data: { data: 2 },
-      beforeSend: function () {
-        $('#load-form').text('Loading form...')
-      },
-      success: function (response) {
-        $("#elements-muthowwif").append(response);
-        const classFormMuthowwif = ".muthowwif";
-        const classFormSop = ".muthowwifsop";
-        initialSelectMuthowwif(classFormMuthowwif);
         initialSelectSop(classFormSop);
 
       },
