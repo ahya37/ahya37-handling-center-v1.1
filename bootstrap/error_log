@@ -1,0 +1,20 @@
+[23-Mar-2024 07:14:29 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/percscoi/apphand.perciktours.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/percscoi/apphand.perciktours.com/bootstrap/app.php on line 14
+[23-Mar-2024 07:14:29 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/percscoi/apphand.perciktours.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/percscoi/apphand.perciktours.com/bootstrap/app.php on line 14
+[23-Mar-2024 07:14:29 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/percscoi/apphand.perciktours.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/percscoi/apphand.perciktours.com/bootstrap/app.php on line 14
+[23-Mar-2024 07:15:27 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/percscoi/apphand.perciktours.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/percscoi/apphand.perciktours.com/bootstrap/app.php on line 14
+[23-Mar-2024 07:16:17 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/percscoi/apphand.perciktours.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/percscoi/apphand.perciktours.com/bootstrap/app.php on line 14
