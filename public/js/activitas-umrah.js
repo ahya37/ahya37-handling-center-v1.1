@@ -177,7 +177,7 @@ $(".pembimbing").on("change", function () {
 });
 
 const table = $("#data").DataTable({
-  pageLength: 100,
+  pageLength: 10,
   bLengthChange: true,
   bFilter: true,
   bInfo: true,
