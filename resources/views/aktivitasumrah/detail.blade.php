@@ -25,16 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card radius-10 col-md-9 col-sm-12">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1">
-							<div class="loading" style="display: none"></div>
-                            <button class="btn btn-sm btn-primary" id="btnValidate" onclick="validate()">Validasi</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
             <hr />
             <div class="row">
                 @forelse  ($judul_sop as $item)
@@ -142,7 +133,8 @@
                 @endforelse
             </div>
             <input type="hidden" value="{{ Auth::user()->id }}" name="idUser">
-            <button class="btn btn-primary" name="validasi" onclick="getdata()">Validasi</button>
+            <button class="btn btn-sm btn-primary" name="validasi" onclick="updateValidate()">Validasi Yang Dipilih</button>
+            <button class="btn btn-sm btn-primary" name="validasi" onclick="updateValidateAll()">Validasi Semua</button> 
         </div>
     </div>
 @endsection

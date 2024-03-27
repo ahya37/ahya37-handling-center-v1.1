@@ -80,7 +80,18 @@ function cekAndPerbaruiTugas() {
   });
 }
 
-function getdata(){
+function updateValidate() {
+   const urlValidation = '/aktivitas/jadwal/umrah/active/updatevalidate';
+   initialValidation(urlValidation,'');
+}
+
+function updateValidateAll() {
+  const urlValidation = '/aktivitas/jadwal/umrah/active/updatevalidate/all';
+  const text = 'Hanya melakukan validasi pada sop yang sudah dilaksanakan';
+  initialValidation(urlValidation, text);
+}
+
+function initialValidation(urlValidation, text){
   let idTugas = [];
   $('input[name="validate[]"]:checked').each(function () {
     idTugas.push(this.value);
@@ -90,91 +101,46 @@ function getdata(){
   Swal.fire({
     title: 'Validasi Tugas ?',
     icon: 'warning',
+	text:text,
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: 'Ya',
-    cancelButtonText: "Batal",
+    cancelButtonText: "Batal", 
   }).then((result) => {
     if (result.isConfirmed) {
-      $.ajax({
-        url: `/aktivitas/jadwal/umrah/active/updatevalidate`,
-        method: "POST",
-        data: { id: idTugas, _token: CSRF_TOKEN },
-        success: function (data) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: `${data.data.message}`,
-            showConfirmButton: false,
-            width: 500,
-            timer: 900,
-          });
-          //console.log(data.data.message);
-          window.location.reload();
-        },
-      });
-  }
-  })
-
-  
-}
-
-function validate() {
-  let idTugas = [];
-  $('input[name="validate[]"]:checked').each(function () {
-    idTugas.push(this.value);
-  });
-
-  // AJAX UNTUK VALIDASI
-  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
-  Swal.fire({
-    title: `Validsi tugas ?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Ya",
-    cancelButtonText: "Batal",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        url: `/aktivitas/jadwal/umrah/active/validasi`,
-        method: "POST",
-        data: { id: idTugas, aktivitasId: id, _token: CSRF_TOKEN },
-        beforeSend: function () {
-          $("#btnValidate").hide();
-          $(".loading").show();
-          $(".loading").append(
-            `<div>
-              <button class="btn btn-primary" type="button" disabled>
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Validasi Tugas ...
-            </button>
-          </div>`
-          );
-        },
-        success: function (data) {
-          
-          Swal.fire({
-            position: "center",
-            icon: `success`,
-            title: `${data.data.message}`,
-            showConfirmButton: false,
-            width: 500,
-            timer: 900,
-          });
-          window.location.reload();
-        },
-        complete: function () {
-          $("#btnValidate").show();
-          $(".loading").hide();
-          $(".loading").empty();
-        },
-      });
-    }
+		  $.ajax({
+			url: urlValidation,
+			method: "POST",
+			data: { id: idTugas, activitasId: id ,_token: CSRF_TOKEN },
+			success: function (data) {
+			  Swal.fire({
+				position: "center",
+				icon: "success",
+				title: `${data.data.message}`,
+				showConfirmButton: false,
+				width: 500,
+				timer: 900,
+			  });
+			  window.location.reload();
+			},
+			error: function(error){
+				console.log();
+				Swal.fire({
+				position: "center",
+				icon: "warning",
+				title: error.responseJSON.data.message,
+				showConfirmButton: false,
+				width: 500,
+				timer: 900,
+			  });
+			}
+		  });
+	}
   });
 }
+
+
 
 async function NilaiPertimbangan(data){
   const id = data.getAttribute('data-id');

@@ -71,19 +71,37 @@ class Globalprovider extends ServiceProvider
         $show = number_format($data,1);
         return $show;
     }
+	
+	// public function calculateGradeByUmrahOld($data)
+    // {
+        // $grade = 'Sedang Dikalkulasi';
+        // if ($data >= 909 AND $data >= 957) {
+            // $grade = 'A';
+        // }
+		// if ($data >= 814 AND $data <= 908 ) {
+            // $grade = 'B';
+        // }
+		// if ($data >= 622 AND $data <= 813 ) {
+            // $grade = 'C';
+        // }if($data <= 621){
+            // $grade = 'D';
+        // }
+
+        // return $grade;
+    // }
 
     public function calculateGradeByUmrah($data)
     {
         $grade = 'Sedang Dikalkulasi';
-        if ($data >= 909 AND $data >= 957) {
+        if ($data >= 901) {
             $grade = 'A';
         }
-		if ($data >= 814 AND $data <= 908 ) {
+		if ($data >= 703 AND $data <= 900 ) {
             $grade = 'B';
         }
-		if ($data >= 622 AND $data <= 813 ) {
+		if ($data >= 413 AND $data <= 702 ) {
             $grade = 'C';
-        }if($data <= 621){
+        }if($data <= 412){
             $grade = 'D';
         }
 
@@ -139,7 +157,7 @@ class Globalprovider extends ServiceProvider
             $result_nilai = ($n_avg*$r_persentage)/$n_avg;
         }
 
-        if ($couunt = 2) {
+        if ($count = 2) {
             $result_nilai = $result_nilai;  
         }elseif ($count = 3) {
             $result_nilai = ($result_nilai + 50) - 100;  

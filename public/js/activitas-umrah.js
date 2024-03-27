@@ -260,13 +260,13 @@ const table = $("#data").DataTable({
 
 function calculateGrade(data) {
   let grade = "";
-  if (data >= 909) {
+  if (data >= 901) {
     grade = "A";
-  }else if (data >= 814 && data <= 908) {
+  }else if (data >= 703 && data <= 900) {
     grade = "B";
-  }else if (data >= 622 && data <= 813) {
+  }else if (data >= 413 && data <= 702) {
     grade = "C";
-  }else if (data <= 621) {
+  }else if (data <= 413) {
     grade = "D";
   }else {
 	  grade = "Dalam prosess";

@@ -234,6 +234,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/jadwal/umrah/active/detail/{id}', 'AktivitasUmrahController@jadwalUmrahActiveDetail')->name('tugas.jadwalumrah.detail');
 
         Route::post('/jadwal/umrah/active/updatevalidate', 'AktivitasUmrahController@updateValidate');
+        Route::post('/jadwal/umrah/active/updatevalidate/all', 'AktivitasUmrahController@updateValidateAll');
 
 
         // DETAIL VIA GRAFIK

@@ -1976,11 +1976,12 @@ class AktivitasUmrahController extends Controller
         // looping array nya
         foreach ($id['id'] as $validateValue){
                     $detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')
-                        ->select('id', 'validate')
+                        ->select('id', 'validate','status')
                         ->where('id', $validateValue)
                         ->first();
-
-        if ($detail_aktivitas_umrah->validate == 'N'){
+		
+		// melakukan validasi hanya untuk status pelaksanaan = 'Y' dan belum di validasi
+        if ($detail_aktivitas_umrah->validate == 'N' AND $detail_aktivitas_umrah->status == 'Y'){
             DB::table('detail_aktivitas_umrah')
                     ->where('id', $detail_aktivitas_umrah->id)
                     ->update([
@@ -1994,13 +1995,54 @@ class AktivitasUmrahController extends Controller
             }
                     
         }
-
-        //  dalam looping get data berdasarkan key valuen y
-
-        
-
+		
         return ResponseFormatter::success([
             'message' => 'Berhasil Validasi'
         ], 200);
+    }
+	
+	public function updateValidateAll(Request $request){
+		
+		DB::beginTransaction();
+			try {
+				  
+			$idUser = Auth::user()->id;  
+				 
+			// get data detail_aktivitas_umrah where aktivitas_umrah_id 
+			$aktivitas_umrah_id = $request->activitasId;
+			$detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')->where('aktivitas_umrah_id', $aktivitas_umrah_id)->get();
+			foreach($detail_aktivitas_umrah as $value){
+				// melakukan validasi hanya untuk status pelaksanaan = 'Y' dan belum di validasi
+				if ($value->validate == 'N' AND $value->status == 'Y'){
+					DB::table('detail_aktivitas_umrah')
+							->where('id', $value->id)
+							->update([
+								'nilai_akhir' => $value->nilai_akhir + 1,
+								'nilai_validate' => 1, 
+								'validate' => 'Y',
+								'validate_by' => $idUser,
+								'updated_at' => now()
+							]);
+							
+					}
+							
+				}
+			
+			
+            DB::commit();
+            return ResponseFormatter::success([
+                'data' => $detail_aktivitas_umrah,
+                'message' => 'Berhasil validasi'
+            ],200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal Validasi!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
+		
     }
 }
