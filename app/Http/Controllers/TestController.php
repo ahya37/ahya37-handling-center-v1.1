@@ -203,7 +203,7 @@ class TestController extends Controller
             ];
 
             
-            DB::commit();
+           DB::commit();
            return response()->json([
                 'message' => 'Sukses!',
                 'data' => $result
