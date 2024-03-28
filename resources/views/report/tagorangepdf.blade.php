@@ -101,7 +101,7 @@
                                             height: 30px;
                                             margin-left: 46px;
                                             border: #f08619;
-                                            border-width: 100px solid #f08619;
+                                            border-width: 100px solid #f08619; 
                                             border-style: solid;
                                             box-sizing: border-box;
                                             border-radius: 15px;
@@ -111,7 +111,9 @@
                                       <p style="text-align: center; font-family: Sans-serif; font-weight: bold; margin-top: 6px;">
                                         {{$row->nama_jamaah}}
                                       </p>
-                                      <p style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -9px;">
+                                      <p style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -12px;">
+                                         Room Type : {{strtoupper($row->room_jamaah ?? '') }}
+                                      </p> <p style="text-align: center; font-family:Sans-serif; font-size: 10px; font-weight: bold; margin-top: -9px;">
                                           Contact Person TL : {{$tl->telp_jamaah ?? '' }}
                                       </p>
                                   </div>

@@ -137,6 +137,7 @@
                                             <th>No.Telp</th>
                                             <th>Email</th>
                                             <th>Alamat</th>
+                                            <th>Room</th>
                                             <th>Opsi</th>
                                         </tr>
                                     </thead>

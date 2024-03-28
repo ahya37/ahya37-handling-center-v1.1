@@ -210,7 +210,7 @@ const table = $("#data").DataTable({
     url: "/api/dt/muthowwif/list",
     type: "POST",
     data: function (q) {
-      q.tourcode = tourcode;
+      q.tourcode = tourcode; 
       q.month = month;
       q.year = year;
       q.muthowwif = muthowwifId;
@@ -234,7 +234,7 @@ const table = $("#data").DataTable({
         }
       },
     },
-    {
+    { 
       targets: 2,
       render: function (data, type, row, meta) {
         if (row.nonaktif === 1) {
@@ -278,33 +278,33 @@ const table = $("#data").DataTable({
   ],
 });
 
+// function calculateGradeOld(data) {
+  // let grade = "";
+  // if (data >= 909) {
+    // grade = "A";
+  // }else if (data >= 814 && data <= 908) {
+    // grade = "B";
+  // }else if (data >= 622 && data <= 813) {
+    // grade = "C";
+  // }else if (data <= 621) {
+    // grade = "D";
+  // }else {
+	  // grade = "Dalam prosess";
+  // }
+
+  // return grade;
+// }
+
 
 function calculateGrade(data) {
   let grade = "";
-  if (data >= 909) {
+  if (data >= 424) {
     grade = "A";
-  }else if (data >= 814 && data <= 908) {
+  }else if (data >= 283 && data <= 423) {
     grade = "B";
-  }else if (data >= 622 && data <= 813) {
+  }else if (data >= 142 && data <= 282) {
     grade = "C";
-  }else if (data <= 621) {
-    grade = "D";
-  }else {
-	  grade = "Dalam prosess";
-  }
-
-  return grade;
-}
-
-function calculateGradeCopy(data) {
-  let grade = "";
-  if (data >= 909 && data >= 957) {
-    grade = "A";
-  }else if (data >= 814 && data <= 908) {
-    grade = "B";
-  }else if (data >= 622 && data <= 813) {
-    grade = "C";
-  }else if (data <= 621) {
+  }else if (data <= 141) {
     grade = "D";
   }else {
 	  grade = "Dalam prosess";

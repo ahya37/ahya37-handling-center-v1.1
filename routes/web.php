@@ -33,6 +33,11 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/resumekuisioner','DashboardController@resumeKuisioner')->name('dashbaord.resume.kuisioner');
     Route::get('/resumekuisioner/detail/','DashboardController@getDetailResumeByTourcode')->name('dashbaord.resume.kuisioner.detail');
     Route::get('/resumekuisionerkategori/detail', 'DashboardController@getdataKuisioner');
+	
+	Route::prefix('muthowwif')->group(function(){
+		Route::get('/analytics','DashboardController@dashboardAnalitycsMuthowwif')->name('dashbaord.muthowwif.analytics');
+		 Route::get('/analytics/sop_n/detail/{id}','MuthowwifController@detailSopNByAktivitasUmrah');
+	});
 });
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
@@ -253,7 +258,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/petugas/umrah', 'AktivitasUmrahPetugascontroller@indexPetugas')->name('aktivitas.petugas.index');
         Route::get('/petugas/detail/{id}', 'AktivitasUmrahPetugascontroller@show')->name('aktivitas.detail');
         Route::post('/petugas/finish', 'AktivitasUmrahPetugascontroller@updateStatusAktifitasUmrah');
-        Route::post('/petugas/delete/tugas', 'AktivitasUmrahPetugascontroller@deleteAktifitasUmrah');        
+        Route::post('/petugas/delete/tugas', 'AktivitasUmrahPetugascontroller@deleteAktifitasUmrah');
+
+		//MUTHOWWIF
+		Route::get('/muthowwif/detailactivitas/statusNull/{aktivitasId}/{id}', 'MuthowwifController@getDetailDataStatusNull'); // datatable
+		Route::post('/muthowwif/jadwal/umrah/active/renilai', 'MuthowwifController@ReNilaiSop');
 
     });
     
@@ -306,6 +315,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/muthowwif/createTugas', 'MuthowwifController@createStatusTugasByPembimbing');
         Route::post('/muthowwif/createTugaswithfileUpload', 'MuthowwifController@uploadPelaksanaanTanpaResizaImage')->name('user.muthowwif.create.aktivitas');
         Route::post('/muthowwif/jadwal/umrah/active/updatevalidate', 'MuthowwifController@updateValidate');
+        Route::post('/muthowwif/jadwal/umrah/active/updatevalidate/all', 'MuthowwifController@updateValidateAll');
         Route::post('/muthowwif/update/nilai/pertimbangan', 'MuthowwifController@updateNilaiAkhirPertimbangan');
 
 

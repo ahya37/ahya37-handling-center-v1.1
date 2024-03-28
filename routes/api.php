@@ -30,6 +30,9 @@ Route::get('/getdatapembimbing/umrah/{month}/{year}', 'PembimbingController@getD
 Route::post('/add/form/essay', 'KuisionerController@addElementFormEssayJawaban');
 Route::get('getpilihan', 'KuisionerController@getDataJawabanPilihan'); 
 
+// MUTHOWWIF
+Route::get('/getdataumrah/{muthowwifId}', 'UmrahController@getDataTourcodeByMuthowwif');
+
 Route::get('testlisttugas/{id}', 'TestController@testListTugas'); 
 
 Route::post('searchpanduan', 'PanduanController@searchPanduan');
@@ -84,6 +87,7 @@ Route::group(['as' => 'api.'], function () {
 
     // ANALYTIC
     Route::post('/grade/pembimbing', 'DashboardController@dataGradeByPembimbing');
+    Route::post('/grade/muthowwif', 'DashboardController@dataGradeByMuthowwif');
 
     // merge data kuisioner
     Route::post('mergedatakuisioner', 'TestController@mergeDataKuisioner');

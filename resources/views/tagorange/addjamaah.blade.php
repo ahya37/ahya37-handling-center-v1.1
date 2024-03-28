@@ -58,6 +58,15 @@
                                                 </span>
                                             @enderror
                                         </div>
+										<div class="col-md-6">
+                                            <label class="form-label">Room Type</label>
+                                            <input type="text" name="room_jamaah"  class="form-control @error ('room_jamaah') is-invalid @enderror" required>
+                                            @error('count')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Foto</label>
                                             <input type="file" name="foto" class="form-control @error ('tourcode') is-invalid @enderror number" required>

@@ -30,7 +30,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
 							<div class="loading" style="display: none"></div>
-                            <button class="btn btn-sm btn-primary" id="btnValidate" onclick="validate()">Validasi</button>
+                            <button class="btn btn-sm btn-primary" id="btnValidate" onclick="validation()">Validasi</button>
                         </div>
                     </div>
                 </div>
@@ -143,6 +143,7 @@
             </div>
             <input type="hidden" value="{{ Auth::user()->id }}" name="idUser">
             <button class="btn btn-primary" name="validasi" onclick="validation()">Validasi</button>
+            <button class="btn btn-primary" name="validasi" onclick="validationAll()">Validasi Semua</button>
         </div>
     </div>
 @endsection

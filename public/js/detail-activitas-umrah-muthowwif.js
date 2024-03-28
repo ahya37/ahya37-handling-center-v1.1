@@ -81,42 +81,63 @@ function cekAndPerbaruiTugas() {
 }
 
 function validation(){
-  let idTugas = [];
-  $('input[name="validate[]"]:checked').each(function () {
-    idTugas.push(this.value);
-  });
-
-  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
-  Swal.fire({
-    title: 'Validasi Tugas ?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Ya',
-    cancelButtonText: "Batal",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        url: `/user/muthowwif/jadwal/umrah/active/updatevalidate`,
-        method: "POST",
-        data: { id: idTugas, _token: CSRF_TOKEN },
-        success: function (data) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: `${data.data.message}`,
-            showConfirmButton: false,
-            width: 500,
-            timer: 900,
-          });
-          window.location.reload();
-        },
-      });
-  }
-  })
-
+  const urlValidation = '/user/muthowwif/jadwal/umrah/active/updatevalidate';
+  initialValidation(urlValidation, '');
   
+}
+
+function validationAll(){
+	const urlValidation = '/user/muthowwif/jadwal/umrah/active/updatevalidate/all';
+	const text = 'Hanya melakukan validasi pada sop yang sudah dilaksanakan';
+	initialValidation(urlValidation, text);
+}
+
+function initialValidation(urlValidation, text){
+	let idTugas = [];
+	  $('input[name="validate[]"]:checked').each(function () {
+		idTugas.push(this.value);
+	  });
+
+	  const CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+	  Swal.fire({
+		title: 'Validasi Tugas ?',
+		icon: 'warning',
+		text:text,
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Ya',
+		cancelButtonText: "Batal",
+	  }).then((result) => {
+		if (result.isConfirmed) {
+			  $.ajax({
+				url: urlValidation,
+				method: "POST",
+				data: { id: idTugas, activitasId: id, _token: CSRF_TOKEN },
+				success: function (data) {
+				  Swal.fire({
+					position: "center",
+					icon: "success",
+					title: `${data.data.message}`,
+					showConfirmButton: false,
+					width: 500,
+					timer: 900,
+				  });
+				  window.location.reload();
+				},
+				error: function(error){
+					Swal.fire({
+					position: "center",
+					icon: "warning",
+					title: error.responseJSON.data.message,
+					showConfirmButton: false,
+					width: 500,
+					timer: 900,
+				  });
+				}
+			  });
+		  }
+  });
 }
 
 async function NilaiPertimbangan(data){

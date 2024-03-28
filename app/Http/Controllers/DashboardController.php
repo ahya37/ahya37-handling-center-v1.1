@@ -156,6 +156,11 @@ class DashboardController extends Controller
     {
         return view('dashboard.analitik.index');
     }
+	
+	public function dashboardAnalitycsMuthowwif()
+    {
+        return view('dashboard.analitikmuthowwif.index');
+    }
 
     public function dataGradeByPembimbing()
     {
@@ -183,6 +188,59 @@ class DashboardController extends Controller
                         ->where('c.status','N')
                         ->where('a.nonaktif', 0)
                         ->where('a.pembimbing_id',$id)
+                        ->groupBy('a.id','b.tourcode')
+                        ->orderBy('b.start_date','asc')
+                        ->get();
+
+            // $result = [];
+            $tourcode = [];
+            $nilai    = [];
+            foreach ($grade as $value) {
+                $tourcode[]= $value->tourcode;
+                $nilai[] = (int)$value->nilai;
+            }
+
+            return ResponseFormatter::success([
+                'tourcode' => $tourcode,
+                'nilai' => $nilai,
+                'sop_n' => $sop_n,
+                'count_sop_n' => count($sop_n)
+            ],200);
+
+        } catch (\Exception $e) {
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+	
+	public function dataGradeByMuthowwif()
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = request()->id;
+
+            $grade = DB::table('aktivitas_umrah_muthowwif as a')
+                    ->select('c.tourcode','c.start_date',DB::raw('sum(b.nilai_akhir) as nilai'))
+                    ->join('detail_aktivitas_umrah_muthowwif as b','a.id','=','b.aktivitas_umrah_id')
+                    ->join('umrah as c','a.umrah_id','=','c.id')
+                    ->where('a.muthowwif_id', $id)
+                    ->where('a.nonaktif', 0)
+                    ->groupBy('c.tourcode','c.start_date')
+                    ->orderBy('c.start_date','asc')
+                    ->get();
+
+            // SOP TIDAK DILAKSANAKAN
+            $sop_n = DB::table('aktivitas_umrah_muthowwif as a')
+                        ->select('a.id','b.tourcode', 
+                            DB::raw('count(c.status) as total_tidak_dilaksanakan'))
+                        ->join('umrah as b','a.umrah_id','=','b.id')
+                        ->join('detail_aktivitas_umrah_muthowwif as c','c.aktivitas_umrah_id','=','a.id')
+                        ->where('c.status','N')
+                        ->where('a.nonaktif', 0)
+                        ->where('a.muthowwif_id',$id)
                         ->groupBy('a.id','b.tourcode')
                         ->orderBy('b.start_date','asc')
                         ->get();

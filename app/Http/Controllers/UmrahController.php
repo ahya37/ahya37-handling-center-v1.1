@@ -324,6 +324,40 @@ class UmrahController extends Controller
 
 
     }
+	
+	public function getDataTourcodeByMuthowwif(Request $request, $muthowwifId)
+    {
+        try {
+           
+            $data = DB::table('aktivitas_umrah_muthowwif as a')
+            ->select('b.id','b.tourcode')
+            ->join('umrah as b','a.umrah_id','=','b.id')
+            ->where('a.muthowwif_id', $muthowwifId)
+            ->get();
+   
+            if($request->has('q')){
+                $search = $request->q;
+            
+                $data = DB::table('aktivitas_umrah_muthowwif as a')
+                ->select('b.id','b.tourcode')
+                ->join('umrah as b','a.umrah_id','=','b.id')
+                ->where('a.muthowwif_id', $muthowwifId)
+                ->where('b.tourcode','LIKE',"%$search%")
+                ->get();
+
+                }
+
+            return response()->json($data);
+
+        } catch (\Exception $th) {
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+        }
+
+
+    }
 
     public function getDataUmrahByTourcode(Request $request,$month,$year)
     {

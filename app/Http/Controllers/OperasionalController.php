@@ -118,6 +118,7 @@ class OperasionalController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'no_urut' => 'required',
+                'room_jamaah' => 'required',
                 'foto' => 'image'
              ]);
 
@@ -140,6 +141,7 @@ class OperasionalController extends Controller
                 'telp_jamaah'  => $request->telp,
                 'email_jamaah'  => $request->email,
                 'alamat_jamaah'  => $request->address,
+                'room_jamaah'  => $request->room_jamaah,
             ]);
 
             DB::commit();
@@ -185,6 +187,7 @@ class OperasionalController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'no_urut' => 'required',
+                'room_jamaah' => 'required',
                 'foto' => 'image'
              ]);
 
@@ -214,6 +217,7 @@ class OperasionalController extends Controller
                 'telp_jamaah'  => $request->telp,
                 'email_jamaah'  => $request->email,
                 'alamat_jamaah'  => $request->address,
+                'room_jamaah'  => strtoupper($request->room_jamaah),
             ]);
 
             DB::commit();

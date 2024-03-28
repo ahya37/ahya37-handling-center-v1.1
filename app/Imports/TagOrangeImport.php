@@ -30,7 +30,8 @@ class TagOrangeImport implements ToModel, WithHeadingRow
             'nama_jamaah'        => strtoupper($row['nama_jamaah']),
             'telp_jamaah'        =>$row['telp_jamaah'],
             'email_jamaah'        =>$row['email_jamaah'],
-            'alamat_jamaah'        =>$row['alamat_jamaah']
+            'alamat_jamaah'        =>$row['alamat_jamaah'],
+            'room_jamaah'        => strtoupper($row['room_jamaah']),
         ]);
     }
 }

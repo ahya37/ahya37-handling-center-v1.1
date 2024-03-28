@@ -21,6 +21,7 @@ $(function () {
       { data: "telp_jamaah", name: "telp_jamaah" },
       { data: "email_jamaah", name: "email_jamaah" },
       { data: "alamat_jamaah", name: "alamat_jamaah" },
+      { data: "room_jamaah", name: "room_jamaah" },
       {
         data: "action",
         name: "action",

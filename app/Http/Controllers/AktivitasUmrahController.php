@@ -1965,40 +1965,54 @@ class AktivitasUmrahController extends Controller
         }
     }
 
-    public function updateValidate(Request $request){
+    public function updateValidate(Request $request)
+	{
+		DB::beginTransaction();
+		try{
+			
+			// get data id dari client
+			// tampung dalam sebuah array
+			$id['id'] = $request->id;
 
-        // get data id dari client
-        // tampung dalam sebuah array
-        $id['id'] = $request->id;
+			$idUser = Auth::user()->id;
 
-        $idUser = Auth::user()->id;
+			// looping array nya
+			foreach ($id['id'] as $validateValue){
+						$detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')
+							->select('id', 'validate','status')
+							->where('id', $validateValue)
+							->first();
+			
+			// melakukan validasi hanya untuk status pelaksanaan = 'Y' dan belum di validasi
+			if ($detail_aktivitas_umrah->validate == 'N' AND $detail_aktivitas_umrah->status == 'Y'){
+				DB::table('detail_aktivitas_umrah')
+						->where('id', $detail_aktivitas_umrah->id)
+						->update([
+							'nilai_akhir' => DB::raw('nilai_akhir + 1'),
+							'nilai_validate' => 1,
+							'validate' => 'Y',
+							'validate_by' => $idUser,
+							'updated_at' => now()
+						]);
+						
+				}
+						
+			}
+			
+			DB::commit();
+			return ResponseFormatter::success([
+				'message' => 'Berhasil Validasi'
+			], 200);
+			
+		}catch(\Exception $e){
+			DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal Validasi!',
+                'error' => $e->getMessage()
+            ]);
+		}
 
-        // looping array nya
-        foreach ($id['id'] as $validateValue){
-                    $detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah')
-                        ->select('id', 'validate','status')
-                        ->where('id', $validateValue)
-                        ->first();
-		
-		// melakukan validasi hanya untuk status pelaksanaan = 'Y' dan belum di validasi
-        if ($detail_aktivitas_umrah->validate == 'N' AND $detail_aktivitas_umrah->status == 'Y'){
-            DB::table('detail_aktivitas_umrah')
-                    ->where('id', $detail_aktivitas_umrah->id)
-                    ->update([
-                        'nilai_akhir' => DB::raw('nilai_akhir + 1'),
-                        'nilai_validate' => 1,
-                        'validate' => 'Y',
-                        'validate_by' => $idUser,
-                        'updated_at' => now()
-                    ]);
-                    
-            }
-                    
-        }
-		
-        return ResponseFormatter::success([
-            'message' => 'Berhasil Validasi'
-        ], 200);
+        
     }
 	
 	public function updateValidateAll(Request $request){
@@ -2031,7 +2045,6 @@ class AktivitasUmrahController extends Controller
 			
             DB::commit();
             return ResponseFormatter::success([
-                'data' => $detail_aktivitas_umrah,
                 'message' => 'Berhasil validasi'
             ],200);
 

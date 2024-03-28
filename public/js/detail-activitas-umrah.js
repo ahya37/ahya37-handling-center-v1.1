@@ -25,7 +25,7 @@ $(function () {
     columnDefs: [
       {
         targets: [0],
-        visible: false,
+        visible: false, 
       },
     ],
   });

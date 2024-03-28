@@ -757,39 +757,193 @@ class MuthowwifController extends Controller
         return redirect()->back()->with(['success' => 'Berhasil simpan']);
     }
 
-    public function updateValidate(Request $request){
+    public function updateValidate(Request $request)
+	{
+		DB::beginTransaction();
+		try{
+			
+			 // get data id dari client
+			// tampung dalam sebuah array
+			$id['id'] = $request->id;
 
-        // get data id dari client
-        // tampung dalam sebuah array
-        $id['id'] = $request->id;
+			$idUser = Auth::user()->id;
 
-        $idUser = Auth::user()->id;
+			// looping array nya
+			foreach ($id['id'] as $validateValue){
+						$detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah_muthowwif')
+							->select('id', 'validate','nilai_akhir')
+							->where('id', $validateValue)
+							->first();
 
-        // looping array nya
-        foreach ($id['id'] as $validateValue){
-                    $detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah_muthowwif')
-                        ->select('id', 'validate')
-                        ->where('id', $validateValue)
-                        ->first();
+			if ($detail_aktivitas_umrah->validate == 'N'){
+				DB::table('detail_aktivitas_umrah_muthowwif')
+						->where('id', $detail_aktivitas_umrah->id)
+						->update([
+							'nilai_akhir' => $detail_aktivitas_umrah->nilai_akhir + 1,
+							'nilai_validate' => 1,
+							'validate' => 'Y',
+							'validate_by' => $idUser,
+							'updated_at' => now()
+						]);
+						
+				}
+						
+			}
+			
+			DB::commit();
+			return ResponseFormatter::success([
+				'message' => 'Berhasil Validasi'
+			], 200);
+			
+		}catch(\Exception $e){
+			DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal Validasi!',
+                'error'   => $e->getMessage()
+            ]);
+		}
 
-        if ($detail_aktivitas_umrah->validate == 'N'){
-            DB::table('detail_aktivitas_umrah_muthowwif')
-                    ->where('id', $detail_aktivitas_umrah->id)
-                    ->update([
-                        'nilai_akhir' => DB::raw('nilai_akhir + 1'),
-                        'nilai_validate' => 1,
-                        'validate' => 'Y',
-                        'validate_by' => $idUser,
-                        'updated_at' => now()
-                    ]);
-                    
-            }
-                    
+       
+    }
+	
+	public function updateValidateAll(Request $request){
+		
+			DB::beginTransaction();
+			try {
+				  
+			$idUser = Auth::user()->id;  
+				 
+			// get data detail_aktivitas_umrah where aktivitas_umrah_id 
+			$aktivitas_umrah_id = $request->activitasId;
+			$detail_aktivitas_umrah = DB::table('detail_aktivitas_umrah_muthowwif')->where('aktivitas_umrah_id', $aktivitas_umrah_id)->get();
+			foreach($detail_aktivitas_umrah as $value){
+				// melakukan validasi hanya untuk status pelaksanaan = 'Y' dan belum di validasi
+				if ($value->validate == 'N' AND $value->status == 'Y'){
+					DB::table('detail_aktivitas_umrah_muthowwif')
+							->where('id', $value->id)
+							->update([
+								'nilai_akhir' => $value->nilai_akhir + 1,
+								'nilai_validate' => 1, 
+								'validate' => 'Y',
+								'validate_by' => $idUser,
+								'updated_at' => now()
+							]);
+							
+					}
+							
+				}
+			
+			
+            DB::commit();
+            return ResponseFormatter::success([
+                'message' => 'Berhasil validasi'
+            ],200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal Validasi!',
+                'error' => $e->getMessage()
+            ]);
+        }
+		
+    }
+	
+	public function detailSopNByAktivitasUmrah($id)
+    {
+        $judul_sop   = AktivitasUmrahMuthowwifModel::getDetailSopNByAktivitasUmrah($id);
+        $status      = 'N';
+        
+        $results    = [];
+        foreach ($judul_sop as $value) {
+            $sop = AktivitasUmrahMuthowwifModel::getListSopByStatus($value->id,$status, $value->id_judul);
+            $results[] = [
+                'id' => $value->id,
+                'nomor' => $value->nomor,
+                'judul' => $value->nama,
+                'sop' => $sop
+            ];
         }
 
-        return ResponseFormatter::success([
-            'message' => 'Berhasil Validasi'
-        ], 200);
+        if (count($results) == 0) {
+            return redirect()->route('dashbaord.muthowwif.analytics');
+        }else{
+			return view('dashboard.analitikmuthowwif.detail-sop', compact('results'));
+        }
+
+    }
+	
+	 public function getDetailDataStatusNull($aktivitasId, $id)
+    {
+        $aktitivitasModel = new AktivitasUmrahModel();
+        $data            = $aktitivitasModel->getListTugasByMasterJudulIdInChartNew($aktivitasId,$id);
+        $data            = $data->where('status','=','')->get();
+       
+        // $aktitivitas      = $aktitivitasModel->getNameTourcodeAndPembimbing($id)
+
+        // $aktitivitasModel = new AktivitasUmrahModel();
+        // $data             = $aktitivitasModel->getDetailActivitasStatusNull($id);
+        if (request()->ajax()) 
+        {
+            return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('updatedAt', function($item){
+                        if($item->updated_at == NULL){
+                            return '-';
+                        }else{
+                            return date('d-m-Y H:i', strtotime($item->updated_at));
+                        }
+                    })
+                    ->rawColumns(['updatedAt'])
+                    ->make(true);
+        }
+    }
+	public function ReNilaiSop(Request $request)
+    {
+            
+        DB::beginTransaction();
+        try {
+
+            $id          =   $request->id;
+            $aktivitasId = $request->aktivitasId;
+
+            // GET master_tugas_id where id
+            foreach ($id as $key => $value) {
+                
+                // DB::table('detail_aktivitas_umrah')->where('aktivitas_umrah_id', $aktivitasId)->where('id', $value)
+                //    ->update(['validate' => 'Y']);
+                $master_tugas  = DB::table('detail_aktivitas_umrah_muthowwif as a')
+                                        ->select('b.nilai_point')
+                                        ->join('master_tugas as b','a.master_tugas_id','=','b.id')
+                                        ->where('a.aktivitas_umrah_id', $aktivitasId)
+                                        ->where('a.id', $value)
+                                        ->first();
+
+               $update =  DB::table('detail_aktivitas_umrah_muthowwif')
+                    ->where('aktivitas_umrah_id', $aktivitasId)
+                    ->where('id', $value)
+                    ->update([
+                        'validate' => 'Y',
+                        'status' => 'Y',
+                        'nilai_point' => $master_tugas->nilai_point,
+                        'nilai_akhir' => $master_tugas->nilai_point
+                    ]);
+            }
+
+            DB::commit();
+            return ResponseFormatter::success([
+                'data' => $update,
+                'message' => 'Berhasil ubah nilai'
+            ],200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => 'Gagal!',
+                'error' => $e->getMessage()
+            ]);
+
+        }
     }
 
 }
