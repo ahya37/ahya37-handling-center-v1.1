@@ -30,6 +30,9 @@ Route::get('/getdatapembimbing/umrah/{month}/{year}', 'PembimbingController@getD
 Route::post('/add/form/essay', 'KuisionerController@addElementFormEssayJawaban');
 Route::get('getpilihan', 'KuisionerController@getDataJawabanPilihan'); 
 
+
+Route::post('nilaikompetensi/count', 'KuisionerUmrahController@countNIlaiKompetensiAll'); 
+
 // MUTHOWWIF
 Route::get('/getdataumrah/{muthowwifId}', 'UmrahController@getDataTourcodeByMuthowwif');
 

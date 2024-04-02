@@ -150,7 +150,7 @@ class KuisionerUmrahController extends Controller
                 $essayModel->kuisioner_umrah_id = $kuisionerumrah_id;
                 $essayModel->umrah_id = $umrah_id;
                 $essayModel->pertanyaan_id = $key;
-                $essayModel->essay = $val;
+                $essayModel->essay = $val; 
                 $essayModel->save();
             }
 
@@ -174,4 +174,27 @@ class KuisionerUmrahController extends Controller
     {
         return view('kuisioner-success');
     }
+	
+	public function countNilaiKompetensiAll()
+	{
+		// get data kategori kompetensi kuisioner 
+		$kategori_kompetensi_kuisioner = DB::table('kategori_kompetensi_kuisioner')->select('id','name')->orderBy('level_sort','asc')->get();
+		
+		$results = [];
+		foreach($kategori_kompetensi_kuisioner as $item){
+			
+			// get pertanyaan by kategori_kompetensi_kuisioner
+			
+		}
+		
+		return $kategori_kompetensi_kuisioner;
+	}
+	
 }
+
+
+
+
+
+
+

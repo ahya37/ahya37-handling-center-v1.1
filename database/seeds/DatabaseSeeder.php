@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(PertanyaanKuisionerSeeder::class);
         // $this->call(PilihanSeeder::class);
         // $this->call(KategoriPertanyaanKuisionerSeeder::class);
-        $this->call(KategoriSopSeeder::class);
+        // $this->call(KategoriSopSeeder::class);
+        $this->call(KategoriKompetensiSeeder::class);   
     }
 }

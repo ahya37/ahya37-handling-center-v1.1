@@ -525,4 +525,6 @@ class DashboardController extends Controller
 
         return view('dashboard.kuisioner.detail-kategori-kuisioner', compact('responden','pembimbing','result_data'));
     }
+	
+	
 }
